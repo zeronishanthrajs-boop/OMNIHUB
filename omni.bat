@@ -49,12 +49,12 @@ echo  [A]  Open ALL 12 Systems in separate browser tabs (Google Chrome)
 echo  [E]  Open ALL 12 Systems in separate browser tabs (Microsoft Edge)
 echo  [O]  Open OmniHub Command Center (http://localhost:8080)
 echo.
-echo  --- Individual Dedicated Ports (Opens directly in real browser) ---
-echo  [1]  CYBER TREE (:3000)            [7]  jo form (:3009)
-echo  [2]  DECLUZ (:3001)                [8]  Prediction Areena (:3011)
+echo  --- Individual Dedicated Ports & Live Cloud Deployments ---
+echo  [1]  CYBER TREE (Vercel Cloud)     [7]  jo form (:3009)
+echo  [2]  DECLUZ (:3001)                [8]  Prediction Areena (Vercel Cloud)
 echo  [3]  GAME CHANGER (:3002)          [9]  Stock Pulse (:3012)
 echo  [4]  JARVIS Elite (:3003)          [10] Cinematic Chess (:3013)
-echo  [5]  VENOM Security (:3007)        [11] AI Web Builder (:3014)
+echo  [5]  VENOM Security (Vercel Cloud) [11] AI Web Builder (:3014)
 echo  [6]  Whisper Pages (:3008)         [12] ULTRON 3.0 Dashboard (:8000)
 echo.
 echo  [Q]  Exit launcher menu (all servers remain active on their ports)
@@ -64,17 +64,29 @@ set /p choice="Enter option: "
 if /i "%choice%"=="A" (
     echo Opening all 12 project tabs in Google Chrome...
     if exist "!CHROME_EXE!" (
-        start "" "!CHROME_EXE!" "http://localhost:8080" "http://localhost:3000" "http://localhost:3001" "http://localhost:3002" "http://localhost:3003" "http://localhost:3007" "http://localhost:3008" "http://localhost:3009" "http://localhost:3011" "http://localhost:3012" "http://localhost:3013" "http://localhost:3014" "http://localhost:8000"
+        start "" "!CHROME_EXE!" "http://localhost:8080"
+        start "" "!CHROME_EXE!" "https://cyber-tree-azure.vercel.app/"
+        start "" "!CHROME_EXE!" "http://localhost:3001"
+        start "" "!CHROME_EXE!" "http://localhost:3002"
+        start "" "!CHROME_EXE!" "http://localhost:3003"
+        start "" "!CHROME_EXE!" "https://dashboard-sigma-puce-87.vercel.app/onboard"
+        start "" "!CHROME_EXE!" "http://localhost:3008"
+        start "" "!CHROME_EXE!" "http://localhost:3009"
+        start "" "!CHROME_EXE!" "https://prediction-areena.vercel.app/"
+        start "" "!CHROME_EXE!" "http://localhost:3012"
+        start "" "!CHROME_EXE!" "http://localhost:3013"
+        start "" "!CHROME_EXE!" "http://localhost:3014"
+        start "" "!CHROME_EXE!" "http://localhost:8000"
     ) else (
         start "" "http://localhost:8080"
-        start "" "http://localhost:3000"
+        start "" "https://cyber-tree-azure.vercel.app/"
         start "" "http://localhost:3001"
         start "" "http://localhost:3002"
         start "" "http://localhost:3003"
-        start "" "http://localhost:3007"
+        start "" "https://dashboard-sigma-puce-87.vercel.app/onboard"
         start "" "http://localhost:3008"
         start "" "http://localhost:3009"
-        start "" "http://localhost:3011"
+        start "" "https://prediction-areena.vercel.app/"
         start "" "http://localhost:3012"
         start "" "http://localhost:3013"
         start "" "http://localhost:3014"
@@ -86,7 +98,19 @@ if /i "%choice%"=="A" (
 if /i "%choice%"=="E" (
     echo Opening all 12 project tabs in Microsoft Edge...
     if exist "!EDGE_EXE!" (
-        start "" "!EDGE_EXE!" "http://localhost:8080" "http://localhost:3000" "http://localhost:3001" "http://localhost:3002" "http://localhost:3003" "http://localhost:3007" "http://localhost:3008" "http://localhost:3009" "http://localhost:3011" "http://localhost:3012" "http://localhost:3013" "http://localhost:3014" "http://localhost:8000"
+        start "" "!EDGE_EXE!" "http://localhost:8080"
+        start "" "!EDGE_EXE!" "https://cyber-tree-azure.vercel.app/"
+        start "" "!EDGE_EXE!" "http://localhost:3001"
+        start "" "!EDGE_EXE!" "http://localhost:3002"
+        start "" "!EDGE_EXE!" "http://localhost:3003"
+        start "" "!EDGE_EXE!" "https://dashboard-sigma-puce-87.vercel.app/onboard"
+        start "" "!EDGE_EXE!" "http://localhost:3008"
+        start "" "!EDGE_EXE!" "http://localhost:3009"
+        start "" "!EDGE_EXE!" "https://prediction-areena.vercel.app/"
+        start "" "!EDGE_EXE!" "http://localhost:3012"
+        start "" "!EDGE_EXE!" "http://localhost:3013"
+        start "" "!EDGE_EXE!" "http://localhost:3014"
+        start "" "!EDGE_EXE!" "http://localhost:8000"
     )
     goto MENU
 )
@@ -96,7 +120,7 @@ if /i "%choice%"=="O" (
     goto MENU
 )
 if "%choice%"=="1" (
-    if exist "!CHROME_EXE!" ( start "" "!CHROME_EXE!" "http://localhost:3000" ) else ( start "" "http://localhost:3000" )
+    if exist "!CHROME_EXE!" ( start "" "!CHROME_EXE!" "https://cyber-tree-azure.vercel.app/" ) else ( start "" "https://cyber-tree-azure.vercel.app/" )
     goto MENU
 )
 if "%choice%"=="2" (
@@ -112,7 +136,7 @@ if "%choice%"=="4" (
     goto MENU
 )
 if "%choice%"=="5" (
-    if exist "!CHROME_EXE!" ( start "" "!CHROME_EXE!" "http://localhost:3007" ) else ( start "" "http://localhost:3007" )
+    if exist "!CHROME_EXE!" ( start "" "!CHROME_EXE!" "https://dashboard-sigma-puce-87.vercel.app/onboard" ) else ( start "" "https://dashboard-sigma-puce-87.vercel.app/onboard" )
     goto MENU
 )
 if "%choice%"=="6" (
@@ -124,7 +148,7 @@ if "%choice%"=="7" (
     goto MENU
 )
 if "%choice%"=="8" (
-    if exist "!CHROME_EXE!" ( start "" "!CHROME_EXE!" "http://localhost:3011" ) else ( start "" "http://localhost:3011" )
+    if exist "!CHROME_EXE!" ( start "" "!CHROME_EXE!" "https://prediction-areena.vercel.app/" ) else ( start "" "https://prediction-areena.vercel.app/" )
     goto MENU
 )
 if "%choice%"=="9" (

@@ -1225,3 +1225,53 @@ body.dark-theme {
   color: var(--text-dim);
 }
 
+/* Security Frame Overlay (for deployments with X-Frame-Options DENY) */
+.frame-security-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 14, 23, 0.92);
+  backdrop-filter: blur(16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 2rem;
+}
+.security-banner-card {
+  max-width: 520px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-glass-bright);
+  border-radius: var(--radius-lg);
+  padding: 2.2rem;
+  text-align: center;
+  box-shadow: var(--shadow-xl);
+}
+.security-banner-card .sec-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent-amber);
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--radius-full);
+  margin-bottom: 1rem;
+}
+.security-banner-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.6rem;
+  color: #fff;
+}
+.security-banner-card p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+.security-banner-card .sec-actions {
+  display: flex;
+  gap: 0.8rem;
+  justify-content: center;
+}
+
+

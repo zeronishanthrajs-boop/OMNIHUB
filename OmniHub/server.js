@@ -87,12 +87,13 @@ const PROJECTS = [
     category: 'Fintech & Markets',
     icon: '🎲',
     port: 3011,
-    url: 'http://localhost:3011',
+    url: process.env.VERCEL_URL_PREDICTION_ARENA || 'https://prediction-areena.vercel.app/',
+    localUrl: 'http://localhost:3011',
     dir: path.join(ROOT_DIR, 'Prediction Areena'),
     command: 'npm run dev -- -p 3011',
-    tags: ['Next.js 16', 'React 19', 'LibSQL', 'SQLite', 'Framer Motion'],
+    tags: ['Next.js 16', 'React 19', 'LibSQL', 'SQLite', 'Vercel Cloud'],
     techEquipment: 'Cryptographic Provable Fairness (VRF Hash Chain) & Orderbook Depth',
-    description: 'Competitive prediction market platform with real-time odds, leaderboards, and portfolio management.'
+    description: 'Competitive prediction market platform deployed on Vercel with real-time odds, leaderboards, and portfolio management.'
   },
   {
     id: 'venom',
@@ -101,12 +102,13 @@ const PROJECTS = [
     category: 'Cybersecurity & Privacy',
     icon: '🛡️',
     port: 3007,
-    url: 'http://localhost:3007',
+    url: process.env.VERCEL_URL_VENOM || 'https://dashboard-sigma-puce-87.vercel.app/onboard',
+    localUrl: 'http://localhost:3007',
     dir: path.join(ROOT_DIR, 'New folder (2)', 'VENOM', 'dashboard'),
     command: 'npm run dev -- -p 3007',
-    tags: ['Next.js', 'Node.js', 'Security Audit', 'Penetration Testing'],
+    tags: ['Next.js', 'Node.js', 'Security Audit', 'Vercel Cloud'],
     techEquipment: 'Static AST Vulnerability Scanner + CVSS 3.1 Severity Calculator',
-    description: 'Targeted vulnerability scanner for modern web applications, generating audit reports and compliance roadmaps.'
+    description: 'Targeted vulnerability scanner for modern web applications deployed on Vercel with onboarding dashboard.'
   },
   {
     id: 'cyber-tree',
@@ -115,12 +117,13 @@ const PROJECTS = [
     category: 'Cybersecurity & Privacy',
     icon: '🌲',
     port: 3000,
-    url: 'http://localhost:3000',
+    url: process.env.VERCEL_URL_CYBER_TREE || 'https://cyber-tree-azure.vercel.app/',
+    localUrl: 'http://localhost:3000',
     dir: path.join(ROOT_DIR, 'New folder (2)', 'CYBER TREE'),
     command: 'npm run dev -- -p 3000',
-    tags: ['Next.js 16', 'Supabase', 'Recharts', 'Tailwind CSS'],
+    tags: ['Next.js 16', 'Supabase', 'Recharts', 'Vercel Cloud'],
     techEquipment: 'Interactive 3D WebGL Threat Topology (Three.js Attack Arc Globe)',
-    description: 'Real-time telemetry and threat intelligence visualizer with live graphs and incident logging.'
+    description: 'Real-time telemetry and threat intelligence visualizer deployed on Vercel with live graphs and incident logging.'
   },
   {
     id: 'whisper-pages',
@@ -269,6 +272,34 @@ function pingPort(port, timeout = 1200) {
   });
 }
 
+// Helper: Smart pinger supporting both HTTPS cloud deployments and local sockets
+function pingTarget(targetUrl, fallbackPort, timeout = 2500) {
+  if (targetUrl && targetUrl.startsWith('https://')) {
+    return new Promise((resolve) => {
+      const startTime = Date.now();
+      try {
+        const u = new URL(targetUrl);
+        const req = https.request({
+          hostname: u.hostname,
+          port: 443,
+          path: u.pathname || '/',
+          method: 'HEAD',
+          headers: { 'User-Agent': 'OmniHub-HealthCheck/1.0' },
+          timeout: timeout
+        }, (res) => {
+          resolve({ online: res.statusCode < 500, latency: Date.now() - startTime });
+        });
+        req.on('timeout', () => { req.destroy(); pingPort(fallbackPort, 800).then(resolve); });
+        req.on('error', () => { pingPort(fallbackPort, 800).then(resolve); });
+        req.end();
+      } catch (e) {
+        pingPort(fallbackPort, 800).then(resolve);
+      }
+    });
+  }
+  return pingPort(fallbackPort, timeout);
+}
+
 // Child process spawner
 function launchProject(project) {
   return new Promise((resolve, reject) => {
@@ -317,7 +348,7 @@ const server = http.createServer(async (req, res) => {
   if (pathname === '/api/projects') {
     const healthChecks = await Promise.all(
       PROJECTS.map(async (p) => {
-        const ping = await pingPort(p.port);
+        const ping = await pingTarget(p.url, p.port);
         return {
           ...p,
           status: ping.online ? 'online' : 'offline',
@@ -334,7 +365,7 @@ const server = http.createServer(async (req, res) => {
     const statuses = {};
     await Promise.all(
       PROJECTS.map(async (p) => {
-        const ping = await pingPort(p.port);
+        const ping = await pingTarget(p.url, p.port);
         statuses[p.id] = {
           port: p.port,
           online: ping.online,
@@ -445,7 +476,7 @@ const server = http.createServer(async (req, res) => {
         const payload = body ? JSON.parse(body) : {};
         const chosenBrowser = payload.browser || 'chrome';
         
-        const urls = PROJECTS.map(p => `http://localhost:${p.port}`);
+        const urls = PROJECTS.map(p => p.url || `http://localhost:${p.port}`);
         const allUrls = ['http://localhost:8080', ...urls];
         
         const chromePath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
@@ -463,9 +494,21 @@ const server = http.createServer(async (req, res) => {
         }
         
         if (targetExe === 'start') {
-          allUrls.forEach(u => spawn('cmd.exe', ['/c', 'start', '', u], { windowsHide: true, detached: true }));
+          allUrls.forEach((u, idx) => {
+            setTimeout(() => {
+              spawn('cmd.exe', ['/c', 'start', '', u], { windowsHide: true, detached: true });
+            }, idx * 100);
+          });
         } else {
-          spawn(targetExe, allUrls, { windowsHide: false, detached: true, stdio: 'ignore' }).unref();
+          allUrls.forEach((u, idx) => {
+            setTimeout(() => {
+              try {
+                spawn(targetExe, [u], { windowsHide: false, detached: true, stdio: 'ignore' }).unref();
+              } catch (err) {
+                console.error(`Failed to launch tab for ${u}:`, err);
+              }
+            }, idx * 120);
+          });
         }
 
         res.writeHead(200, { 'Content-Type': 'application/json' });

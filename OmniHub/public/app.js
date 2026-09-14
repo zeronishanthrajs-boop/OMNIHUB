@@ -212,7 +212,7 @@ function renderGrid() {
           <button class="btn btn-primary" onclick="openInWorkspace('${p.id}')">
             <span>🚀 Open in Workspace</span>
           </button>
-          <button class="btn-icon-square" title="Open in Real Browser Tab (http://localhost:${p.port})" onclick="openExternalTab('${p.url}')">
+          <button class="btn-icon-square" title="Open in Real Browser Tab (${p.url})" onclick="openExternalTab('${p.url}')">
             <span>↗</span>
           </button>
         </div>
@@ -312,6 +312,36 @@ function renderWorkspace() {
       if (dom.mainIframe.dataset.currentId !== activeProject.id) {
         dom.mainIframe.src = activeProject.url;
         dom.mainIframe.dataset.currentId = activeProject.id;
+      }
+
+      // Security Frame Overlay for services with X-Frame-Options DENY
+      const bannerId = 'venom-frame-security-overlay';
+      let existingBanner = document.getElementById(bannerId);
+      if (activeProject.id === 'venom' && activeProject.url.includes('vercel.app')) {
+        if (!existingBanner) {
+          existingBanner = document.createElement('div');
+          existingBanner.id = bannerId;
+          existingBanner.className = 'frame-security-overlay';
+          existingBanner.innerHTML = `
+            <div class="security-banner-card">
+              <div class="sec-badge">🛡️ VERCEL STRICT CSP PROTECTED</div>
+              <h3>VENOM Security Dashboard</h3>
+              <p>This deployment enforces strict HTTP headers (<code>X-Frame-Options: DENY</code> & <code>frame-ancestors 'none'</code>) preventing clickjacking.</p>
+              <div class="sec-actions">
+                <button class="btn btn-primary" onclick="openExternalTab('${activeProject.url}')">
+                  <span>🚀 Open Live Onboard in Browser Tab</span>
+                </button>
+                <button class="btn btn-secondary" onclick="dom.mainIframe.src='http://localhost:3007'; document.getElementById('${bannerId}').style.display='none';">
+                  <span>Load Local Port (:3007)</span>
+                </button>
+              </div>
+            </div>
+          `;
+          dom.primaryFrameWrapper.appendChild(existingBanner);
+        }
+        existingBanner.style.display = 'flex';
+      } else if (existingBanner) {
+        existingBanner.style.display = 'none';
       }
     }
   } else {
