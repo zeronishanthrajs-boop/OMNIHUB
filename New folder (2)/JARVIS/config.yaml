@@ -1,0 +1,88 @@
+# ════════════════════════════════════════
+# FILE: config.yaml
+# PURPOSE: Hot-reloadable runtime configuration for JARVIS v3.
+# MODIFIES: all runtime subsystems through config_loader.py
+# ════════════════════════════════════════
+assistant:
+  name: "JARVIS"
+  wake_word: "hey jarvis"
+  wake_sensitivity: 0.6
+  language: "en"
+  version: "3.0.0"
+  operator: "Nishanth"
+voice:
+  tts_engine: "piper"
+  piper_voice: "en_US-ryan-high"
+  tts_fallback: "sapi5"
+  speech_rate: 1.0
+brain:
+  model: "qwen2.5-coder:7b"
+  code_model: "qwen2.5-coder:7b"
+  fallback_model: "llama3.1:8b"
+  temperature: 0.7
+  code_temperature: 0.2
+  ollama_timeout: 300
+  context_window: 8192  # MUST be 8192 (not 4096)
+  keep_alive_minutes: 15
+  session_memory_turns: 20
+  ollama_host: "http://127.0.0.1:11434"
+
+  # NEW: Entity tracking settings
+  entity_tracking: true
+  max_conversation_turns: 20  # Keep last 20 messages for context
+  entity_memory: true  # Remember who/what was discussed
+
+# INDEPENDENCE GUARANTEE
+ai_backend:
+  type: "local_ollama_only"
+  external_apis: []  # EMPTY - no external dependencies
+  fallback_strategy: "graceful_degradation"  # Fail locally, never call external
+stt:
+  whisper_model: "tiny.en"
+  device: "cpu"
+  compute_type: "int8"
+  min_recording_seconds: 1.5
+  silence_timeout_seconds: 1.2
+  max_recording_seconds: 15
+  no_speech_timeout_seconds: 8
+  energy_threshold: 200.0
+  continuous_listening: false
+vision:
+  model: "moondream"
+  lazy_load: true
+  unload_after_seconds: 60
+memory:
+  session_db: "memory/session.db"
+  personal_db: "memory/personal.db"
+  knowledge_dir: "memory/knowledge"
+  sources_db: "memory/sources.db"
+  cloud_sync: false
+  ram_safety_threshold: 1200
+  max_model_memory: 6000
+server:
+  host: "0.0.0.0"
+  port: 8000
+monitoring:
+  check_interval: 30
+  ollama_probe_timeout: 1.5
+  websites:
+    - name: "ZeroOps"
+      url: "https://zeroops.in"
+      check_interval_minutes: 5
+    - name: "UniGate"
+      url: "https://unigateadmission.online"
+      check_interval_minutes: 5
+  venom:
+    check_interval_hours: 24
+offline_dms:
+  enabled: true
+  channels: [discord, whatsapp, instagram, telegram]
+  response_with_knowledge: true
+paths:
+  temp_dir: "temp"
+  logs_dir: "logs"
+  speech_dir: "static/speech"
+  piper_binary: "bin/piper/piper.exe"
+  piper_voice_model: "models/tts/en_US-ryan-high.onnx"
+  whisper_dir: "models/whisper/tiny.en"
+  ffmpeg_binary: "bin/ffmpeg/ffmpeg.exe"

@@ -1,0 +1,26 @@
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+
+# Python cache & bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# System / Temporary
+*.log
+.system_generated/
+test_flow_done.txt
+
+# OS generated files
+.DS_Store
+Thumbs.db
+Desktop.ini

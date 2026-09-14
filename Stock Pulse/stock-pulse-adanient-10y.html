@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Stock Pulse · Adani Enterprises Ltd (ADANIENT)</title>
+<style>
+  @page { size: A4; margin: 14mm 12mm 16mm 12mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #1a1f2b;
+    font-size: 9pt;
+    line-height: 1.35;
+    background: #ffffff;
+    margin: 0;
+    padding: 0;
+  }
+  .header {
+    background: linear-gradient(135deg, #0f1e3d 0%, #1b3a68 100%);
+    color: #fff;
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+  }
+  .header .eyebrow { font-size: 7.8pt; letter-spacing: 1.5px; color: #9db4d8; text-transform: uppercase; font-weight: 600; }
+  .header h1 { font-size: 16pt; margin: 2px 0 2px 0; color: #ffffff; }
+  .header .sub { font-size: 8.5pt; color: #c7d5ec; }
+  .badge-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .badge { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 4px; padding: 4px 9px; font-size: 8pt; }
+  .badge b { color: #ffce54; }
+
+  .corrections-box {
+    background: #fff7e6;
+    border: 1.5px solid #e6a817;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    font-size: 8.3pt;
+  }
+  .corrections-box .title { font-weight: 700; color: #8a5a00; font-size: 9pt; margin-bottom: 4px; }
+  .corrections-box ul { margin: 4px 0 0 16px; padding: 0; }
+  .corrections-box li { margin-bottom: 2px; }
+
+  .section { margin-bottom: 11px; page-break-inside: avoid; }
+  .section-title {
+    font-size: 10pt; font-weight: 700; color: #0f1e3d;
+    border-bottom: 2px solid #0f1e3d; padding-bottom: 3px; margin-bottom: 7px;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .section-title .tag { font-size: 7.8pt; font-weight: 700; padding: 2px 8px; border-radius: 3px; }
+  .tag-weak { background: #fdeaea; color: #c0392b; }
+  .tag-fair { background: #eaf7ee; color: #1e8449; }
+  .tag-watch { background: #fef6e0; color: #b7791f; }
+  .tag-mixed { background: #eef1fb; color: #3949ab; }
+  .tag-narrow { background: #fef6e0; color: #b7791f; }
+  .tag-moderate { background: #eef1fb; color: #3949ab; }
+  .tag-strong { background: #eaf7ee; color: #1e8449; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+  .stat-grid.cols4 { grid-template-columns: repeat(4, 1fr); }
+  .stat-grid.cols3 { grid-template-columns: repeat(3, 1fr); }
+  .stat-grid.cols2 { grid-template-columns: repeat(2, 1fr); }
+  .stat {
+    background: #f4f6fa; border: 1px solid #e2e6ee; border-radius: 4px;
+    padding: 6px 9px;
+  }
+  .stat .label { font-size: 6.8pt; color: #6b7488; text-transform: uppercase; letter-spacing: 0.4px; font-weight: 600; }
+  .stat .value { font-size: 11pt; font-weight: 700; color: #0f1e3d; margin-top: 1px; }
+  .stat .note { font-size: 7.2pt; color: #6b7488; margin-top: 2px; }
+  .stat .note.healthy { color: #1e8449; font-weight: 600; }
+  .stat .note.weak { color: #c0392b; font-weight: 600; }
+  .stat .note.watch { color: #b7791f; font-weight: 600; }
+
+  p.body-text { font-size: 8.5pt; color: #2c3345; margin: 4px 0; }
+  .note-box { background: #f4f6fa; border-left: 3px solid #1b3a68; padding: 6px 10px; font-size: 8pt; color: #3a4257; margin-top: 5px; border-radius: 3px; }
+  .fix-note { background: #eaf7ee; border-left: 3px solid #1e8449; padding: 6px 10px; font-size: 8pt; color: #1e5631; margin-top: 5px; border-radius: 3px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 8pt; margin-top: 4px; }
+  th { background: #0f1e3d; color: #fff; text-align: left; padding: 5px 7px; font-size: 7.4pt; text-transform: uppercase; letter-spacing: 0.3px; }
+  td { padding: 5px 7px; border-bottom: 1px solid #e2e6ee; }
+  tr:nth-child(even) td { background: #f8f9fc; }
+  td.num { text-align: right; }
+  .fixed-val { color: #1e8449; font-weight: 700; }
+
+  .moat-table td.score { font-weight: 700; text-align: center; }
+  .checklist-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; margin-top: 5px; }
+  .check-item { background: #f8f9fc; border: 1px solid #e2e6ee; border-radius: 3px; padding: 4px 7px; font-size: 7.6pt; display: flex; justify-content: space-between; align-items: center; }
+  .check-item.pass { border-left: 3px solid #1e8449; }
+  .check-item.fail { border-left: 3px solid #c0392b; }
+  .check-status { font-weight: 700; font-size: 7pt; padding: 1px 4px; border-radius: 2px; }
+  .check-status.pass { background: #eaf7ee; color: #1e8449; }
+  .check-status.fail { background: #fdeaea; color: #c0392b; }
+
+  .footer-note { font-size: 7.2pt; color: #8b93a3; margin-top: 10px; border-top: 1px solid #e2e6ee; padding-top: 6px; text-align: center; }
+  .pagebreak { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="eyebrow">Stock Pulse · Institutional Research Report · v3.1</div>
+  <h1>Adani Enterprises Ltd <span style="font-weight:400; font-size:11pt; color:#c7d5ec;">(ADANIENT · NSE/BSE)</span></h1>
+  <div class="sub">Sector: Commodities &nbsp;|&nbsp; Horizon: 10Y &nbsp;|&nbsp; Data Confidence: 14/14 (HIGH)</div>
+  <div class="badge-row">
+    <div class="badge">Pulse Score <b>3/10 (WEAK)</b></div>
+    <div class="badge">Data Confidence <b>14/14 (HIGH)</b></div>
+    <div class="badge">Moat <b>6/14 (NARROW)</b></div>
+    <div class="badge">Management Trust <b>7/8 (HIGH)</b></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">01 &nbsp;Overview &amp; Market Standing</div>
+  <div class="stat-grid">
+    <div class="stat"><div class="label">Current Market Price</div><div class="value">Rs. 2,891.8</div></div>
+    <div class="stat"><div class="label">52-Week High / Low</div><div class="value" style="font-size:9.5pt;">Rs. 3,245 / Rs. 1,753</div></div>
+    <div class="stat"><div class="label">Market Capitalisation</div><div class="value" style="font-size:9.5pt;">Rs. 3,91,474 Cr</div></div>
+    <div class="stat"><div class="label">Primary Sector</div><div class="value" style="font-size:9.5pt;">Commodities</div></div>
+  </div>
+  <p class="body-text">CMP (Rs. 2,891.8) is +65.0% above 52W Low (Rs. 1,753) and -10.9% below 52W High (Rs. 3,245) — trading in upper quartile (near 52W high) (76th percentile of 1-year band).</p>
+</div>
+
+<div class="section">
+  <div class="section-title">02 &nbsp;Business &amp; Operational Overview</div>
+  <p class="body-text">Adani Enterprises Ltd has business interests in various economic areas such as mining, integrated resources management (IRM), infrastructure such as airports, roads, rail/ metro, water, data centres, solar manufacturing, agro and defence.</p>
+</div>
+
+<div class="section">
+  <div class="section-title">03 &nbsp;Valuation Multiples &amp; Benchmark Banding <span class="tag tag-premium">PREMIUM</span></div>
+  <div class="stat-grid">
+    <div class="stat"><div class="label">Stock P/E Ratio</div><div class="value">49.4</div><div class="note">Fair Band: 20.4 – 27.6</div></div>
+    <div class="stat"><div class="label">Price to Book (P/B)</div><div class="value">4.61</div><div class="note">BV: Rs. 627</div></div>
+    <div class="stat"><div class="label">Dividend Yield</div><div class="value">0.04%</div><div class="note">Face Value: Rs. 1</div></div>
+    <div class="stat"><div class="label">Sector Benchmark P/E</div><div class="value">24</div><div class="note">105.8% vs Sector</div></div>
+  </div>
+  <div class="stat-grid cols3" style="margin-top:6px;">
+    <div class="stat"><div class="label">Reverse DCF Implied FCF Growth</div><div class="value" style="font-size:10pt;">25%</div><div class="note watch">DEMANDING (WACC: 11.5%)</div></div>
+    <div class="stat"><div class="label">10Y Historical P/E Quantile</div><div class="value" style="font-size:10pt;">43th %ile</div><div class="note">10Y Median: 51.7 [41.9 - 55]</div></div>
+    <div class="stat"><div class="label">Earnings Power Value (EPV)</div><div class="value" style="font-size:10pt;">Rs. -914.2</div><div class="note">Growth Premium Priced In</div></div>
+  </div>
+  <div class="note-box">
+    <b>Valuation Triangulation:</b> At current enterprise value (Rs. 5,88,357 Cr), market prices in a 25% annual FCF growth rate for 10 years (WACC: 11.5%, Terminal: 4.5%). Trades at the 43th percentile of its 10-year valuation range [39.8 - 60.3], with 10Y median P/E at 51.7.<br>
+    <b>Multiple Note:</b> Trading at 105.8% vs sector median (24). CMP ÷ trailing diluted EPS = Rs. 2,891.8 ÷ Rs. 58.54 = <span class="fixed-val">49.4</span>.
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">04 &nbsp;Growth &amp; Operating Trajectory <span class="tag tag-slowing">SLOWING</span></div>
+  <div class="stat-grid">
+    <div class="stat"><div class="label">Revenue 3Y / 5Y CAGR</div><div class="value" style="font-size:10pt;">4.94% / 9.93%</div><div class="note">TTM Sales: Rs. 1,11,431 Cr</div></div>
+    <div class="stat"><div class="label">Profit 3Y / 5Y CAGR</div><div class="value" style="font-size:10pt;">31.09% / 56.98%</div><div class="note">TTM PAT: Rs. 7,513 Cr</div></div>
+    <div class="stat"><div class="label">EBITDA Margin Profile</div><div class="value" style="font-size:10pt;">TTM 14%</div><div class="note">Latest Qtr (Jun 2026): 15%</div></div>
+    <div class="stat"><div class="label">Net Margin Profile</div><div class="value" style="font-size:10pt;">TTM 6.74%</div><div class="note">Pre-Tax Bridge</div></div>
+  </div>
+  <div class="stat-grid cols2" style="margin-top:6px;">
+    <div class="stat"><div class="label">Trailing Diluted EPS</div><div class="value">Rs. 58.54</div><div class="note">3Y EPS CAGR: 32.14%</div></div>
+    <div class="stat"><div class="label">Cash Conversion Cycle</div><div class="value" style="font-size:10pt;">-13 Days</div><div class="note healthy">EXPANDING (DSO: 46d | DIO: 126d | DPO: 185d)</div></div>
+  </div>
+  <div class="note-box">
+    <b>5-Stage DuPont Decomposition:</b> Tax Burden (0.7) &times; Interest Burden (0.68) &times; Operating Margin (14.1%) &times; Asset Turnover (0.43x) &times; Leverage (3.22x) &rarr; Reconstituted ROE: <b>9.3%</b>. Primary Driver: <b>Financial Leverage (Gearing Risk)</b>.<br>
+    <b>Margin Bridge:</b> TTM EBITDA margin (14%) reflects operating cash profitability before D&amp;A; Net margin (6.74%) accounts for D&amp;A, interest, and taxes.
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">05 &nbsp;Financial Health, Solvency &amp; Forensic Audit <span class="tag tag-watch">WATCH</span></div>
+  <div class="stat-grid">
+    <div class="stat"><div class="label">Debt to Equity (D/E)</div><div class="value">1.32</div><div class="note watch">WATCH (&le;0.5)</div></div>
+    <div class="stat"><div class="label">Interest Coverage</div><div class="value">2.12x</div><div class="note watch">WATCH (&ge;5.0x)</div></div>
+    <div class="stat"><div class="label">Current Ratio</div><div class="value">1.15</div><div class="note weak">WATCH (&ge;1.0)</div></div>
+    <div class="stat"><div class="label">Free Cash Flow Trend</div><div class="value" style="color:#1e8449;">NEGATIVE</div><div class="note healthy">HEALTHY</div></div>
+  </div>
+  <div class="stat-grid cols4" style="margin-top:6px;">
+    <div class="stat"><div class="label">Beneish M-Score</div><div class="value" style="font-size:10pt;">-1.75</div><div class="note weak">RED FLAG (High (>75%))</div></div>
+    <div class="stat"><div class="label">Altman Z''-Score</div><div class="value" style="font-size:10pt;">2.17</div><div class="note watch">GREY ZONE</div></div>
+    <div class="stat"><div class="label">Piotroski F-Score</div><div class="value" style="font-size:10pt;">6/9</div><div class="note watch">MODERATE Quality</div></div>
+    <div class="stat"><div class="label">Sloan Accrual Ratio</div><div class="value" style="font-size:10pt;">2.25%</div><div class="note healthy">CLEAN CASH CONVERSION</div></div>
+  </div>
+  <div class="note-box">
+    <b>Forensic Accounting Audit:</b> M-Score -1.75 warrants scrutiny on accruals and asset quality indices. Z''-Score 2.17 indicates moderate leverage; watch debt service coverage.<br>
+    <b>Solvency Context:</b> Benchmark thresholds — D/E &le;0.5 Healthy, Interest Coverage &ge;5x Healthy, Current Ratio &ge;1.0 Healthy. Liquid current assets comfortably cover short-term 12-month liabilities (Current Ratio &ge;1.0).
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">06 &nbsp;Return Quality &amp; Incremental Capital Allocation <span class="tag tag-weak">WEAK</span></div>
+  <div class="stat-grid cols2">
+    <div class="stat"><div class="label">Return on Equity (ROE)</div><div class="value">-3.38%</div><div class="note watch">WEAK (&ge;15% cutoff)</div></div>
+    <div class="stat"><div class="label">Return on Capital Employed (ROCE)</div><div class="value">5.8%</div><div class="note watch">WEAK (&ge;15% cutoff)</div></div>
+  </div>
+  <div class="stat-grid cols2" style="margin-top:6px;">
+    <div class="stat"><div class="label">3Y Incremental ROIC (ROIIC)</div><div class="value" style="font-size:10pt;">21.8%</div><div class="note healthy">VALUE CREATOR</div></div>
+    <div class="stat"><div class="label">5Y Incremental ROIC (ROIIC)</div><div class="value" style="font-size:10pt;">22.9%</div><div class="note">WACC Spread: +10.3%</div></div>
+  </div>
+  <div class="note-box">
+    <b>Capital Deployment Efficacy:</b> 3Y Incremental ROIC stands at 21.8% (5Y: 22.9%). Management deployed Rs. 14,844 Cr of fresh invested capital to generate Rs. 3,241 Cr of incremental NOPAT.
+  </div>
+</div>
+
+<div class="pagebreak"></div>
+
+<div class="section">
+  <div class="section-title">07 &nbsp;Competitive Moat Analysis <span class="tag tag-narrow">6/14 NARROW</span></div>
+  <table class="moat-table">
+    <tr><th>Moat Factor</th><th style="text-align:center;">Score</th><th>Evidence</th></tr>
+    
+      <tr>
+        <td><b>Brand Power</b></td>
+        <td class="score" style="color:#b7791f;">1/2</td>
+        <td>Recognized industry presence and commercial goodwill.</td>
+      </tr>
+    
+      <tr>
+        <td><b>Switching Costs</b></td>
+        <td class="score" style="color:#b7791f;">1/2</td>
+        <td>Established B2B operational integration and contractual terms.</td>
+      </tr>
+    
+      <tr>
+        <td><b>Network Effects</b></td>
+        <td class="score" style="color:#c0392b;">0/2</td>
+        <td>Standard operating structure without direct network externalities.</td>
+      </tr>
+    
+      <tr>
+        <td><b>Cost Advantage</b></td>
+        <td class="score" style="color:#1e8449;">2/2</td>
+        <td>Operational efficiencies and supply chain optimization. Resilient operating margins prove cost efficiency.</td>
+      </tr>
+    
+      <tr>
+        <td><b>Regulatory License</b></td>
+        <td class="score" style="color:#c0392b;">0/2</td>
+        <td>Standard statutory operating permissions.</td>
+      </tr>
+    
+      <tr>
+        <td><b>Patents/IP</b></td>
+        <td class="score" style="color:#c0392b;">0/2</td>
+        <td>Conventional industry technology and processes.</td>
+      </tr>
+    
+      <tr>
+        <td><b>Scale Advantage</b></td>
+        <td class="score" style="color:#1e8449;">2/2</td>
+        <td>Mega-cap balance sheet (Rs. 3,91,474 Cr) drives structural procurement scale.</td>
+      </tr>
+    
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">08 &nbsp;Peer Comparison &amp; Recent Events</div>
+  <table>
+    <tr><th>Peer Company</th><th class="num">P/E</th><th class="num">ROCE</th><th class="num">Market Cap</th><th class="num">3Y Sales</th><th>Relationship</th></tr>
+    
+  </table>
+  <div style="font-size:7.4pt; color:#6b7488; margin-top:4px;"><b>Peer Selection Rationale:</b> Discovered from exchange sector classification. Sector Benchmark P/E reflects peer basket median.</div>
+  <p class="body-text" style="margin-top:6px;"><b>Recent Corporate News Headlines (most recent first):</b></p>
+  <ul style="font-size:8pt; margin:2px 0 0 16px; color:#2c3345;">
+    
+      <li><b>[9 Jul 2026]</b> Adani Group stocks rally: Adani Total Gas shares up 7%, Adani Ent gain 3%; key reasons explained - Upstox</li>
+    
+      <li><b>[24 Jun 2026]</b> Morgan Stanley sees 20% upside in Adani Ent; rates 'Overweight'; here's why - business-standard.com</li>
+    
+      <li><b>[3 Feb 2026]</b> Adani ENT, Hindalco, Hindustan Copper, To Vedanta: Why Are Metal Stocks Rallying Today? Explained In 4 Points - Goodreturns</li>
+    
+  </ul>
+</div>
+
+<div class="section">
+  <div class="section-title">09 &nbsp;Ownership Structure &amp; Management Trust <span class="tag tag-high">7/8 HIGH</span></div>
+  <div class="stat-grid">
+    <div class="stat"><div class="label">Promoter Holding</div><div class="value">71.97%</div><div class="note">Trend: FALLING</div></div>
+    <div class="stat"><div class="label">Institutional FII / DII</div><div class="value" style="font-size:10pt;">10.51% / 10.75%</div><div class="note">High Institutional</div></div>
+    <div class="stat"><div class="label">Promoter Pledging</div><div class="value">0%</div><div class="note healthy">CLEAN</div></div>
+    <div class="stat"><div class="label">Quarterly Track Record</div><div class="value" style="font-size:10pt;">2 Qtrs Contraction</div><div class="note watch">WATCH</div></div>
+  </div>
+  <div class="note-box">
+    <b>Strengths:</b> +2 Regulatory compliance | +1 Quarterly delivery consistency | +1 Pledging <5% | +1 FII stake >=10% | +1 Cycle resilience | +1 Audit disclosure & accounting transparency<br>
+    <b>Unmet Criteria (+0):</b> Promoter trend stable/rising
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">10 &nbsp;The Pulse Score &amp; What-If Matrix <span class="tag tag-weak">3/10 WEAK PULSE</span></div>
+  <div class="fix-note" style="background:#fdeaea; border-color:#c0392b; color:#c0392b;"><b>WARNING:</b> Net profit has declined for 2 consecutive quarters. | Free cash flow is negative or under sustained contraction.</div>
+
+  <p class="body-text"><b>Baseline Financials (TTM):</b> Revenue Rs. 1,11,431 Cr | Net Profit (PAT) Rs. 7,513 Cr | EPS Rs. 58.54 | Margin 6.74% | Dividend Yield 0.04%</p>
+
+  <table>
+    <tr><th>Scenario (Mathematical Model)</th><th class="num">Rev CAGR</th><th class="num">Projected Revenue (10Y)</th><th class="num">Projected PAT (10Y)</th></tr>
+    <tr>
+      <td><b>Bear Case</b> (&minus;5.0% vs Base | 4.7% Margin)</td>
+      <td class="num">2.4%</td>
+      <td class="num">Rs. 1,41,256 Cr</td>
+      <td class="num"><span class="fixed-val">Rs. 6,639 Cr</span></td>
+    </tr>
+    <tr>
+      <td><b>Base Case</b> (Historical Avg | 6.7% Margin)</td>
+      <td class="num">7.4%</td>
+      <td class="num">Rs. 2,27,535 Cr</td>
+      <td class="num"><span class="fixed-val">Rs. 15,245 Cr</span></td>
+    </tr>
+    <tr>
+      <td><b>Bull Case</b> (+3.5% vs Base | 8.2% Margin)</td>
+      <td class="num">10.9%</td>
+      <td class="num">Rs. 3,13,561 Cr</td>
+      <td class="num"><span class="fixed-val">Rs. 25,712 Cr</span></td>
+    </tr>
+  </table>
+
+  <p class="body-text" style="margin-top:8px;"><b>Total Return Model</b> (Rs. 1,00,000 investment):</p>
+  <table>
+    <tr><th>Metric</th><th class="num">Value</th></tr>
+    <tr><td>Base Case Fundamental PAT CAGR (10Y)</td><td class="num fixed-val">7.33%</td></tr>
+    <tr><td>+ Dividend Yield</td><td class="num">0.04%</td></tr>
+    <tr><td><b>Total Return Rate (Annualized)</b></td><td class="num fixed-val"><b>7.37% CAGR</b></td></tr>
+    <tr><td><b>10Y Projected Capital of Rs. 1,00,000</b></td><td class="num fixed-val"><b>~Rs. 2,03,624</b></td></tr>
+    <tr><td>Mean-reversion adjusted CAGR (P/E 49.4&rarr;24)</td><td class="num">-0.11%</td></tr>
+    <tr><td>10Y Projected Capital (Mean-reversion adjusted)</td><td class="num">~Rs. 98,905</td></tr>
+  </table>
+
+  <p class="body-text" style="margin-top:8px;"><b>Pulse Score 10-Rule Audit Scorecard:</b></p>
+  <div class="checklist-grid">
+    
+      <div class="check-item fail">
+        <div><b>01.</b> Valuation within fair/attractive range</div>
+        <span class="check-status fail">FAIL</span>
+      </div>
+    
+      <div class="check-item fail">
+        <div><b>02.</b> Revenue 3Y growth trajectory robust (>=10% 3Y CAGR or steady)</div>
+        <span class="check-status fail">FAIL</span>
+      </div>
+    
+      <div class="check-item fail">
+        <div><b>03.</b> Operating profit expansion solid (>8% CAGR & no consecutive drops)</div>
+        <span class="check-status fail">FAIL</span>
+      </div>
+    
+      <div class="check-item fail">
+        <div><b>04.</b> Solvency & liquidity balance sheet sound (zero watch/weak metrics)</div>
+        <span class="check-status fail">FAIL</span>
+      </div>
+    
+      <div class="check-item fail">
+        <div><b>05.</b> Return on Equity (ROE) exceeds 15%</div>
+        <span class="check-status fail">FAIL</span>
+      </div>
+    
+      <div class="check-item fail">
+        <div><b>06.</b> Return on Capital Employed (ROCE) exceeds 15%</div>
+        <span class="check-status fail">FAIL</span>
+      </div>
+    
+      <div class="check-item fail">
+        <div><b>07.</b> Promoter shareholding stable/accumulating (or institutional backing >=40%)</div>
+        <span class="check-status fail">FAIL</span>
+      </div>
+    
+      <div class="check-item pass">
+        <div><b>08.</b> Promoter shares unencumbered (pledge <=10%)</div>
+        <span class="check-status pass">PASS</span>
+      </div>
+    
+      <div class="check-item pass">
+        <div><b>09.</b> Defensible competitive moat (score >=5/14)</div>
+        <span class="check-status pass">PASS</span>
+      </div>
+    
+      <div class="check-item pass">
+        <div><b>10.</b> Management trust & capital allocation score >=4/8</div>
+        <span class="check-status pass">PASS</span>
+      </div>
+    
+  </div>
+</div>
+
+<div class="footer-note">
+  Regulatory Disclaimer: Stock Pulse is an automated fundamental computational tool and does not issue buy, sell, or hold recommendations, nor price targets. Figures parsed directly from public filings (Screener.in, NSE, BSE) at generation time. Not investment advice.<br>
+  Stock Pulse v3.1 · Institutional Research Report · Generated 02 Sept 2026
+</div>
+
+</body>
+</html>

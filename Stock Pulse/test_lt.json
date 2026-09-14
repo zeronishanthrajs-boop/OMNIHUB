@@ -1,0 +1,420 @@
+﻿{
+    "overview":  {
+                     "company_name":  "Larsen \u0026 Toubro Ltd",
+                     "ticker":  "LT",
+                     "exchange":  "NSE/BSE",
+                     "sector":  "Industrials",
+                     "about":  "Larsen \u0026 Toubro Ltd is a multinational conglomerate which is primarily engaged in providing engineering, procurement and construction (EPC) solutions in key sectors such as Infrastructure, Hydrocarbon, Power, Process Industries and Defence, Information Technology and Financial Services in domestic and international markets.",
+                     "range_context":  {
+                                           "percentile":  60.152791040888964,
+                                           "pctAboveLow":  21.072960068124452,
+                                           "pctBelowHigh":  10.337837837837839,
+                                           "narrative":  "CMP (Rs. 3,981) is +21.1% above 52W Low (Rs. 3,288.1) and -10.3% below 52W High (Rs. 4,440) — trading in mid-range (60th percentile of 1-year band)."
+                                       }
+                 },
+    "ratios":  {
+                   "current_price":  3981,
+                   "market_cap_cr":  546373,
+                   "stock_pe":  33,
+                   "book_value":  794,
+                   "div_yield":  0.95,
+                   "face_value":  2,
+                   "roce":  14.6,
+                   "roe":  15.9,
+                   "high52":  4440,
+                   "low52":  3288.1
+               },
+    "growth_health":  {
+                          "revenue_current_cr":  290137,
+                          "revenue_3y_ago_cr":  221113,
+                          "revenue_5y_ago_cr":  156521,
+                          "profit_current_cr":  16550,
+                          "profit_3y_ago_cr":  15547,
+                          "profit_5y_ago_cr":  10419,
+                          "eps_current":  120.59,
+                          "eps_3y_ago":  95,
+                          "eps_5y_ago":  61.7,
+                          "ebitda_margin_current_pct":  12,
+                          "ebitda_margin_prior_pct":  12,
+                          "latest_quarter_name":  "Jun 2026",
+                          "latest_quarter_margin_pct":  12,
+                          "latest_quarter_sales_cr":  67942,
+                          "latest_quarter_pat_cr":  4988,
+                          "net_margin_current_pct":  6.763701285944227,
+                          "de_ratio":  1.1482935309726416,
+                          "interest_coverage":  13.06286206044766,
+                          "current_ratio":  1.6076949943932792,
+                          "ocf_trend":  "growing",
+                          "fcf_trend":  "growing",
+                          "cash_position_cr":  68377,
+                          "profit_falling_quarters":  1
+                      },
+    "ownership":  {
+                      "promoter_pct":  0,
+                      "fii_pct":  19.13,
+                      "dii_pct":  43.01,
+                      "pledging_pct":  0,
+                      "trend_8q":  "widely_held"
+                  },
+    "peers":  [
+                  {
+                      "name":  "Bharat Electronics Ltd",
+                      "ticker":  "BEL",
+                      "pe":  48.3,
+                      "market_cap":  296775,
+                      "roce":  36.4,
+                      "sales_growth_3y":  null,
+                      "edge":  "Industry Peer"
+                  },
+                  {
+                      "name":  "Hindustan Aeronautics Ltd",
+                      "ticker":  "HAL",
+                      "pe":  34.3,
+                      "market_cap":  319382,
+                      "roce":  32,
+                      "sales_growth_3y":  null,
+                      "edge":  "Industry Peer"
+                  },
+                  {
+                      "name":  "Siemens Ltd",
+                      "ticker":  "SIEMENS",
+                      "pe":  95.4,
+                      "market_cap":  143431,
+                      "roce":  21.4,
+                      "sales_growth_3y":  null,
+                      "edge":  "Industry Peer"
+                  }
+              ],
+    "news":  [
+                 {
+                     "headline":  "L\u0026T Share Price August 31, 2026: Gains 0.82% to Rs 3,486.70 - The Eastern Herald",
+                     "date":  "1 Sept 2026",
+                     "timestamp":  1788221753000,
+                     "source":  "The Eastern Herald",
+                     "url":  "https://news.google.com/rss/articles/CBMidkFVX3lxTE9DTGxiUDVoWmV2N29oeUMwMHd3Z1NmTlZqYjBxMU1UZWVDS1laZ3YzSlhoMDl3eWE1MFI5eW1lMzdGUGQxR1M5eVFKbWVra0RmaGpWS0hBcUlOYnNFZjVscFVZZTFHTm1mN2ZmSlJLVmcyT3JyQUE?oc=5",
+                     "summary":  "Reported by The Eastern Herald"
+                 },
+                 {
+                     "headline":  "3 Fundamentally Strong Engineering Stocks in India - Univest",
+                     "date":  "21 Aug 2026",
+                     "timestamp":  1787289420000,
+                     "source":  "Univest",
+                     "url":  "https://news.google.com/rss/articles/CBMiYEFVX3lxTE03SlZkZENoMjdxSXBFbEJPWmNWVFVicVVaNXFUczJPek1ndHI4TTFvbl9wYVFLSW1kcU5KVGFPVnFGZkFrOWZjV2lFNkV2VFBlWmE4RHR2cFNWZTF3b3VwSA?oc=5",
+                     "summary":  "Reported by Univest"
+                 },
+                 {
+                     "headline":  "BSE, L\u0026T, Bharat Forge, Navin Fluorine, Sundram Fasteners shares: Expert weighs in - Business Today",
+                     "date":  "17 Aug 2026",
+                     "timestamp":  1786950000000,
+                     "source":  "Business Today",
+                     "url":  "https://news.google.com/rss/articles/CBMi3AFBVV95cUxQY3NyWXRYMEM3SEE0VXI1VDlWWWg2WlZPd0pIZGZCNHE5VFQ4NUFGNjdnXzNRVjZCUzNLU2NHS29aaWEyNHBoOHZ5aWFTS1kwb1RDcVZySWxMNGJJaVotWnQwdXh5RElzc28xWGFHbGNPS2tlV3B1cWJla3F4UktFWmJsMl9QRVhBb295bG53ZVJGZ04tNXV0emhjanp1Qmt0cmlwN0M3RFdyUGtoQ1ZCRXdGNlNLM2g0dE5GNTc2eExxbU91VWM1REdabWdNcnc2bEpXOEJuTTM2OHND0gHiAUFVX3lxTFBJZEVla2g3VURONV9wSk52SGRIWV9wSU1lcTNOWFJGdThERkd6NjVpc29ZSW1wWmo3enI1aDVKQksySUZjY2p1bGg5MFlfZlkxalNGMWNvUC02cHFIZzdxeWQxMmwzUVlxZks4QXdmempUcnBHRmFGVGZzNVpaQVI0bVFzVWNPYWRSTVVoRDdkS0tQaE1tOV9zcDVucmV1M1JYel96ME1NVG5sQ2tCb0ZLNDR0RUZCM0VmY25HejdMU1NGSUtfZlV6SmpoaklIX1dOOThBOW5vMXVRY2l6cU1FVXc?oc=5",
+                     "summary":  "Reported by Business Today"
+                 },
+                 {
+                     "headline":  "Coal India, L\u0026T among 20 firms bidding for ₹7,280 crore rare earth magnet scheme; shares in focus - Upstox",
+                     "date":  "13 Aug 2026",
+                     "timestamp":  1786604400000,
+                     "source":  "Upstox",
+                     "url":  "https://news.google.com/rss/articles/CBMi7gFBVV95cUxQTVpSMm1KbmlFeDVMR0xuWUxMdUJTbkxBZmlsX1JkbF9obnZOelZHMGQwQXVpWndzTVp3ODhNNnNPSnF3QWpHME1UbUVBTUVmajZfcWJDQmhIUGlBQlBsbEN1VDczMzFkdUd2YjNKUmJzZVNsQVdyTXp4ZnRFSy1MYnJXQlRnSF9NNmJnNG1oeTBPMmthbFFybXA0akRWa2xIRWR3MEpUbkFQV0MwWl85OUkzS3FfQ2h4OHkzWDVpNmRMOUR6RmI3VGFSNVp5bnhfbmR3bGlsX05TTUtudV9ZWnU0dVU5Mkk1OUVPLVBB?oc=5",
+                     "summary":  "Reported by Upstox"
+                 },
+                 {
+                     "headline":  "L\u0026T shares crash over 7% as US–Israel strike on Iran raises Mideast exposure risks. Company responds - economictimes.com",
+                     "date":  "2 Mar 2026",
+                     "timestamp":  1772438400000,
+                     "source":  "economictimes.com",
+                     "url":  "https://news.google.com/rss/articles/CBMi-AFBVV95cUxPOHFzNjRIY2xYOFVLcS11NGxRMGh4emFfLUJ2SE4wd1QtRVUtT1JxWVRLU3F5SXN5c1h4dDVGNjJMU3NVUkxsVk1PMlNoNEQxdkJTcUloREhwWUNsWDkzVHpaWTBhbE5qaWdnQ2FFSFN5N0tkN1I4Q18yQUVaR1ltcmJBUjZKRE5DUkcyVFYzTVN1eGY2dmYxYkFMYk9uLVJGM2w3RFE5WVk4STNxRXlhZXhQVGVsWHdtM3hTcDRTajJQOVUtODJ0OVhNSkxHM0ZvUVk1aGlBbktUYk1oajhwRHBlNEJ2ZHpBWWZENFBNeHNHaGVKaGw5WtIB_gFBVV95cUxOSFZGV2FFbmxCNHpvMlRaM3ZBeFFHUFRDTFczSTlQNUNjNzJVT25QbDd2ZmRrNHFXRG9SOHFxclZaZzdnT1NXYms0OVRLSVNOQlhtN2hHNENIaHZob3ItM2xBMGNIQjlfVnlHWlI2elVDRkdpaDRvWFA1UHozMnZlRHp0NnJnQmlscGlRTVNBUlhjZVBUSlkwbUlPN2loUks2TmpTZFY3X3dNSTF6bTNHcU1DMHlxNTFpa21fdWdFaEJTVVo2b19GcFA1MnZoZDVNY2w4aDVDT3A5aGExQ0swR3lpTHhCSHNKTE1sckdLRE1KVm5PN0xHY1JqVGlOZw?oc=5",
+                     "summary":  "Reported by economictimes.com"
+                 }
+             ],
+    "moat":  {
+                 "factors":  [
+                                 {
+                                     "name":  "Brand Power",
+                                     "score":  1,
+                                     "evidence":  "Recognized industry presence and commercial goodwill."
+                                 },
+                                 {
+                                     "name":  "Switching Costs",
+                                     "score":  1,
+                                     "evidence":  "Established B2B operational integration and contractual terms."
+                                 },
+                                 {
+                                     "name":  "Network Effects",
+                                     "score":  0,
+                                     "evidence":  "Standard operating structure without direct network externalities."
+                                 },
+                                 {
+                                     "name":  "Cost Advantage",
+                                     "score":  2,
+                                     "evidence":  "Operational efficiencies and supply chain optimization. Resilient operating margins prove cost efficiency."
+                                 },
+                                 {
+                                     "name":  "Regulatory License",
+                                     "score":  0,
+                                     "evidence":  "Standard statutory operating permissions."
+                                 },
+                                 {
+                                     "name":  "Patents/IP",
+                                     "score":  0,
+                                     "evidence":  "Conventional industry technology and processes."
+                                 },
+                                 {
+                                     "name":  "Scale Advantage",
+                                     "score":  2,
+                                     "evidence":  "Mega-cap balance sheet (Rs. 5,46,373 Cr) drives structural procurement scale."
+                                 }
+                             ],
+                 "total":  6,
+                 "label":  "NARROW",
+                 "tone":  "amber",
+                 "tailwinds":  "Long-term expansion in Industrials driven by Indian domestic consumption, capex cycle, and formalization.",
+                 "headwinds":  "Competitive pricing pressure, input inflation volatility, and broader macroeconomic shifts.",
+                 "sources":  [
+                                 "https://www.screener.in/company/LT/consolidated/"
+                             ]
+             },
+    "mgmtTrust":  {
+                      "breakdown":  [
+                                        {
+                                            "factor":  "Clean regulatory \u0026 listing compliance track record",
+                                            "pts":  "+2",
+                                            "status":  "PASS",
+                                            "evidence":  "Standard exchange disclosures; zero statutory disqualifications."
+                                        },
+                                        {
+                                            "factor":  "Quarterly delivery consistency (zero consecutive profit drops)",
+                                            "pts":  "+1",
+                                            "status":  "PASS",
+                                            "evidence":  "Consistent sequential earnings delivery across trailing quarters."
+                                        },
+                                        {
+                                            "factor":  "Professionally managed board (institutional backing \u003e=40%)",
+                                            "pts":  "+1",
+                                            "status":  "PASS",
+                                            "evidence":  "Widely held structure with 62.1% institutional equity ownership."
+                                        },
+                                        {
+                                            "factor":  "Promoter pledging negligible (\u003c5%)",
+                                            "pts":  "+1",
+                                            "status":  "PASS",
+                                            "evidence":  "Unencumbered promoter equity (0.0% pledge)."
+                                        },
+                                        {
+                                            "factor":  "High institutional FII equity sponsorship (\u003e=10%)",
+                                            "pts":  "+1",
+                                            "status":  "PASS",
+                                            "evidence":  "Institutional FII stake stands at 19.1%."
+                                        },
+                                        {
+                                            "factor":  "Operational resilience during business cycles",
+                                            "pts":  "+1",
+                                            "status":  "PASS",
+                                            "evidence":  "Sustained operating performance within normal industry cycle."
+                                        },
+                                        {
+                                            "factor":  "Audit disclosure \u0026 accounting transparency",
+                                            "pts":  "+1",
+                                            "status":  "PASS",
+                                            "evidence":  "Unqualified statutory audit opinion; standardized accounting policies."
+                                        }
+                                    ],
+                      "total":  8,
+                      "label":  "HIGH",
+                      "tone":  "green",
+                      "formula":  "+2 (Clean) +1 (Quarterly) +1 (Professionally) +1 (Promoter) +1 (High) +1 (Operational) +1 (Audit) = 8/8",
+                      "banding":  "HIGH \u003e=7, MODERATE 4-6, LOW \u003c4",
+                      "concall_tone":  "Disciplined capital execution and sustained quarterly operating delivery."
+                  },
+    "revenue_cagr_3y":  9.478695283844928,
+    "revenue_cagr_5y":  13.137375619273396,
+    "profit_cagr_3y":  2.1058127289363293,
+    "profit_cagr_5y":  9.696909419966948,
+    "eps_cagr_3y":  8.27525867567811,
+    "eps_cagr_5y":  14.34185305400244,
+    "sector_avg_pe":  59.3,
+    "valuation_bucket":  {
+                             "label":  "CHEAP",
+                             "tone":  "green",
+                             "benchmark":  59.3,
+                             "bandMin":  50.4,
+                             "bandMax":  68.2
+                         },
+    "growth_class":  {
+                         "label":  "SLOWING",
+                         "tone":  "amber",
+                         "marginFlag":  false,
+                         "revTrend":  "SLOWING",
+                         "patTrend":  "SLOWING"
+                     },
+    "solvency_bucket":  {
+                            "label":  "WATCH",
+                            "tone":  "amber"
+                        },
+    "return_quality_bucket":  {
+                                  "label":  "WATCH",
+                                  "tone":  "amber"
+                              },
+    "de_bucket":  {
+                      "label":  "WATCH",
+                      "tone":  "amber"
+                  },
+    "ic_bucket":  {
+                      "label":  "HEALTHY",
+                      "tone":  "green"
+                  },
+    "cr_bucket":  {
+                      "label":  "HEALTHY",
+                      "tone":  "green"
+                  },
+    "fcf_bucket":  {
+                       "label":  "HEALTHY",
+                       "tone":  "green"
+                   },
+    "roe":  15.9,
+    "roce":  14.6,
+    "roe_bucket":  {
+                       "label":  "HEALTHY",
+                       "tone":  "green"
+                   },
+    "roce_bucket":  {
+                        "label":  "WATCH",
+                        "tone":  "amber"
+                    },
+    "leverage_warning":  false,
+    "redFlags":  [
+
+                 ],
+    "horizon":  5,
+    "pulse":  {
+                  "criteria":  [
+                                   {
+                                       "rule":  "01",
+                                       "name":  "Valuation within fair/attractive range",
+                                       "pass":  true,
+                                       "evidence":  "P/E 33 vs Sector 59.3"
+                                   },
+                                   {
+                                       "rule":  "02",
+                                       "name":  "Revenue 3Y growth trajectory robust (\u003e=10% 3Y CAGR or steady)",
+                                       "pass":  false,
+                                       "evidence":  "3Y Rev CAGR: 9.5% (5Y: 13.1%)"
+                                   },
+                                   {
+                                       "rule":  "03",
+                                       "name":  "Operating profit expansion solid (\u003e8% CAGR \u0026 no consecutive drops)",
+                                       "pass":  true,
+                                       "evidence":  "3Y PAT CAGR: 2.1%"
+                                   },
+                                   {
+                                       "rule":  "04",
+                                       "name":  "Solvency \u0026 liquidity balance sheet sound (zero watch/weak metrics)",
+                                       "pass":  false,
+                                       "evidence":  "D/E 1.1482935309726416 flagged WATCH"
+                                   },
+                                   {
+                                       "rule":  "05",
+                                       "name":  "Return on Equity (ROE) exceeds 15%",
+                                       "pass":  true,
+                                       "evidence":  "ROE: 15.9%"
+                                   },
+                                   {
+                                       "rule":  "06",
+                                       "name":  "Return on Capital Employed (ROCE) exceeds 15%",
+                                       "pass":  false,
+                                       "evidence":  "ROCE: 14.6%"
+                                   },
+                                   {
+                                       "rule":  "07",
+                                       "name":  "Promoter shareholding stable/accumulating (or institutional backing \u003e=40%)",
+                                       "pass":  true,
+                                       "evidence":  "0% Promoter (Widely Held / Inst Backed: 62.1%)"
+                                   },
+                                   {
+                                       "rule":  "08",
+                                       "name":  "Promoter shares unencumbered (pledge \u003c=10%)",
+                                       "pass":  true,
+                                       "evidence":  "Pledging: 0%"
+                                   },
+                                   {
+                                       "rule":  "09",
+                                       "name":  "Defensible competitive moat (score \u003e=5/14)",
+                                       "pass":  true,
+                                       "evidence":  "Moat: 6/14 (NARROW)"
+                                   },
+                                   {
+                                       "rule":  "10",
+                                       "name":  "Management trust \u0026 capital allocation score \u003e=4/8",
+                                       "pass":  true,
+                                       "evidence":  "Trust: 8/8 (HIGH)"
+                                   }
+                               ],
+                  "total":  7,
+                  "label":  "MODERATE",
+                  "tone":  "amber"
+              },
+    "scenarios":  {
+                      "baseline":  {
+                                       "rev_cr":  290137,
+                                       "pat_cr":  16550,
+                                       "eps":  120.59,
+                                       "net_margin_pct":  5.7,
+                                       "div_yield":  0.95
+                                   },
+                      "bear":  {
+                                   "cagr":  6.3,
+                                   "patCagr":  -2.52,
+                                   "margin":  3.7,
+                                   "futureRev":  393794.31192117947,
+                                   "futurePat":  14570.389541083643,
+                                   "futureEps":  106.16575678303785
+                               },
+                      "base":  {
+                                   "cagr":  11.3,
+                                   "patCagr":  11.28,
+                                   "margin":  5.7,
+                                   "futureRev":  495540.2525459384,
+                                   "futurePat":  28245.79439511849,
+                                   "futureEps":  205.81029281615338
+                               },
+                      "bull":  {
+                                   "cagr":  14.8,
+                                   "patCagr":  20.27,
+                                   "margin":  7.2,
+                                   "futureRev":  578512.2458607091,
+                                   "futurePat":  41652.88170197106,
+                                   "futureEps":  303.4997585764768
+                               },
+                      "totalReturnRate":  12.23,
+                      "lakhSim":  178051.1629310824,
+                      "valuationSensitivity":  {
+                                                   "currentPe":  33,
+                                                   "sectorPe":  59.3,
+                                                   "multReversionFactor":  1.1244,
+                                                   "reversionReturnRate":  26.19,
+                                                   "lakhSimReverted":  319981.37608692114
+                                               }
+                  },
+    "confidence":  {
+                       "total":  14,
+                       "label":  "HIGH",
+                       "audit":  [
+                                     {
+                                         "item":  "Section completeness (10/10 sections parsed from real data)",
+                                         "pts":  "+10"
+                                     },
+                                     {
+                                         "item":  "Scraper execution (100% financial modules returned)",
+                                         "pts":  "+2"
+                                     },
+                                     {
+                                         "item":  "Primary structured source reachable (Screener.in)",
+                                         "pts":  "+1"
+                                     },
+                                     {
+                                         "item":  "Data freshness (\u003c24h verified cache / live fetch)",
+                                         "pts":  "+1"
+                                     }
+                                 ]
+                   }
+}

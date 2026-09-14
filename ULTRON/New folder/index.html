@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ULTRON — Holographic Command Interface</title>
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#000305;
+    --void-1:#00080d;
+    --line:rgba(90,216,255,0.16);
+    --line-strong:rgba(90,216,255,0.42);
+    --cyan:#5ad8ff;
+    --cyan-soft:rgba(90,216,255,0.55);
+    --white:#eaf6ff;
+    --ink-1:#6f8fa8;
+    --ink-2:#38495a;
+    --amber:#ffb454;
+    --red:#ff4d5e;
+    --green:#59ffc6;
+    --violet:#9db2ff;
+    --font-display:'Space Grotesk', system-ui, sans-serif;
+    --font-mono:'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    --font-body:'IBM Plex Sans', system-ui, sans-serif;
+  }
+  *,*::before,*::after{ box-sizing:border-box; }
+  html,body{ height:100%; }
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 1100px 650px at 50% -8%, rgba(90,216,255,0.10), transparent 55%),
+      radial-gradient(ellipse 900px 700px at 100% 105%, rgba(90,216,255,0.05), transparent 55%),
+      var(--void);
+    color:var(--white);
+    font-family:var(--font-mono);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  ::selection{ background:rgba(90,216,255,0.35); }
+  ::-webkit-scrollbar{ width:6px; height:6px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
+  ::-webkit-scrollbar-thumb{ background:rgba(90,216,255,0.25); border-radius:4px; }
+
+  button,textarea,input{ font-family:inherit; color:inherit; }
+  button{ cursor:pointer; background:none; }
+  :focus-visible{ outline:1.5px solid var(--cyan); outline-offset:2px; }
+
+  .scanlines{
+    position:fixed; inset:0; z-index:998; pointer-events:none; opacity:0.05;
+    background:repeating-linear-gradient(0deg, rgba(90,216,255,0.6) 0 1px, transparent 1px 3px);
+  }
+  .noise{
+    position:fixed; inset:0; z-index:997; pointer-events:none; opacity:0.03; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .vignette{ position:fixed; inset:0; z-index:996; pointer-events:none; box-shadow:inset 0 0 180px rgba(0,0,0,0.75); }
+
+  .app{
+    max-width:1180px; margin:0 auto; padding:18px 22px 44px;
+    display:flex; flex-direction:column; gap:18px;
+    opacity:0; transform:translateY(6px);
+    animation:app-in .7s cubic-bezier(.2,.7,.3,1) .05s forwards;
+  }
+  @keyframes app-in{ to{ opacity:1; transform:translateY(0); } }
+
+  /* ---------- hairline header ---------- */
+  .hud-strip{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-bottom:12px; border-bottom:1px solid var(--line);
+  }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .brand-mark{ width:26px; height:26px; }
+  .brand-name{ font-family:var(--font-display); font-weight:700; font-size:15px; letter-spacing:0.14em; }
+  .brand-sub{ font-size:9.5px; color:var(--ink-1); letter-spacing:0.1em; margin-top:2px; text-transform:uppercase; }
+  .strip-right{ display:flex; align-items:center; gap:16px; }
+  .strip-item{ font-size:10px; letter-spacing:0.06em; color:var(--ink-1); text-transform:uppercase; display:flex; align-items:center; gap:6px; }
+  .strip-item b{ color:var(--white); font-weight:500; }
+  .dot{ width:6px; height:6px; border-radius:50%; background:var(--ink-2); flex:none; }
+  .dot.live{ background:var(--green); box-shadow:0 0 8px var(--green); animation:blink 2s ease-in-out infinite; }
+  .dot.sim{ background:var(--amber); box-shadow:0 0 8px var(--amber); animation:blink 2s ease-in-out infinite; }
+  @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.4;} }
+  .icon-btn{
+    width:28px; height:28px; border:1px solid var(--line); display:flex; align-items:center; justify-content:center;
+    font-size:12px; color:var(--ink-1); transition:border-color .2s, color .2s;
+  }
+  .icon-btn:hover{ border-color:var(--line-strong); color:var(--white); }
+  .icon-btn[aria-pressed="true"]{ color:var(--cyan); border-color:var(--cyan-soft); }
+
+  /* ---------- generic hud frame w/ corner brackets ---------- */
+  .hud-frame{ position:relative; background:linear-gradient(180deg, rgba(10,26,32,0.30), rgba(0,4,6,0.20)); border:1px solid var(--line); }
+  .cnr{ position:absolute; width:12px; height:12px; pointer-events:none; }
+  .cnr.tl{ top:-1px; left:-1px; border-top:1.5px solid var(--cyan-soft); border-left:1.5px solid var(--cyan-soft); }
+  .cnr.tr{ top:-1px; right:-1px; border-top:1.5px solid var(--cyan-soft); border-right:1.5px solid var(--cyan-soft); }
+  .cnr.bl{ bottom:-1px; left:-1px; border-bottom:1.5px solid var(--cyan-soft); border-left:1.5px solid var(--cyan-soft); }
+  .cnr.br{ bottom:-1px; right:-1px; border-bottom:1.5px solid var(--cyan-soft); border-right:1.5px solid var(--cyan-soft); }
+
+  /* ---------- REACTOR HERO ---------- */
+  .reactor-hero{ position:relative; height:clamp(380px, 52vw, 520px); overflow:hidden; }
+  #reactorCanvas{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+
+  .tele{ position:absolute; font-size:9.5px; letter-spacing:0.06em; line-height:1.9; color:var(--ink-1); text-transform:uppercase; }
+  .tele-k{ color:var(--ink-2); }
+  .tele-v{ color:var(--cyan); }
+  .tele.tl{ top:16px; left:18px; }
+  .tele.br{ bottom:16px; right:18px; text-align:right; }
+
+  .core-status{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; pointer-events:none; }
+  .core-status-word{ font-family:var(--font-display); font-weight:600; font-size:clamp(13px,2vw,17px); letter-spacing:0.22em; text-transform:uppercase; color:var(--white); text-shadow:0 0 18px rgba(90,216,255,0.5); }
+  .core-status-sub{ font-size:9px; letter-spacing:0.14em; color:var(--ink-1); margin-top:6px; text-transform:uppercase; }
+
+  .orbit{ position:absolute; display:flex; align-items:center; gap:0; animation:orbit-in .5s ease both; }
+  @keyframes orbit-in{ from{ opacity:0; transform:scale(.85);} to{ opacity:1; transform:scale(1);} }
+  .orbit-n{ top:14px; left:50%; transform:translateX(-50%); flex-direction:column; animation-delay:.15s; }
+  .orbit-s{ bottom:14px; left:50%; transform:translateX(-50%); flex-direction:column-reverse; animation-delay:.4s; }
+  .orbit-w{ left:10px; top:50%; transform:translateY(-50%); flex-direction:row; animation-delay:.25s; }
+  .orbit-e{ right:10px; top:50%; transform:translateY(-50%); flex-direction:row-reverse; animation-delay:.3s; }
+  .orbit-line{ background:linear-gradient(var(--line-strong), transparent); flex:none; }
+  .orbit-n .orbit-line, .orbit-s .orbit-line{ width:1px; height:20px; }
+  .orbit-w .orbit-line, .orbit-e .orbit-line{ height:1px; width:20px; background:linear-gradient(90deg, var(--line-strong), transparent); }
+  .orbit-s .orbit-line{ background:linear-gradient(0deg, var(--line-strong), transparent); }
+  .orbit-e .orbit-line{ background:linear-gradient(270deg, var(--line-strong), transparent); }
+  .orbit-tag{ padding:7px 11px; min-width:118px; background:rgba(0,6,9,0.55); backdrop-filter:blur(4px); }
+  .orbit-name{ font-family:var(--font-display); font-weight:600; font-size:11.5px; letter-spacing:0.03em; }
+  .orbit-role{ font-size:9px; color:var(--ink-1); margin-top:2px; letter-spacing:0.02em; }
+  .orbit-status{ display:flex; align-items:center; gap:5px; margin-top:5px; font-size:9px; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink-1); }
+  .orbit-status .sdot{ width:5px; height:5px; border-radius:50%; background:var(--cyan); flex:none; }
+
+  /* ---------- COMMAND CONSOLE ---------- */
+  .console{ max-width:680px; margin:0 auto; width:100%; padding:18px 20px 20px; display:flex; flex-direction:column; gap:12px; }
+  .console-label{ font-size:9.5px; letter-spacing:0.14em; color:var(--ink-1); text-transform:uppercase; }
+  .waveform{ display:flex; align-items:center; gap:2px; height:20px; }
+  .wf-bar{ width:2px; flex:none; background:var(--cyan); opacity:.45; border-radius:1px; animation:wf 1.7s ease-in-out infinite; }
+  @keyframes wf{ 0%,100%{ transform:scaleY(.15);} 50%{ transform:scaleY(1);} }
+  .waveform.active .wf-bar{ animation-duration:.45s; opacity:.9; }
+
+  .console-input{ display:flex; gap:10px; align-items:flex-start; border-bottom:1px solid var(--line); padding-bottom:10px; }
+  .console-caret{ color:var(--cyan); font-size:14px; line-height:1.6; flex:none; }
+  #goalInput{
+    flex:1; resize:vertical; min-height:24px; max-height:140px;
+    background:transparent; border:none; padding:0;
+    font-family:var(--font-mono); font-size:13px; color:var(--white); line-height:1.6;
+  }
+  #goalInput::placeholder{ color:var(--ink-2); }
+
+  .console-row{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+  .btn{
+    font-family:var(--font-mono); font-weight:500; font-size:11px; letter-spacing:0.08em; text-transform:uppercase;
+    padding:10px 16px; border:1px solid var(--line-strong); background:transparent; color:var(--white);
+    display:inline-flex; align-items:center; gap:8px; transition:background .2s, border-color .2s, opacity .2s;
+  }
+  .btn:hover:not(:disabled){ background:rgba(90,216,255,0.08); }
+  .btn:disabled{ opacity:.3; cursor:not-allowed; }
+  .btn-primary{ border-color:var(--cyan); color:var(--cyan); }
+  .btn-primary:hover:not(:disabled){ background:rgba(90,216,255,0.12); box-shadow:0 0 16px rgba(90,216,255,0.15); }
+  .btn-danger{ border-color:rgba(255,77,94,0.5); }
+  .btn-danger:hover:not(:disabled){ border-color:var(--red); color:var(--red); background:rgba(255,77,94,0.08); }
+  .console-hint{ font-size:10px; color:var(--ink-1); letter-spacing:0.05em; margin-left:auto; text-transform:uppercase; }
+
+  /* ---------- INTEL PANEL ---------- */
+  .intel-panel{ display:flex; flex-direction:column; min-height:340px; }
+  .tabs{ display:flex; gap:0; border-bottom:1px solid var(--line); }
+  .tab-btn{
+    font-family:var(--font-mono); font-size:10px; letter-spacing:0.08em; text-transform:uppercase;
+    padding:12px 16px; color:var(--ink-1); border-bottom:2px solid transparent; margin-bottom:-1px;
+  }
+  .tab-btn.active{ color:var(--cyan); border-bottom-color:var(--cyan); }
+  .tab-panels{ flex:1; padding:16px 18px; overflow:hidden; display:flex; flex-direction:column; }
+  .tab-content{ display:none; flex:1; min-height:0; flex-direction:column; }
+  .tab-content.active{ display:flex; }
+
+  .empty-state{ margin:auto; text-align:center; padding:18px; font-family:var(--font-body); font-size:12px; color:var(--ink-1); max-width:230px; line-height:1.7; }
+  .empty-state .glyph{ font-size:18px; color:var(--ink-2); margin-bottom:8px; display:block; }
+
+  #treeRoot{ overflow:auto; flex:1; font-size:11.5px; line-height:1.8; }
+  #treeRoot ul{ list-style:none; margin:0; padding-left:16px; border-left:1px dashed rgba(90,216,255,0.16); }
+  #treeRoot > ul{ padding-left:0; border-left:none; }
+  #treeRoot li{ margin:2px 0; }
+  .tk{ color:var(--cyan); }
+  .tv-str{ color:var(--white); }
+  .tv-num{ color:var(--amber); }
+  .tv-bool{ color:var(--green); }
+  .t-toggle{ border:none; color:var(--ink-1); padding:0 4px 0 0; font-size:10px; width:14px; background:none; }
+  .t-meta{ color:var(--ink-2); }
+
+  #logStream{ overflow:auto; flex:1; font-size:11px; line-height:1.7; }
+  .log-line{ display:flex; gap:8px; padding:2px 0; }
+  .log-time{ color:var(--ink-2); flex:none; }
+  .log-msg{ color:var(--ink-1); word-break:break-word; }
+  .log-line.lvl-boss .log-msg{ color:var(--cyan); }
+  .log-line.lvl-planner .log-msg{ color:var(--violet); }
+  .log-line.lvl-coordinator .log-msg{ color:var(--green); }
+  .log-line.lvl-worker .log-msg{ color:var(--amber); }
+  .log-line.lvl-error .log-msg{ color:var(--red); }
+  .log-line.lvl-system .log-msg{ color:var(--white); }
+
+  #rulesList{ overflow:auto; flex:1; display:flex; flex-direction:column; gap:8px; }
+  .rule-row{ display:flex; gap:10px; padding:10px 12px; border:1px solid var(--line); background:rgba(90,216,255,0.02); }
+  .rule-check{ flex:none; margin-top:2px; accent-color:var(--cyan); width:14px; height:14px; }
+  .rule-label{ font-family:var(--font-display); font-weight:600; font-size:11.5px; color:var(--white); }
+  .rule-desc{ font-family:var(--font-body); font-size:10.5px; color:var(--ink-1); margin-top:2px; line-height:1.5; }
+
+  /* ---------- SANDBOX ---------- */
+  .sandbox-panel{ padding-bottom:18px; }
+  .panel-head{ display:flex; align-items:center; justify-content:space-between; padding:14px 18px 12px; border-bottom:1px solid var(--line); flex-wrap:wrap; gap:10px; }
+  .panel-title{ font-family:var(--font-display); font-weight:600; font-size:12.5px; letter-spacing:0.04em; }
+  .panel-hint{ font-size:9.5px; color:var(--ink-1); letter-spacing:0.05em; margin-top:3px; text-transform:uppercase; }
+  .sandbox-controls{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .seg{ display:flex; border:1px solid var(--line); }
+  .seg-btn{ font-size:9.5px; letter-spacing:0.05em; text-transform:uppercase; padding:7px 11px; color:var(--ink-1); border-right:1px solid var(--line); }
+  .seg-btn:last-child{ border-right:none; }
+  .seg-btn.active{ color:var(--cyan); background:rgba(90,216,255,0.08); }
+
+  .sandbox-stage{ margin:16px 18px 0; min-height:300px; border:1px solid var(--line);
+    background:repeating-linear-gradient(0deg, rgba(90,216,255,0.03) 0 1px, transparent 1px 26px), var(--void-1);
+    display:flex; align-items:center; justify-content:center; padding:26px; perspective:1400px; }
+  .frame-wrap{ position:relative; background:var(--void); border:1px solid var(--line-strong);
+    box-shadow:0 26px 60px rgba(0,0,0,0.5); transition:width .4s cubic-bezier(.2,.7,.3,1), height .4s cubic-bezier(.2,.7,.3,1), transform .12s ease-out;
+    overflow:hidden; width:100%; height:360px; }
+  .frame-wrap.size-tablet{ width:400px; height:320px; }
+  .frame-wrap.size-mobile{ width:220px; height:390px; }
+  #sandboxFrame{ width:100%; height:100%; border:none; background:var(--void); }
+  .sandbox-foot{ display:flex; justify-content:space-between; align-items:center; padding:10px 18px 0; }
+  .foot-note{ font-size:9.5px; color:var(--ink-2); letter-spacing:0.05em; }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:640px){
+    .app{ padding:14px 12px 30px; }
+    .strip-right{ gap:10px; }
+    .strip-item:nth-child(2){ display:none; }
+    .orbit-tag{ min-width:92px; padding:5px 8px; }
+    .orbit-role{ display:none; }
+    .orbit-name{ font-size:10px; }
+    .console{ padding:16px 14px 18px; }
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{ animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; }
+  }
+</style>
+</head>
+<body>
+<div class="scanlines" aria-hidden="true"></div>
+<div class="noise" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<div class="app" id="app">
+
+  <header class="hud-strip">
+    <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 26 26" fill="none"><polygon points="13,1.5 24,13 13,24.5 2,13" stroke="#5ad8ff" stroke-width="1.3" opacity=".9"/><circle cx="13" cy="13" r="3" fill="#5ad8ff"/></svg>
+      <div><div class="brand-name">ULTRON</div><div class="brand-sub">Holographic Command Interface</div></div>
+    </div>
+    <div class="strip-right">
+      <div class="strip-item"><span class="dot sim" id="connDot"></span><b id="connText">Simulation</b></div>
+      <div class="strip-item">Uptime <b id="elapsedTime">00:00</b></div>
+      <button class="icon-btn" id="audioToggle" aria-pressed="false" aria-label="Toggle interface audio">◔</button>
+    </div>
+  </header>
+
+  <!-- REACTOR HERO -->
+  <section class="reactor-hero hud-frame" id="reactorHero">
+    <span class="cnr tl"></span><span class="cnr tr"></span><span class="cnr bl"></span><span class="cnr br"></span>
+    <canvas id="reactorCanvas"></canvas>
+
+    <div class="tele tl">
+      <div class="tele-k">Engine</div><div class="tele-v" id="engineReadout">Ollama · llama3.1:8b</div>
+      <div class="tele-k">Threads</div><div class="tele-v">8 · parallel 1</div>
+    </div>
+    <div class="tele br">
+      <div class="tele-k">FPS</div><div class="tele-v" id="fpsReadout">60</div>
+      <div class="tele-k">Ring Segments</div><div class="tele-v">84</div>
+    </div>
+
+    <div class="core-status">
+      <div class="core-status-word" id="systemStatus">Idle</div>
+      <div class="core-status-sub">Reasoning Graph</div>
+    </div>
+
+    <div class="orbit orbit-n" data-agent="boss">
+      <div class="orbit-tag hud-frame">
+        <span class="cnr tl"></span><span class="cnr tr"></span><span class="cnr bl"></span><span class="cnr br"></span>
+        <div class="orbit-name">Boss</div>
+        <div class="orbit-role">Sentinel · Chief Reviewer</div>
+        <div class="orbit-status"><span class="sdot" data-status-dot></span><span data-status-text>Idle</span></div>
+      </div>
+      <div class="orbit-line"></div>
+    </div>
+
+    <div class="orbit orbit-w" data-agent="planner">
+      <div class="orbit-tag hud-frame">
+        <span class="cnr tl"></span><span class="cnr tr"></span><span class="cnr bl"></span><span class="cnr br"></span>
+        <div class="orbit-name">Planner</div>
+        <div class="orbit-role">Systems Architect</div>
+        <div class="orbit-status"><span class="sdot" data-status-dot></span><span data-status-text>Idle</span></div>
+      </div>
+      <div class="orbit-line"></div>
+    </div>
+
+    <div class="orbit orbit-e" data-agent="coordinator">
+      <div class="orbit-tag hud-frame">
+        <span class="cnr tl"></span><span class="cnr tr"></span><span class="cnr bl"></span><span class="cnr br"></span>
+        <div class="orbit-name">Coordinator</div>
+        <div class="orbit-role">Router · Dispatcher</div>
+        <div class="orbit-status"><span class="sdot" data-status-dot></span><span data-status-text>Idle</span></div>
+      </div>
+      <div class="orbit-line"></div>
+    </div>
+
+    <div class="orbit orbit-s" data-agent="worker">
+      <div class="orbit-line"></div>
+      <div class="orbit-tag hud-frame">
+        <span class="cnr tl"></span><span class="cnr tr"></span><span class="cnr bl"></span><span class="cnr br"></span>
+        <div class="orbit-name">Worker</div>
+        <div class="orbit-role">Autonomous Synthesizer</div>
+        <div class="orbit-status"><span class="sdot" data-status-dot></span><span data-status-text>Idle</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMMAND CONSOLE -->
+  <section class="hud-frame console">
+    <span class="cnr tl"></span><span class="cnr tr"></span><span class="cnr bl"></span><span class="cnr br"></span>
+    <div class="console-label">Mission Objective</div>
+    <div class="waveform" id="waveform"></div>
+    <div class="console-input">
+      <span class="console-caret">›</span>
+      <textarea id="goalInput" rows="1" placeholder="Describe the system ULTRON should build — e.g. &quot;Text-based emotion understanding with bike EMI analyzer&quot;"></textarea>
+    </div>
+    <div class="console-row">
+      <button class="btn btn-primary" id="launchBtn">Initialize Reasoning Graph</button>
+      <button class="btn btn-danger" id="abortBtn" disabled>Abort</button>
+      <button class="btn" id="resetBtn">Reset</button>
+      <span class="console-hint" id="consoleHint">Ready</span>
+    </div>
+  </section>
+
+  <!-- INTEL PANEL -->
+  <aside class="hud-frame intel-panel">
+    <span class="cnr tl"></span><span class="cnr tr"></span><span class="cnr bl"></span><span class="cnr br"></span>
+    <div class="tabs" role="tablist" aria-label="Intelligence panels">
+      <button class="tab-btn active" data-tab="tree" role="tab" aria-selected="true">Reasoning Tree</button>
+      <button class="tab-btn" data-tab="logs" role="tab" aria-selected="false">Execution Log</button>
+      <button class="tab-btn" data-tab="rules" role="tab" aria-selected="false">Governance</button>
+    </div>
+    <div class="tab-panels">
+      <div class="tab-content active" id="tab-tree">
+        <div id="treeRoot"><div class="empty-state"><span class="glyph">⌁</span>No tree yet. Launch a mission and the logical reasoning tree will branch here in real time.</div></div>
+      </div>
+      <div class="tab-content" id="tab-logs">
+        <div id="logStream"><div class="empty-state"><span class="glyph">▤</span>The execution log is silent. Agent reasoning will stream here once a mission starts.</div></div>
+      </div>
+      <div class="tab-content" id="tab-rules"><div id="rulesList"></div></div>
+    </div>
+  </aside>
+
+  <!-- SANDBOX -->
+  <section class="hud-frame sandbox-panel">
+    <span class="cnr tl"></span><span class="cnr tr"></span><span class="cnr bl"></span><span class="cnr br"></span>
+    <div class="panel-head">
+      <div><div class="panel-title">Holographic Sandbox</div><div class="panel-hint" id="sandboxHint">Awaiting synthesis</div></div>
+      <div class="sandbox-controls">
+        <div class="seg" role="group" aria-label="Viewport size">
+          <button class="seg-btn active" data-viewport="desktop">Desktop</button>
+          <button class="seg-btn" data-viewport="tablet">Tablet</button>
+          <button class="seg-btn" data-viewport="mobile">Mobile</button>
+        </div>
+        <button class="icon-btn" id="tiltToggle" aria-pressed="true" aria-label="Toggle 3D tilt" title="3D Tilt">◈</button>
+        <button class="icon-btn" id="sandboxAbort" aria-label="Abort run" title="Abort">✕</button>
+        <button class="icon-btn" id="sandboxReset" aria-label="Reset sandbox" title="Reset">↺</button>
+      </div>
+    </div>
+    <div class="sandbox-stage" id="sandboxStage">
+      <div class="frame-wrap" id="frameWrap"><iframe id="sandboxFrame" title="Synthesized application preview"></iframe></div>
+    </div>
+    <div class="sandbox-foot">
+      <span class="foot-note">domains/web_ui/index.html</span>
+      <span class="foot-note" id="viewportLabel">1920 × 1080</span>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   STATE
+============================================================ */
+const state = {
+  status:"idle", runId:0, running:false, liveBackend:false,
+  audioEnabled:false, audioCtx:null, tiltEnabled:true, viewport:"desktop",
+  runStart:null, timerHandle:null,
+  reduceMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+  simTimeouts:[], pollHandles:[]
+};
+const AGENTS = ["boss","planner","coordinator","worker"];
+const API_BASE = "";
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+
+/* ============================================================
+   AUDIO ENGINE
+============================================================ */
+function ensureAudio(){
+  if(!state.audioCtx){ const Ctx = window.AudioContext || window.webkitAudioContext; state.audioCtx = new Ctx(); }
+  if(state.audioCtx.state === "suspended") state.audioCtx.resume();
+  return state.audioCtx;
+}
+function tone({freq=440, dur=0.12, type="sine", gain=0.05, glideTo=null, delay=0}={}){
+  if(!state.audioEnabled) return;
+  const ctx = ensureAudio();
+  const t0 = ctx.currentTime + delay;
+  const osc = ctx.createOscillator(); const amp = ctx.createGain();
+  osc.type = type; osc.frequency.setValueAtTime(freq, t0);
+  if(glideTo) osc.frequency.exponentialRampToValueAtTime(glideTo, t0+dur);
+  amp.gain.setValueAtTime(0.0001, t0);
+  amp.gain.exponentialRampToValueAtTime(gain, t0+0.012);
+  amp.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+  osc.connect(amp).connect(ctx.destination);
+  osc.start(t0); osc.stop(t0+dur+0.02);
+}
+const sfx = {
+  click: () => tone({freq:720, dur:0.05, type:"square", gain:0.03}),
+  stage: () => tone({freq:520, dur:0.14, gain:0.045, glideTo:880}),
+  launch: () => { tone({freq:180, dur:0.5, type:"sawtooth", gain:0.03, glideTo:60}); tone({freq:900, dur:0.3, gain:0.03, delay:0.05, glideTo:1400}); },
+  approve: () => { tone({freq:660, dur:0.18, gain:0.05, glideTo:990}); tone({freq:990, dur:0.22, gain:0.04, delay:0.12}); },
+  alert: () => { tone({freq:220, dur:0.22, type:"square", gain:0.05}); tone({freq:180, dur:0.22, type:"square", gain:0.05, delay:0.18}); }
+};
+$("#audioToggle").addEventListener("click", () => {
+  state.audioEnabled = !state.audioEnabled;
+  const btn = $("#audioToggle");
+  btn.setAttribute("aria-pressed", String(state.audioEnabled));
+  btn.textContent = state.audioEnabled ? "◉" : "◔";
+  if(state.audioEnabled){ ensureAudio(); tone({freq:880, dur:0.08, gain:0.04}); }
+});
+
+/* ============================================================
+   WAVEFORM
+============================================================ */
+const waveform = $("#waveform");
+for(let i=0;i<32;i++){
+  const bar = document.createElement("span");
+  bar.className = "wf-bar";
+  bar.style.height = (8 + Math.random()*12) + "px";
+  bar.style.animationDelay = (-Math.random()*1.7).toFixed(2) + "s";
+  waveform.appendChild(bar);
+}
+
+/* ============================================================
+   REACTOR CANVAS
+============================================================ */
+const canvas = $("#reactorCanvas");
+const ctx2d = canvas.getContext("2d");
+let dpr = Math.min(window.devicePixelRatio||1, 2);
+let W=0, H=0;
+
+const STATUS_COLOR = {
+  idle:[90,216,255], analyzing:[157,178,255], synthesizing:[255,180,84],
+  approved:[89,255,198], error:[255,77,94]
+};
+
+function resizeCanvas(){
+  const rect = canvas.parentElement.getBoundingClientRect();
+  dpr = Math.min(window.devicePixelRatio||1, 2);
+  W = rect.width; H = rect.height;
+  canvas.width = W*dpr; canvas.height = H*dpr;
+  canvas.style.width = W+"px"; canvas.style.height = H+"px";
+  ctx2d.setTransform(dpr,0,0,dpr,0,0);
+}
+window.addEventListener("resize", resizeCanvas);
+
+function drawRing(cx,cy,radius,segCount,rotation,opts){
+  const {color=[90,216,255], lw=1.4, gap=0.32, baseAlpha=0.16, activeAlpha=0.85, litStart=null, litCount=0} = opts;
+  const step = Math.PI*2/segCount;
+  for(let i=0;i<segCount;i++){
+    const a0 = i*step + rotation;
+    const a1 = a0 + step*(1-gap);
+    let isLit = false;
+    if(litStart!==null && litCount>0){
+      let rel = (i - litStart) % segCount; if(rel<0) rel += segCount;
+      isLit = rel < litCount;
+    }
+    ctx2d.beginPath();
+    ctx2d.arc(cx,cy,radius,a0,a1);
+    ctx2d.strokeStyle = `rgba(${color[0]},${color[1]},${color[2]},${isLit?activeAlpha:baseAlpha})`;
+    ctx2d.lineWidth = isLit ? lw*1.8 : lw;
+    ctx2d.stroke();
+  }
+}
+
+const motes = Array.from({length:26}, () => ({
+  angle: Math.random()*Math.PI*2,
+  radius: 0.5 + Math.random()*0.42,
+  speed: (0.15 + Math.random()*0.25) * (Math.random()<0.5?-1:1),
+  size: 0.6 + Math.random()*1.3,
+  phase: Math.random()*Math.PI*2
+}));
+
+let rotOuter=0, rotMid=0, sweepAngle=0;
+let lastFrame = performance.now();
+let fpsCount=0, fpsLast=performance.now();
+
+function speedForStatus(s){
+  switch(s){ case "analyzing": return 0.6; case "synthesizing": return 1.1; case "approved": return 0.35; case "error": return 0.18; default: return 0.28; }
+}
+
+function renderReactor(now){
+  const dt = Math.min((now-lastFrame)/1000, 0.05); lastFrame = now;
+  fpsCount++;
+  if(now-fpsLast>500){ $("#fpsReadout").textContent = Math.round(fpsCount/((now-fpsLast)/1000)); fpsCount=0; fpsLast=now; }
+
+  ctx2d.clearRect(0,0,W,H);
+  const cx=W/2, cy=H/2;
+  const base = Math.min(W,H);
+  const R1=base*0.42, R2=base*0.32, R3=base*0.20, Rcore=base*0.075;
+  const mul = state.reduceMotion ? 0 : speedForStatus(state.status);
+  const col = STATUS_COLOR[state.status] || STATUS_COLOR.idle;
+
+  rotOuter += dt*0.12*mul; rotMid -= dt*0.2*mul; sweepAngle += dt*0.7;
+
+  // ambient glow
+  const bg = ctx2d.createRadialGradient(cx,cy,0,cx,cy,R1*1.4);
+  bg.addColorStop(0, `rgba(90,216,255,${0.05+mul*0.02})`);
+  bg.addColorStop(1, "rgba(0,0,0,0)");
+  ctx2d.fillStyle = bg; ctx2d.fillRect(0,0,W,H);
+
+  // scan sweep (additive)
+  ctx2d.save();
+  ctx2d.globalCompositeOperation = "lighter";
+  const sweepWidth = 0.5;
+  const sg = ctx2d.createConicGradient ? ctx2d.createConicGradient(sweepAngle, cx, cy) : null;
+  if(sg){
+    sg.addColorStop(0, "rgba(90,216,255,0)");
+    sg.addColorStop(0.02, `rgba(90,216,255,0.10)`);
+    sg.addColorStop(0.06, "rgba(90,216,255,0)");
+    sg.addColorStop(1, "rgba(90,216,255,0)");
+    ctx2d.fillStyle = sg;
+    ctx2d.beginPath(); ctx2d.moveTo(cx,cy); ctx2d.arc(cx,cy,R1,0,Math.PI*2); ctx2d.fill();
+  }
+  ctx2d.restore();
+
+  // outer ring — sweeping lit arc (bezel)
+  const litStart = Math.floor((now/900*mul*3)%48);
+  drawRing(cx,cy,R1,48,rotOuter,{color:col, baseAlpha:0.14, activeAlpha:0.8, litStart, litCount:7});
+  // mid ring — rotating, static base glow
+  drawRing(cx,cy,R2,32,rotMid,{color:[90,216,255], baseAlpha:0.14, activeAlpha:0.14, litCount:0});
+  // inner ring — pulsing containment
+  const pulse = 0.55 + Math.sin(now/1000*(state.status==="synthesizing"?5:1.8))*0.25;
+  ctx2d.beginPath(); ctx2d.arc(cx,cy,R3,0,Math.PI*2);
+  ctx2d.strokeStyle = `rgba(${col[0]},${col[1]},${col[2]},${(0.35*pulse).toFixed(3)})`;
+  ctx2d.lineWidth = 1.6; ctx2d.stroke();
+
+  // spokes N E S W
+  ctx2d.strokeStyle = "rgba(90,216,255,0.3)"; ctx2d.lineWidth = 1;
+  [[0,-1],[1,0],[0,1],[-1,0]].forEach(([dx,dy]) => {
+    ctx2d.beginPath();
+    ctx2d.moveTo(cx+dx*R1, cy+dy*R1);
+    ctx2d.lineTo(cx+dx*(R1+14), cy+dy*(R1+14));
+    ctx2d.stroke();
+  });
+
+  // dust motes
+  for(const m of motes){
+    m.angle += dt*m.speed*(0.3+mul*0.4);
+    const r = (R3 + (R1-R3)*m.radius) + Math.sin(now/1400+m.phase)*4;
+    const mx = cx + Math.cos(m.angle)*r, my = cy + Math.sin(m.angle)*r;
+    const tw = 0.4+Math.sin(now/600+m.phase)*0.3;
+    ctx2d.beginPath();
+    ctx2d.fillStyle = `rgba(90,216,255,${(0.25*tw).toFixed(3)})`;
+    ctx2d.arc(mx,my,m.size,0,Math.PI*2); ctx2d.fill();
+  }
+
+  // core
+  const cg = ctx2d.createRadialGradient(cx,cy,0,cx,cy,Rcore*2.4);
+  cg.addColorStop(0, `rgba(${col[0]},${col[1]},${col[2]},${(0.55*pulse).toFixed(3)})`);
+  cg.addColorStop(1, "rgba(0,0,0,0)");
+  ctx2d.fillStyle = cg; ctx2d.beginPath(); ctx2d.arc(cx,cy,Rcore*2.4,0,Math.PI*2); ctx2d.fill();
+  ctx2d.beginPath(); ctx2d.arc(cx,cy,Rcore*0.4,0,Math.PI*2);
+  ctx2d.fillStyle = "rgba(234,246,255,0.9)"; ctx2d.fill();
+
+  requestAnimationFrame(renderReactor);
+}
+
+/* ============================================================
+   AGENT STATUS
+============================================================ */
+function setPod(agent, status, label){
+  const tag = document.querySelector(`.orbit[data-agent="${agent}"]`);
+  if(!tag) return;
+  const labelMap = {idle:"Idle", analyzing:"Analyzing", synthesizing:"Synthesizing", approved:"Approved", error:"Error", queued:"Queued"};
+  tag.querySelector("[data-status-text]").textContent = label || labelMap[status] || status;
+  const dot = tag.querySelector("[data-status-dot]");
+  const col = STATUS_COLOR[status] || STATUS_COLOR.idle;
+  dot.style.background = `rgb(${col[0]},${col[1]},${col[2]})`;
+  dot.style.boxShadow = status==="idle" ? "none" : `0 0 6px rgb(${col[0]},${col[1]},${col[2]})`;
+}
+function resetPods(){ AGENTS.forEach(a => setPod(a,"idle")); }
+function setSystemStatus(status){
+  state.status = status;
+  const map = {idle:"Idle", analyzing:"Analyzing", synthesizing:"Synthesizing", approved:"Approved", error:"Error"};
+  $("#systemStatus").textContent = map[status] || status;
+}
+resetPods();
+
+/* ============================================================
+   TABS
+============================================================ */
+$$(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    sfx.click();
+    $$(".tab-btn").forEach(b => { b.classList.remove("active"); b.setAttribute("aria-selected","false"); });
+    btn.classList.add("active"); btn.setAttribute("aria-selected","true");
+    $$(".tab-content").forEach(c => c.classList.remove("active"));
+    $("#tab-"+btn.dataset.tab).classList.add("active");
+  });
+});
+
+/* ============================================================
+   TREE RENDERER
+============================================================ */
+function escapeHtml(s){ return s.replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m])); }
+function renderValue(v){
+  if(typeof v === "string") return `<span class="tv-str">"${escapeHtml(v)}"</span>`;
+  if(typeof v === "number") return `<span class="tv-num">${v}</span>`;
+  if(typeof v === "boolean") return `<span class="tv-bool">${v}</span>`;
+  return `<span class="t-meta">null</span>`;
+}
+function renderNode(key, value){
+  const li = document.createElement("li");
+  if(value !== null && typeof value === "object"){
+    const isArr = Array.isArray(value);
+    const count = isArr ? value.length : Object.keys(value).length;
+    const btn = document.createElement("button");
+    btn.className = "t-toggle"; btn.textContent = "▾"; btn.setAttribute("aria-label","Toggle");
+    const label = document.createElement("span");
+    label.innerHTML = `<span class="tk">${escapeHtml(key)}</span> <span class="t-meta">${isArr?`[${count}]`:`{${count}}`}</span>`;
+    li.appendChild(btn); li.appendChild(label);
+    const ul = document.createElement("ul");
+    if(isArr) value.forEach((v,i) => ul.appendChild(renderNode(String(i), v)));
+    else Object.entries(value).forEach(([k,v]) => ul.appendChild(renderNode(k,v)));
+    li.appendChild(ul);
+    btn.addEventListener("click", () => {
+      const collapsed = ul.style.display === "none";
+      ul.style.display = collapsed ? "" : "none";
+      btn.textContent = collapsed ? "▾" : "▸";
+    });
+  } else {
+    li.innerHTML = `<span class="tk">${escapeHtml(key)}</span>: ${renderValue(value)}`;
+  }
+  return li;
+}
+function renderTree(obj){
+  const root = $("#treeRoot"); root.innerHTML = "";
+  const ul = document.createElement("ul");
+  Object.entries(obj).forEach(([k,v]) => ul.appendChild(renderNode(k,v)));
+  root.appendChild(ul);
+}
+
+/* ============================================================
+   LOG TERMINAL
+============================================================ */
+let logCleared = false;
+function log(msg, level="system"){
+  const stream = $("#logStream");
+  if(!logCleared){ stream.innerHTML = ""; logCleared = true; }
+  const line = document.createElement("div");
+  line.className = "log-line lvl-"+level;
+  const stamp = new Date().toTimeString().slice(0,8);
+  line.innerHTML = `<span class="log-time">${stamp}</span><span class="log-msg">${escapeHtml(msg)}</span>`;
+  stream.appendChild(line);
+  while(stream.children.length > 240) stream.removeChild(stream.firstChild);
+  stream.scrollTop = stream.scrollHeight;
+}
+
+/* ============================================================
+   RULES
+============================================================ */
+const DEFAULT_RULES = [
+  {id:"no-mock", label:"Zero Mock / Placeholder Policy", desc:"No stub comments, no dummy alerts, no unstyled raw HTML in synthesized output.", active:true},
+  {id:"single-file", label:"Single-File Self-Contained Architecture", desc:"Worker emits one unified index.html — structure, styling and script together.", active:true},
+  {id:"dark-modern", label:"Modern Dark UI Design", desc:"High-contrast typography, glassmorphic or HUD-native styling, responsive layouts.", active:true},
+  {id:"interactive-state", label:"Interactive State Engines", desc:"Real calculators, reactive charts, and local persistence — not static mockups.", active:true},
+];
+function renderRules(rules){
+  const list = $("#rulesList"); list.innerHTML = "";
+  rules.forEach(r => {
+    const row = document.createElement("label"); row.className = "rule-row";
+    row.innerHTML = `<input type="checkbox" class="rule-check" ${r.active?"checked":""}>
+      <div><div class="rule-label">${escapeHtml(r.label)}</div><div class="rule-desc">${escapeHtml(r.desc)}</div></div>`;
+    row.querySelector("input").addEventListener("change", (e) => { r.active = e.target.checked; sfx.click(); pushRules(rules); });
+    list.appendChild(row);
+  });
+}
+async function pushRules(rules){
+  try{ await fetchWithTimeout(API_BASE+"/api/rules", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({rules})}, 1500); }
+  catch(e){ /* offline */ }
+}
+renderRules(DEFAULT_RULES);
+
+/* ============================================================
+   SANDBOX
+============================================================ */
+const VIEWPORTS = { desktop:{label:"1920 × 1080", cls:""}, tablet:{label:"1024 × 768", cls:"size-tablet"}, mobile:{label:"375 × 667", cls:"size-mobile"} };
+$$(".seg-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    sfx.click();
+    $$(".seg-btn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    const vp = btn.dataset.viewport; state.viewport = vp;
+    const wrap = $("#frameWrap");
+    wrap.classList.remove("size-tablet","size-mobile");
+    if(VIEWPORTS[vp].cls) wrap.classList.add(VIEWPORTS[vp].cls);
+    $("#viewportLabel").textContent = VIEWPORTS[vp].label;
+  });
+});
+const tiltToggle = $("#tiltToggle");
+tiltToggle.addEventListener("click", () => {
+  state.tiltEnabled = !state.tiltEnabled;
+  tiltToggle.setAttribute("aria-pressed", String(state.tiltEnabled));
+  if(!state.tiltEnabled) $("#frameWrap").style.transform = "none";
+  sfx.click();
+});
+const stage = $("#sandboxStage");
+stage.addEventListener("mousemove", (e) => {
+  if(!state.tiltEnabled || state.reduceMotion) return;
+  const r = stage.getBoundingClientRect();
+  const px = ((e.clientX-r.left)/r.width-0.5)*2, py = ((e.clientY-r.top)/r.height-0.5)*2;
+  $("#frameWrap").style.transform = `rotateX(${(-py*6).toFixed(2)}deg) rotateY(${(px*8).toFixed(2)}deg)`;
+});
+stage.addEventListener("mouseleave", () => { if(state.tiltEnabled) $("#frameWrap").style.transform = "rotateX(0deg) rotateY(0deg)"; });
+
+function sandboxEmpty(){
+  $("#sandboxFrame").srcdoc = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+    body{margin:0;height:100vh;display:flex;align-items:center;justify-content:center;background:#000305;
+      font-family:'IBM Plex Mono',monospace;color:#38495a;text-align:center;}
+    .box{max-width:250px;font-size:11.5px;line-height:1.8;letter-spacing:.04em;}
+    .g{font-size:20px;color:#6f8fa8;display:block;margin-bottom:10px;}
+  </style></head><body><div class="box"><span class="g">◇</span>SANDBOX EMPTY<br>Launch a mission to synthesize a live application here.</div></body></html>`;
+  $("#sandboxHint").textContent = "Awaiting synthesis";
+}
+function sandboxResult(goal){
+  const safeGoal = (goal||"Untitled objective").replace(/[<>&]/g, c => ({"<":"&lt;",">":"&gt;","&":"&amp;"}[c]));
+  $("#sandboxFrame").srcdoc = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+    *{box-sizing:border-box;}
+    body{margin:0;min-height:100vh;background:radial-gradient(circle at 30% 0%, rgba(90,216,255,.12), transparent 55%), #000305;
+      font-family:'IBM Plex Sans',system-ui,sans-serif;color:#eaf6ff;display:flex;align-items:center;justify-content:center;padding:24px;}
+    .card{max-width:320px;width:100%;border:1px solid rgba(90,216,255,.3);padding:22px;background:rgba(0,8,13,.6);}
+    .tag{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.12em;color:#59ffc6;text-transform:uppercase;}
+    h1{font-family:'Space Grotesk',sans-serif;font-size:16px;margin:8px 0 4px;}
+    p{font-size:12px;color:#6f8fa8;line-height:1.6;margin:0 0 16px;}
+    button{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:11px;padding:9px 14px;
+      border:1px solid rgba(90,216,255,.5);background:rgba(90,216,255,.08);color:#eaf6ff;cursor:pointer;letter-spacing:.05em;}
+    .count{font-family:'IBM Plex Mono',monospace;font-size:20px;margin-left:10px;color:#5ad8ff;}
+  </style></head><body>
+    <div class="card">
+      <div class="tag">Diamond-Grade · Verified</div>
+      <h1>${safeGoal}</h1>
+      <p>Synthesized by the Worker node and approved by the Boss node. This preview is fully interactive.</p>
+      <button id="b">INCREMENT</button><span class="count" id="c">0</span>
+    </div>
+    <script>let n=0;const c=document.getElementById('c');document.getElementById('b').addEventListener('click',()=>{n++;c.textContent=n;});<\/script>
+  </body></html>`;
+  $("#sandboxHint").textContent = "domains/web_ui/index.html — live";
+}
+sandboxEmpty();
+
+/* ============================================================
+   MISSION RUNNER
+============================================================ */
+function fetchWithTimeout(url, opts={}, ms=2500){
+  const ctrl = new AbortController();
+  const id = setTimeout(()=>ctrl.abort(), ms);
+  return fetch(url, {...opts, signal:ctrl.signal}).finally(()=>clearTimeout(id));
+}
+function startTimer(){
+  state.runStart = Date.now();
+  clearInterval(state.timerHandle);
+  state.timerHandle = setInterval(() => {
+    const s = Math.floor((Date.now()-state.runStart)/1000);
+    $("#elapsedTime").textContent = `${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
+  }, 250);
+}
+function stopTimer(){ clearInterval(state.timerHandle); }
+function setConn(live){
+  state.liveBackend = live;
+  $("#connDot").className = "dot " + (live?"live":"sim");
+  $("#connText").textContent = live ? "Local Engine Online" : "Simulation";
+  $("#engineReadout").textContent = live ? "Ollama · llama3.1:8b" : "Ollama · llama3.1:8b (sim)";
+}
+async function probeBackend(){
+  try{ const res = await fetchWithTimeout(API_BASE+"/api/state", {}, 1400); setConn(res.ok); }
+  catch(e){ setConn(false); }
+}
+function clearSimTimers(){ state.simTimeouts.forEach(clearTimeout); state.simTimeouts = []; }
+function setRunning(running){
+  state.running = running;
+  $("#launchBtn").disabled = running;
+  $("#abortBtn").disabled = !running;
+  $("#consoleHint").textContent = running ? "Reasoning graph active…" : "Ready";
+  waveform.classList.toggle("active", running);
+}
+
+$("#launchBtn").addEventListener("click", () => {
+  const goal = $("#goalInput").value.trim();
+  if(!goal){ $("#goalInput").focus(); sfx.alert(); $("#consoleHint").textContent = "Enter an objective first"; return; }
+  runMission(goal);
+});
+$("#abortBtn").addEventListener("click", abortRun);
+$("#sandboxAbort").addEventListener("click", abortRun);
+$("#resetBtn").addEventListener("click", resetAll);
+$("#sandboxReset").addEventListener("click", resetAll);
+$("#goalInput").addEventListener("keydown", (e) => { if(e.key==="Enter" && (e.metaKey||e.ctrlKey)) $("#launchBtn").click(); });
+
+async function runMission(goal){
+  state.runId++; const myRun = state.runId;
+  sfx.launch(); setRunning(true); resetPods(); setSystemStatus("analyzing"); startTimer();
+  log(`Mission received: "${goal}"`, "system");
+  log("Boss node evaluating scope and intent…", "boss");
+
+  if(state.liveBackend){
+    try{
+      await fetchWithTimeout(API_BASE+"/api/run", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({goal})}, 3000);
+      pollLiveRun(myRun, goal); return;
+    }catch(e){ log("Live engine unreachable — switching to simulation.", "error"); setConn(false); }
+  }
+  simulateMission(myRun, goal);
+}
+
+async function pollLiveRun(myRun, goal){
+  const poll = async () => {
+    if(myRun !== state.runId) return;
+    try{
+      const [sRes,tRes,lRes] = await Promise.all([
+        fetchWithTimeout(API_BASE+"/api/state", {}, 2000),
+        fetchWithTimeout(API_BASE+"/api/tree", {}, 2000),
+        fetchWithTimeout(API_BASE+"/api/logs", {}, 2000)
+      ]);
+      if(sRes.ok){
+        const s = await sRes.json(); applyLiveState(s);
+        if(s.status==="approved" || s.status==="error"){ finishRun(myRun, goal, s.status); return; }
+      }
+      if(tRes.ok){ const t = await tRes.json(); if(t && Object.keys(t).length) renderTree(t); }
+      if(lRes.ok){ const l = await lRes.json(); if(Array.isArray(l)) l.forEach(entry => log(entry.message||String(entry), entry.level||"system")); }
+      const h = setTimeout(poll, 1500); state.pollHandles.push(h);
+    }catch(e){ log("Connection to local engine lost — switching to simulation.", "error"); setConn(false); simulateMission(myRun, goal); }
+  };
+  poll();
+}
+function applyLiveState(s){ if(s.status) setSystemStatus(s.status); if(s.agent && s.agent_status) setPod(s.agent, s.agent_status); }
+
+function finishRun(myRun, goal, finalStatus){
+  if(myRun !== state.runId) return;
+  stopTimer(); setRunning(false);
+  if(finalStatus === "approved"){
+    setSystemStatus("approved"); AGENTS.forEach(a => setPod(a,"approved"));
+    sandboxResult(goal); sfx.approve();
+    log("Boss node granted final approval. Application live in sandbox.", "boss");
+  } else {
+    setSystemStatus("error"); setPod("boss","error"); sfx.alert();
+    log("Run halted — Boss node rejected an unverified output.", "error");
+  }
+}
+
+function simulateMission(myRun, goal){
+  const t = (fn, ms) => { const h = setTimeout(()=>{ if(myRun===state.runId) fn(); }, ms); state.simTimeouts.push(h); };
+
+  t(() => { setPod("boss","analyzing"); log("Goal brief accepted — scope discipline enforced.", "boss"); sfx.stage(); }, 500);
+  t(() => { setPod("boss","approved"); setPod("planner","analyzing"); setSystemStatus("analyzing"); log("Dispatching to Planner node — decomposing intent.", "boss"); sfx.stage(); }, 1400);
+  t(() => {
+    const tree = {
+      intent: goal,
+      screens: [ {id:"screen_1", name:"Main Dashboard", purpose:"Primary user interaction surface"}, {id:"screen_2", name:"Detail View", purpose:"Focused inspection of a single record"} ],
+      features: [ {id:"feat_1", name:"Dynamic Calculation", details:"Real-time state derivation"}, {id:"feat_2", name:"Persistent Session", details:"Local storage of user state"} ],
+      data_model: { entities:["UserSession","CalculationRecord"] },
+      tasks: [ {id:"task_1", branch:"web_ui", action:"Synthesize index.html"} ],
+      verification: [ {id:"verify_1", check:"Verify all interactive controls update the DOM without errors"} ]
+    };
+    renderTree(tree);
+    setPod("planner","approved"); setPod("coordinator","analyzing"); setSystemStatus("analyzing");
+    log("Logical tree constructed — 2 screens, 2 features, 1 verification check.", "planner"); sfx.stage();
+  }, 2600);
+  t(() => { setPod("coordinator","approved"); setPod("worker","synthesizing"); setSystemStatus("synthesizing"); log("Coordinator scoped task_1 to domain web_ui — dispatching Worker.", "coordinator"); sfx.stage(); }, 3700);
+  t(() => log("Worker synthesizing Diamond-grade markup, styles, and state logic…", "worker"), 4300);
+  t(() => log("Worker applying HUD-native styling and responsive layout.", "worker"), 5200);
+  t(() => log("Worker wiring interactive state engine — zero placeholder policy enforced.", "worker"), 6100);
+  t(() => { setPod("worker","approved"); setPod("boss","analyzing"); setSystemStatus("analyzing"); log("Worker output returned to Boss node for final review.", "worker"); sfx.stage(); }, 7000);
+  t(() => finishRun(myRun, goal, "approved"), 8000);
+}
+
+function abortRun(){
+  if(!state.running) return;
+  clearSimTimers(); state.pollHandles.forEach(clearTimeout); state.runId++;
+  stopTimer(); setRunning(false); setSystemStatus("error");
+  AGENTS.forEach(a => setPod(a,"idle")); setPod("boss","error");
+  log("Run aborted by operator.", "error"); sfx.alert();
+  if(state.liveBackend) fetchWithTimeout(API_BASE+"/api/reset", {method:"POST"}, 2000).catch(()=>{});
+}
+function resetAll(){
+  clearSimTimers(); state.pollHandles.forEach(clearTimeout); state.runId++;
+  stopTimer(); setRunning(false); resetPods(); setSystemStatus("idle");
+  $("#elapsedTime").textContent = "00:00"; $("#goalInput").value = "";
+  logCleared = false;
+  $("#logStream").innerHTML = '<div class="empty-state"><span class="glyph">▤</span>The execution log is silent. Agent reasoning will stream here once a mission starts.</div>';
+  $("#treeRoot").innerHTML = '<div class="empty-state"><span class="glyph">⌁</span>No tree yet. Launch a mission and the logical reasoning tree will branch here in real time.</div>';
+  sandboxEmpty(); sfx.click();
+  if(state.liveBackend) fetchWithTimeout(API_BASE+"/api/reset", {method:"POST"}, 2000).catch(()=>{});
+}
+
+/* ============================================================
+   INIT
+============================================================ */
+function init(){
+  resizeCanvas();
+  requestAnimationFrame(renderReactor);
+  probeBackend();
+  setTimeout(() => log("ULTRON online — all systems nominal.", "system"), 900);
+}
+if(document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
+else init();
+
+})();
+</script>
+</body>
+</html>

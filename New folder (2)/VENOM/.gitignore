@@ -1,0 +1,41 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Build output
+.next/
+dist/
+build/
+.runlogs/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Local tooling
+.tools/
+
+.vercel
+.env*.local
+
+# Temporary patches & scratch logs
+*.patch
+*.csv
+apply_patch_payload.txt
+NOTE_patch_content.txt
+NOTE_append*.md
+fix 160726.md
+temp_patch.md
+scratch_prompt.txt
+test_grep.ps1
+backend/check_db_report.js
+check_backend.js
+cookies.txt
+
+

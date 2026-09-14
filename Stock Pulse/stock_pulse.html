@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Pulse v5.0 — Institutional Financial Cockpit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root, [data-theme="dark"] {
+    --bg-base: #0B120E;
+    --bg-panel: #121C16;
+    --bg-raised: #1A261F;
+    --bg-subtle: #223229;
+    --border: #28382E;
+    --border-light: #3A4E41;
+    --text-main: #EDEBE3;
+    --text-dim: #9BA59D;
+    --text-muted: #6B786E;
+    --gold: #E5C158;
+    --gold-glow: rgba(229, 193, 88, 0.2);
+    --green: #4ADE80;
+    --green-bg: rgba(74, 222, 128, 0.12);
+    --green-border: rgba(74, 222, 128, 0.3);
+    --amber: #FBBF24;
+    --amber-bg: rgba(251, 191, 36, 0.12);
+    --amber-border: rgba(251, 191, 36, 0.3);
+    --red: #F87171;
+    --red-bg: rgba(248, 113, 113, 0.12);
+    --red-border: rgba(248, 113, 113, 0.3);
+    --blue: #60A5FA;
+    --blue-bg: rgba(96, 165, 250, 0.12);
+    --blue-border: rgba(96, 165, 250, 0.3);
+    --shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+
+  [data-theme="light"] {
+    --bg-base: #F4F6F8;
+    --bg-panel: #FFFFFF;
+    --bg-raised: #F8FAFC;
+    --bg-subtle: #E2E8F0;
+    --border: #E2E8F0;
+    --border-light: #CBD5E1;
+    --text-main: #0F172A;
+    --text-dim: #475569;
+    --text-muted: #64748B;
+    --gold: #B45309;
+    --gold-glow: rgba(180, 83, 9, 0.15);
+    --green: #15803D;
+    --green-bg: #DCFCE7;
+    --green-border: #86EFAC;
+    --amber: #B45309;
+    --amber-bg: #FEF3C7;
+    --amber-border: #FDE68A;
+    --red: #B91C1C;
+    --red-bg: #FEE2E2;
+    --red-border: #FCA5A5;
+    --blue: #1D4ED8;
+    --blue-bg: #DBEAFE;
+    --blue-border: #93C5FD;
+    --shadow: 0 2px 10px rgba(0,0,0,0.06);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg-base);
+    color: var(--text-main);
+    font-family: 'IBM Plex Sans', -apple-system, sans-serif;
+    line-height: 1.5;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4 { font-family: 'Fraunces', Georgia, serif; margin: 0; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+
+  /* ------------------- STICKY TOP BAR ------------------- */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow);
+  }
+  .brand-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+  }
+  .brand-logo {
+    width: 28px;
+    height: 28px;
+    background: var(--gold);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    color: #0B120E;
+    font-size: 1.1rem;
+  }
+  .brand-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.02em;
+  }
+  .brand-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: var(--bg-subtle);
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: var(--gold);
+    border: 1px solid var(--border-light);
+  }
+
+  /* Search & Controls */
+  .search-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    max-width: 540px;
+    position: relative;
+  }
+  .search-input-wrap {
+    position: relative;
+    width: 100%;
+  }
+  .search-input {
+    width: 100%;
+    padding: 8px 36px 8px 12px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-main);
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.15s;
+  }
+  .search-input:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 2px var(--gold-glow);
+  }
+  .search-kbd {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.7rem;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    padding: 2px 5px;
+    border-radius: 3px;
+    color: var(--text-dim);
+    pointer-events: none;
+  }
+  .horizon-select {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 0.85rem;
+    outline: none;
+    cursor: pointer;
+  }
+  .btn-submit {
+    background: var(--gold);
+    color: #0B120E;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+  }
+  .btn-submit:hover { opacity: 0.9; }
+
+  /* Autocomplete Dropdown */
+  .suggest-box {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-light);
+    border-radius: 6px;
+    box-shadow: var(--shadow);
+    z-index: 150;
+    max-height: 280px;
+    overflow-y: auto;
+  }
+  .suggest-item {
+    padding: 9px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .suggest-item:last-child { border-bottom: none; }
+  .suggest-item:hover { background: var(--bg-raised); }
+  .suggest-sym { font-weight: 700; color: var(--gold); font-family: 'IBM Plex Mono', monospace; }
+  .suggest-sec { font-size: 0.75rem; color: var(--text-dim); }
+
+  /* Top Right Actions */
+  .top-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-action {
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 7px 12px;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+  .btn-action:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .btn-action-primary {
+    background: #1E3A8A;
+    color: #FFFFFF;
+    border: 1px solid #3B82F6;
+  }
+  .btn-action-primary:hover {
+    background: #1D4ED8;
+    color: #FFFFFF;
+  }
+
+  /* ------------------- MAIN CONTAINER ------------------- */
+  .app-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 16px 24px 60px;
+  }
+
+  /* Quick Samples Bar */
+  .sample-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    font-size: 0.82rem;
+  }
+  .sample-label { color: var(--text-dim); font-weight: 600; }
+  .chip {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .chip:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+  .chip-compare {
+    border-color: var(--border-light);
+    color: var(--text-dim);
+  }
+  .chip-compare:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+  }
+
+  /* ------------------- COMPANY COCKPIT HEADER ------------------- */
+  .cockpit-header {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 24px;
+    margin-bottom: 16px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    align-items: center;
+  }
+  .company-info-title {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+  }
+  .company-info-title h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+  .ticker-pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border-light);
+    border-radius: 4px;
+    color: var(--gold);
+  }
+  .sector-pill {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    background: var(--bg-subtle);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .company-about {
+    font-size: 0.86rem;
+    color: var(--text-dim);
+    max-width: 820px;
+    line-height: 1.45;
+  }
+
+  /* Price Action & 52W Slider */
+  .price-strip {
+    text-align: right;
+    min-width: 280px;
+  }
+  .cmp-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .cmp-delta {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+  /* 52W Progress Bar */
+  .range-track {
+    position: relative;
+    height: 6px;
+    background: var(--bg-subtle);
+    border-radius: 3px;
+    margin: 8px 0 4px;
+    overflow: visible;
+  }
+  .range-fill {
+    position: absolute;
+    left: 0;
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--red) 0%, var(--amber) 50%, var(--green) 100%);
+  }
+  .range-pin {
+    position: absolute;
+    top: -4px;
+    width: 14px;
+    height: 14px;
+    background: var(--gold);
+    border: 2px solid #0B120E;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 6px rgba(229, 193, 88, 0.8);
+  }
+  .range-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* ------------------- TOP EXECUTIVE KPI QUAD ------------------- */
+  .kpi-quad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .kpi-card {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    transition: border-color 0.15s;
+  }
+  .kpi-card:hover { border-color: var(--border-light); }
+  .kpi-title {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .kpi-body {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .dial-svg {
+    width: 58px;
+    height: 58px;
+    transform: rotate(-90deg);
+  }
+  .dial-bg {
+    fill: none;
+    stroke: var(--bg-subtle);
+    stroke-width: 6;
+  }
+  .dial-progress {
+    fill: none;
+    stroke-width: 6;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.6s ease;
+  }
+  .dial-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text-main);
+  }
+  .kpi-main-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.1;
+  }
+  .kpi-sub {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+  .kpi-tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-top: 6px;
+  }
+  .tag-green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .tag-amber { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+  .tag-red { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+  .tag-blue { background: var(--blue-bg); color: var(--blue); border: 1px solid var(--blue-border); }
+
+  /* ------------------- TABBED WORKSPACE NAVIGATION ------------------- */
+  .workspace-tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 20px;
+    overflow-x: auto;
+  }
+  .tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    padding: 10px 18px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .tab-btn:hover { color: var(--text-main); }
+  .tab-btn.active {
+    color: var(--gold);
+    border-bottom-color: var(--gold);
+    background: var(--bg-panel);
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
+  .tab-badge {
+    font-size: 0.65rem;
+    padding: 1px 5px;
+    border-radius: 3px;
+    background: var(--bg-subtle);
+    color: var(--text-dim);
+  }
+
+  /* ------------------- TAB CONTENT PANELS ------------------- */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 16px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+
+  .panel-box {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+  }
+  .panel-box-header {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--gold);
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Data Table */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.86rem;
+  }
+  .data-table th {
+    text-align: left;
+    padding: 8px 12px;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+  }
+  .data-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-main);
+  }
+  .data-table tr:hover td { background: var(--bg-raised); }
+  .data-table td.num { font-family: 'IBM Plex Mono', monospace; text-align: right; }
+  .data-table th.num { text-align: right; }
+
+  /* ------------------- INTERACTIVE REVERSE DCF SIMULATOR ------------------- */
+  .dcf-sim-box {
+    background: var(--bg-raised);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .sim-sliders {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 16px 0;
+  }
+  .slider-group label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+  .slider-control {
+    width: 100%;
+    accent-color: var(--gold);
+    cursor: pointer;
+  }
+  .sim-result-strip {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .sim-implied-growth {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  /* ------------------- VISUAL 5-STAGE DUPONT TREE ------------------- */
+  .dupont-tree {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: var(--bg-raised);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .dupont-node {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    text-align: center;
+    flex: 1;
+    min-width: 110px;
+  }
+  .dupont-node-title {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .dupont-node-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+  .dupont-op {
+    color: var(--gold);
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+
+  /* ------------------- AUDIT SCORECARD TILES ------------------- */
+  .rule-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .rule-tile {
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.82rem;
+    cursor: default;
+    transition: all 0.15s;
+  }
+  .rule-tile:hover { border-color: var(--border-light); }
+  .rule-name { font-weight: 500; color: var(--text-main); }
+  .rule-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700;
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 3px;
+  }
+  .rule-pass { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+  .rule-fail { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+
+  /* ------------------- BENEISH M-SCORE SPEEDOMETER ------------------- */
+  .meter-bar {
+    height: 8px;
+    background: linear-gradient(90deg, var(--green) 0%, var(--green) 60%, var(--amber) 80%, var(--red) 100%);
+    border-radius: 4px;
+    position: relative;
+    margin: 18px 0 10px;
+  }
+  .meter-pointer {
+    position: absolute;
+    top: -5px;
+    width: 16px;
+    height: 16px;
+    background: #FFFFFF;
+    border: 3px solid #0B120E;
+    border-radius: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 6px rgba(0,0,0,0.8);
+  }
+
+  /* ------------------- SKELETON / LOADING ------------------- */
+  .skeleton-loader {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+  }
+  .spinner {
+    width: 42px;
+    height: 42px;
+    border: 3px solid var(--bg-subtle);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 0 auto 16px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 900px) {
+    .kpi-quad { grid-template-columns: repeat(2, 1fr); }
+    .cockpit-header { grid-template-columns: 1fr; }
+    .price-strip { text-align: left; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .sim-sliders { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- STICKY PERSISTENT TOP BAR -->
+<header class="topbar">
+  <div class="brand-wrap" onclick="window.location.reload()">
+    <div class="brand-logo">P</div>
+    <div class="brand-title">Stock Pulse</div>
+    <span class="brand-badge">v5.0 Cockpit</span>
+  </div>
+
+  <form class="search-form" id="searchForm">
+    <div class="search-input-wrap">
+      <input type="text" class="search-input" id="stockQuery" placeholder="Search symbol or competitor (e.g. TCS, HDFCBANK vs ICICIBANK)..." autocomplete="off" required>
+      <span class="search-kbd">/</span>
+      <div class="suggest-box hidden" id="suggestBox"></div>
+    </div>
+    <select class="horizon-select" id="horizonSelect" title="Investment Horizon">
+      <option value="3">3Y Horizon</option>
+      <option value="5" selected>5Y Horizon</option>
+      <option value="10">10Y Horizon</option>
+    </select>
+    <button type="submit" class="btn-submit" id="submitBtn">Analyze</button>
+  </form>
+
+  <div class="top-actions">
+    <button class="btn-action" id="themeToggleBtn" title="Toggle Light/Dark Theme">🌙 Theme</button>
+    <a href="#" class="btn-action btn-action-primary" id="exportPdfBtn" title="Download Publication PDF">📥 Export PDF</a>
+    <a href="#" class="btn-action" id="exportHtmlBtn" title="Open Executive HTML">📄 HTML</a>
+  </div>
+</header>
+
+<div class="app-container">
+
+  <!-- QUICK SAMPLE BENCHMARK CHIPS -->
+  <div class="sample-row">
+    <span class="sample-label">Single Analysis:</span>
+    <button class="chip" data-sym="HDFCBANK">HDFC Bank</button>
+    <button class="chip" data-sym="TCS">TCS</button>
+    <button class="chip" data-sym="LT">Larsen & Toubro</button>
+    <button class="chip" data-sym="ULTRACEMCO">UltraTech</button>
+    <button class="chip" data-sym="MARUTI">Maruti</button>
+    <button class="chip" data-sym="ITC">ITC</button>
+
+    <span class="sample-label" style="margin-left:14px; color:var(--gold);">Head-to-Head:</span>
+    <button class="chip chip-compare" data-compare="TCS,INFY">TCS vs INFY</button>
+    <button class="chip chip-compare" data-compare="HDFCBANK,ICICIBANK">HDFC vs ICICI</button>
+    <button class="chip chip-compare" data-compare="MARUTI,TATAMOTORS">Maruti vs Tata Motors</button>
+    <button class="chip chip-compare" data-compare="ULTRACEMCO,AMBUJACEM">UltraTech vs Ambuja</button>
+  </div>
+
+  <!-- SKELETON LOADER -->
+  <div class="skeleton-loader" id="loader">
+    <div class="spinner"></div>
+    <h3 style="color:var(--text-main); font-size:1.1rem; margin-bottom:4px;" id="loaderTitle">Executing Quantitative Financial Diagnostics...</h3>
+    <p style="color:var(--text-dim); font-size:0.85rem;">Parsing 10-year audited statements & synthesizing mathematical models.</p>
+  </div>
+
+  <!-- REPORT VIEW AREA -->
+  <div id="reportView" class="hidden">
+
+    <!-- COCKPIT HEADER STRIP -->
+    <div class="cockpit-header">
+      <div>
+        <div class="company-info-title">
+          <h1 id="compName">Company Name</h1>
+          <span class="ticker-pill" id="compTicker">TICKER</span>
+          <span class="sector-pill" id="compSector">Sector</span>
+        </div>
+        <p class="company-about" id="compAbout">Operational profile parsed from filings.</p>
+      </div>
+
+      <div class="price-strip">
+        <div class="cmp-val" id="cmpVal">₹0.00</div>
+        <div class="cmp-delta" id="cmpDelta">+0.0% above 52W Low</div>
+        <div class="range-track">
+          <div class="range-fill" id="rangeFill" style="width:50%;"></div>
+          <div class="range-pin" id="rangePin" style="left:50%;"></div>
+        </div>
+        <div class="range-labels">
+          <span id="low52">₹0</span>
+          <span style="color:var(--text-dim);">52-Week Range</span>
+          <span id="high52">₹0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOP EXECUTIVE KPI QUAD -->
+    <div class="kpi-quad">
+      <!-- KPI 1: PULSE SCORE -->
+      <div class="kpi-card">
+        <div class="kpi-title">
+          <span>The Pulse Score</span>
+          <span class="kpi-tag tag-green" id="pulseTag">STRONG</span>
+        </div>
+        <div class="kpi-body">
+          <svg class="dial-svg" viewBox="0 0 40 40">
+            <circle class="dial-bg" cx="20" cy="20" r="15.915"></circle>
+            <circle class="dial-progress" id="pulseDial" cx="20" cy="20" r="15.915" stroke="var(--gold)" stroke-dasharray="100" stroke-dashoffset="20"></circle>
+          </svg>
+          <div>
+            <div class="kpi-main-val" id="pulseScoreText">8 <span style="font-size:0.9rem; color:var(--text-dim);">/ 10</span></div>
+            <div class="kpi-sub" id="redFlagStatus">✓ 0 Red Flags</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI 2: VALUATION -->
+      <div class="kpi-card">
+        <div class="kpi-title">
+          <span>Valuation Compass</span>
+          <span class="kpi-tag tag-blue" id="valTag">FAIR</span>
+        </div>
+        <div>
+          <div class="kpi-main-val" id="stockPeVal">24.5 <span style="font-size:0.8rem; color:var(--text-dim);">P/E</span></div>
+          <div class="kpi-sub" id="dcfSub">Reverse DCF: 10.3% Implied Growth</div>
+          <div class="kpi-sub" id="sectorPeSub">Sector P/E: 24.0</div>
+        </div>
+      </div>
+
+      <!-- KPI 3: FORENSIC & SOLVENCY -->
+      <div class="kpi-card">
+        <div class="kpi-title">
+          <span>Forensic Shield</span>
+          <span class="kpi-tag tag-green" id="forensicTag">SAFE</span>
+        </div>
+        <div>
+          <div class="kpi-main-val" id="mScoreVal">-2.22 <span style="font-size:0.75rem; color:var(--text-dim);">M-Score</span></div>
+          <div class="kpi-sub" id="altmanSub">Altman Z'': 9.42 (SAFE ZONE)</div>
+          <div class="kpi-sub" id="piotroskiSub">Piotroski: 8/9 Fundamental Strength</div>
+        </div>
+      </div>
+
+      <!-- KPI 4: CAPITAL ALLOCATION & MOAT -->
+      <div class="kpi-card">
+        <div class="kpi-title">
+          <span>Capital & Moat</span>
+          <span class="kpi-tag tag-green" id="moatTag">WIDE MOAT</span>
+        </div>
+        <div>
+          <div class="kpi-main-val" id="roeVal">24.1% <span style="font-size:0.8rem; color:var(--text-dim);">ROE</span></div>
+          <div class="kpi-sub" id="dupontSub">Primary: Operating Margin</div>
+          <div class="kpi-sub" id="roiicSub">3Y ROIIC: 29.3% (+17.8% vs WACC)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7-TAB WORKSPACE NAVIGATION -->
+    <nav class="workspace-tabs">
+      <button class="tab-btn active" data-tab="tab-overview">📊 Executive Overview & Rules</button>
+      <button class="tab-btn" data-tab="tab-valuation">🎯 Valuation Triangulation & DCF Lab</button>
+      <button class="tab-btn" data-tab="tab-forensics">🔍 Forensic Accounting</button>
+      <button class="tab-btn" data-tab="tab-dupont">⚡ 5-Stage DuPont & Capital</button>
+      <button class="tab-btn" data-tab="tab-compare">⚔️ Head-to-Head Compare</button>
+      <button class="tab-btn" data-tab="tab-watchlist">🎯 Portfolio Radar</button>
+      <button class="tab-btn" data-tab="tab-news">📰 Disclosures & News</button>
+    </nav>
+
+    <!-- TAB 1: EXECUTIVE OVERVIEW & 10-RULE AUDIT -->
+    <div class="tab-panel active" id="tab-overview">
+      <div class="panel-box">
+        <div class="panel-box-header">
+          <span>Pulse Score 10-Rule Audit Scorecard (Mathematical Audit)</span>
+          <span class="mono" id="auditSummaryText">8 / 10 PASS</span>
+        </div>
+        <div class="rule-grid" id="rulesContainer"></div>
+      </div>
+
+      <!-- QUARTERLY EARNINGS MOMENTUM & MARGIN INFLECTION -->
+      <div class="panel-box">
+        <div class="panel-box-header">
+          <span>Quarterly Earnings Momentum & Operating Margin Inflection</span>
+          <span class="kpi-tag tag-green" id="qmBadge">ACCELERATING</span>
+        </div>
+        <div id="inflectionAlert" class="hidden" style="background:var(--green-bg); border:1px solid var(--green-border); color:var(--green); padding:8px 12px; border-radius:6px; font-size:0.82rem; margin-bottom:12px; font-weight:600;"></div>
+        <div class="grid-4" id="recentQuartersGrid"></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel-box">
+          <div class="panel-box-header">Solvency & Balance Sheet Protection</div>
+          <div id="solvencyGrid"></div>
+        </div>
+
+        <div class="panel-box">
+          <div class="panel-box-header">Ownership & Management Governance</div>
+          <div id="ownershipGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: VALUATION TRIANGULATION & INTERACTIVE DCF LAB -->
+    <div class="tab-panel" id="tab-valuation">
+      <!-- INTERACTIVE REVERSE DCF SIMULATOR -->
+      <div class="dcf-sim-box">
+        <div class="panel-box-header" style="margin-bottom:6px;">
+          <span>Interactive Reverse DCF Lab (Numerical Solver)</span>
+          <span style="font-size:0.75rem; color:var(--text-dim);">Instant In-Browser Binary Search Engine</span>
+        </div>
+        <p style="font-size:0.85rem; color:var(--text-dim); margin-top:0;">
+          Adjust WACC (cost of capital) and terminal growth to see the exact long-term free cash flow growth rate implied by the current enterprise value.
+        </p>
+
+        <div class="sim-sliders">
+          <div class="slider-group">
+            <label><span>WACC (Discount Rate)</span> <span class="mono" id="waccVal">11.5%</span></label>
+            <input type="range" class="slider-control" id="waccSlider" min="9.0" max="14.0" step="0.1" value="11.5">
+          </div>
+          <div class="slider-group">
+            <label><span>Terminal FCF Growth Rate</span> <span class="mono" id="terminalVal">4.5%</span></label>
+            <input type="range" class="slider-control" id="terminalSlider" min="3.0" max="6.0" step="0.1" value="4.5">
+          </div>
+        </div>
+
+        <div class="sim-result-strip">
+          <div>
+            <div style="font-size:0.78rem; text-transform:uppercase; color:var(--text-dim); font-weight:700;">Market-Implied 10Y FCF Growth Rate</div>
+            <div style="font-size:0.82rem; color:var(--text-dim);">Hurdle rate required to justify current enterprise value</div>
+          </div>
+          <div style="display:flex; align-items:baseline; gap:10px;">
+            <div class="sim-implied-growth" id="simImpliedGrowth">10.3%</div>
+            <span class="kpi-tag tag-green" id="simHurdleTag">FAIR</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel-box">
+          <div class="panel-box-header">10-Year Historical Valuation Quantile Bands</div>
+          <div style="padding:10px 0;">
+            <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:8px;">
+              <span>Current P/E: <strong class="mono" id="qCurrentPe">24.5</strong></span>
+              <span class="kpi-tag tag-blue" id="qRankTag">43rd %ile</span>
+            </div>
+            <div class="range-track" style="height:10px; margin:14px 0 8px;">
+              <div class="range-fill" id="qTrackFill" style="background:var(--bg-subtle);"></div>
+              <div class="range-pin" id="qPin" style="left:50%; width:16px; height:16px; top:-3px;"></div>
+            </div>
+            <div class="range-labels">
+              <span id="qP25">25th %ile: 18.2</span>
+              <span id="qMed">10Y Median: 24.0</span>
+              <span id="qP75">75th %ile: 32.5</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel-box">
+          <div class="panel-box-header">Earnings Power Value (EPV)</div>
+          <p style="font-size:0.84rem; color:var(--text-dim);">
+            Bruce Greenwald framework isolating sustainable zero-growth intrinsic value per share capitalized at WACC.
+          </p>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-top:1px solid var(--border);">
+            <span>Zero-Growth EPV per share:</span>
+            <strong class="mono" style="font-size:1.2rem;" id="epvShare">₹0.00</strong>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-top:1px solid var(--border);">
+            <span>CMP vs Zero-Growth Value:</span>
+            <span class="kpi-tag tag-amber" id="epvDeltaTag">Growth Premium</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-box">
+        <div class="panel-box-header">Comprehensive Valuation Multiples Grid</div>
+        <div id="valuationGrid"></div>
+      </div>
+    </div>
+
+    <!-- TAB 3: FORENSIC ACCOUNTING -->
+    <div class="tab-panel" id="tab-forensics">
+      <div class="panel-box">
+        <div class="panel-box-header">
+          <span>Beneish M-Score (8-Variable Manipulation Index)</span>
+          <span class="kpi-tag tag-green" id="beneishBadge">SAFE</span>
+        </div>
+        <p style="font-size:0.85rem; color:var(--text-dim);">
+          Statistical fraud model evaluating receivables, gross margins, asset quality, sales acceleration, depreciation, and accruals. Safe benchmark: &le; -2.22.
+        </p>
+        <div class="meter-bar">
+          <div class="meter-pointer" id="beneishPointer" style="left:25%;"></div>
+        </div>
+        <div class="range-labels" style="margin-bottom:16px;">
+          <span>Safe (&le; -2.22)</span>
+          <span>Moderate (-2.22 to -1.78)</span>
+          <span>Red Flag (&gt; -1.78)</span>
+        </div>
+        <div class="grid-4" id="beneishVarsGrid"></div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel-box">
+          <div class="panel-box-header">Altman Z''-Score (Solvency & Bankruptcy Risk)</div>
+          <div id="altmanComps"></div>
+        </div>
+
+        <div class="panel-box">
+          <div class="panel-box-header">Piotroski F-Score (9-Factor Quality Audit)</div>
+          <div id="piotroskiChecklist"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: DUPONT & CAPITAL ALLOCATION -->
+    <div class="tab-panel" id="tab-dupont">
+      <div class="panel-box">
+        <div class="panel-box-header">
+          <span>5-Stage DuPont ROE Decomposition Tree</span>
+          <span class="kpi-tag tag-green" id="dupontDriverBadge">Core Moat</span>
+        </div>
+        <p style="font-size:0.85rem; color:var(--text-dim);">
+          Mathematical proof of return drivers: Tax Burden &times; Interest Burden &times; Operating Margin &times; Asset Turnover &times; Financial Leverage = Reconstituted ROE.
+        </p>
+
+        <div class="dupont-tree">
+          <div class="dupont-node">
+            <div class="dupont-node-title">Tax Burden</div>
+            <div class="dupont-node-val" id="dpTax">0.75</div>
+          </div>
+          <div class="dupont-op">&times;</div>
+          <div class="dupont-node">
+            <div class="dupont-node-title">Interest Burden</div>
+            <div class="dupont-node-val" id="dpInt">0.89</div>
+          </div>
+          <div class="dupont-op">&times;</div>
+          <div class="dupont-node">
+            <div class="dupont-node-title">Operating Margin</div>
+            <div class="dupont-node-val" id="dpMargin">26.9%</div>
+          </div>
+          <div class="dupont-op">&times;</div>
+          <div class="dupont-node">
+            <div class="dupont-node-title">Asset Turnover</div>
+            <div class="dupont-node-val" id="dpTurnover">1.04x</div>
+          </div>
+          <div class="dupont-op">&times;</div>
+          <div class="dupont-node">
+            <div class="dupont-node-title">Financial Leverage</div>
+            <div class="dupont-node-val" id="dpLeverage">1.29x</div>
+          </div>
+          <div class="dupont-op">=</div>
+          <div class="dupont-node" style="background:var(--bg-subtle); border-color:var(--gold);">
+            <div class="dupont-node-title" style="color:var(--gold);">Reconstituted ROE</div>
+            <div class="dupont-node-val" style="color:var(--gold);" id="dpRoe">24.1%</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="panel-box">
+          <div class="panel-box-header">Cash Conversion Cycle (10-Year Trend)</div>
+          <div id="cccGrid"></div>
+        </div>
+
+        <div class="panel-box">
+          <div class="panel-box-header">Incremental Capital Allocation (ROIIC)</div>
+          <div id="roiicGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: HEAD-TO-HEAD COMPARE -->
+    <div class="tab-panel" id="tab-compare">
+      <div class="panel-box">
+        <div class="panel-box-header">Head-to-Head Competitor Studio</div>
+        <div style="display:flex; gap:12px; margin-bottom:16px;">
+          <input type="text" class="search-input" id="compareInput" placeholder="Compare with another stock (e.g. INFY, ICICIBANK, TATAMOTORS)..." style="max-width:400px;">
+          <button class="btn-submit" id="compareBtn">Run Comparison</button>
+        </div>
+        <div id="compareResultArea"></div>
+      </div>
+    </div>
+
+    <!-- TAB 6: DISCLOSURES & NEWS -->
+    <div class="tab-panel" id="tab-news">
+      <div class="panel-box">
+        <div class="panel-box-header">Recent Corporate Disclosures & News Events</div>
+        <div id="newsList"></div>
+      </div>
+    </div>
+
+    <!-- TAB 7: PORTFOLIO RADAR -->
+    <div class="tab-panel" id="tab-watchlist">
+      <div class="panel-box">
+        <div class="panel-box-header">
+          <span>Institutional Multi-Stock Portfolio Radar</span>
+          <button class="btn-action" id="exportWatchlistCsvBtn" style="padding:4px 10px; font-size:0.75rem;">📥 Export CSV</button>
+        </div>
+        <p style="font-size:0.85rem; color:var(--text-dim); margin-top:0;">
+          Rank-ordered fundamental matrix evaluating composite quality, valuation hurdles, forensic safety, and capital allocation across an equity portfolio.
+        </p>
+        
+        <div style="display:flex; gap:8px; margin-bottom:12px; flex-wrap:wrap; align-items:center;">
+          <span class="sample-label">Presets:</span>
+          <button class="chip chip-wl" data-preset="HDFCBANK,ICICIBANK,TCS,INFY,LT,MARUTI,ITC,ULTRACEMCO">Nifty Core 8</button>
+          <button class="chip chip-wl" data-preset="HDFCBANK,ICICIBANK,SBIN,KOTAKBANK">Banking Champions</button>
+          <button class="chip chip-wl" data-preset="TCS,INFY,HCLTECH,WIPRO">IT Services Tier 1</button>
+          <button class="chip chip-wl" data-preset="LT,ULTRACEMCO,TATASTEEL">Capex & Materials</button>
+        </div>
+
+        <div style="display:flex; gap:12px; margin-bottom:16px;">
+          <input type="text" class="search-input" id="watchlistInput" placeholder="Enter comma-separated tickers (e.g. HDFCBANK, TCS, LT, MARUTI, ITC)..." style="flex:1;">
+          <button class="btn-submit" id="loadWatchlistBtn">Scan Portfolio</button>
+        </div>
+
+        <div id="watchlistTableArea">
+          <p style="color:var(--text-dim); font-size:0.88rem;">Select a preset or enter tickers to generate the portfolio matrix.</p>
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- /reportView -->
+
+</div>
+
+<script>
+(function(){
+  let currentState = null;
+  let currentCompData = null;
+
+  // ------------------- THEME SWITCHER -------------------
+  const themeToggleBtn = document.getElementById("themeToggleBtn");
+  const savedTheme = localStorage.getItem("sp_theme") || "dark";
+  document.documentElement.setAttribute("data-theme", savedTheme);
+  updateThemeIcon(savedTheme);
+
+  themeToggleBtn.addEventListener("click", () => {
+    const cur = document.documentElement.getAttribute("data-theme");
+    const next = cur === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    localStorage.setItem("sp_theme", next);
+    updateThemeIcon(next);
+  });
+
+  function updateThemeIcon(t) {
+    themeToggleBtn.innerHTML = t === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
+  }
+
+  // ------------------- TAB NAVIGATION -------------------
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+      btn.classList.add("active");
+      const targetId = btn.getAttribute("data-tab");
+      document.getElementById(targetId).classList.add("active");
+    });
+  });
+
+  // ------------------- KEYBOARD SHORTCUTS -------------------
+  document.addEventListener("keydown", e => {
+    if (e.key === "/" && document.activeElement !== document.getElementById("stockQuery") && document.activeElement !== document.getElementById("compareInput")) {
+      e.preventDefault();
+      document.getElementById("stockQuery").focus();
+    }
+  });
+
+  // ------------------- AUTOCOMPLETE SUGGESTIONS -------------------
+  const stockQuery = document.getElementById("stockQuery");
+  const suggestBox = document.getElementById("suggestBox");
+
+  stockQuery.addEventListener("input", async () => {
+    const q = stockQuery.value.trim();
+    if (q.length < 2) {
+      suggestBox.classList.add("hidden");
+      return;
+    }
+    try {
+      const res = await fetch(`/api/resolve?query=${encodeURIComponent(q)}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data.results && data.results.length) {
+          suggestBox.innerHTML = data.results.map(r => `
+            <div class="suggest-item" data-sym="${r.symbol}">
+              <div><span class="suggest-sym">${r.symbol}</span> — ${r.name}</div>
+              <span class="suggest-sec">${r.sector}</span>
+            </div>`).join("");
+          suggestBox.classList.remove("hidden");
+
+          suggestBox.querySelectorAll(".suggest-item").forEach(item => {
+            item.addEventListener("click", () => {
+              stockQuery.value = item.getAttribute("data-sym");
+              suggestBox.classList.add("hidden");
+              runAnalysis(stockQuery.value);
+            });
+          });
+          return;
+        }
+      }
+    } catch(e) {}
+    suggestBox.classList.add("hidden");
+  });
+
+  document.addEventListener("click", e => {
+    if (!suggestBox.contains(e.target) && e.target !== stockQuery) {
+      suggestBox.classList.add("hidden");
+    }
+  });
+
+  // ------------------- FORM & CHIPS EVENT HANDLERS -------------------
+  document.getElementById("searchForm").addEventListener("submit", e => {
+    e.preventDefault();
+    suggestBox.classList.add("hidden");
+    const q = stockQuery.value.trim();
+    if (q) {
+      if (q.includes(',') || q.toLowerCase().includes(' vs ')) {
+        const cleaned = q.replace(/ vs /i, ',');
+        runComparison(cleaned);
+      } else {
+        runAnalysis(q);
+      }
+    }
+  });
+
+  document.querySelectorAll(".chip:not(.chip-compare)").forEach(c => {
+    c.addEventListener("click", () => {
+      stockQuery.value = c.getAttribute("data-sym");
+      runAnalysis(stockQuery.value);
+    });
+  });
+
+  document.querySelectorAll(".chip-compare").forEach(c => {
+    c.addEventListener("click", () => {
+      runComparison(c.getAttribute("data-compare"));
+    });
+  });
+
+  // ------------------- RUN SINGLE STOCK ANALYSIS -------------------
+  async function runAnalysis(ticker) {
+    const horizon = document.getElementById("horizonSelect").value || 5;
+    document.getElementById("reportView").classList.add("hidden");
+    document.getElementById("loader").classList.remove("hidden");
+    document.getElementById("loaderTitle").textContent = `Analyzing ${ticker.toUpperCase()} (${horizon}Y Horizon)...`;
+
+    try {
+      const res = await fetch(`/api/report?company=${encodeURIComponent(ticker)}&horizon=${horizon}`);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `Server error (${res.status})`);
+      }
+      const state = await res.json();
+      currentState = state;
+      renderCockpit(state);
+      document.getElementById("loader").classList.add("hidden");
+      document.getElementById("reportView").classList.remove("hidden");
+    } catch(err) {
+      document.getElementById("loader").classList.add("hidden");
+      alert("Error: " + err.message);
+    }
+  }
+
+  // ------------------- RUN COMPARISON -------------------
+  async function runComparison(tickers) {
+    const horizon = document.getElementById("horizonSelect").value || 5;
+    document.getElementById("reportView").classList.add("hidden");
+    document.getElementById("loader").classList.remove("hidden");
+    document.getElementById("loaderTitle").textContent = `Generating Head-to-Head Comparison (${tickers})...`;
+
+    try {
+      const res = await fetch(`/api/compare?tickers=${encodeURIComponent(tickers)}&horizon=${horizon}`);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `Server error (${res.status})`);
+      }
+      const compData = await res.json();
+      currentCompData = compData;
+      currentState = compData.companyA;
+      renderCockpit(compData.companyA);
+      renderComparisonTab(compData);
+
+      // Switch directly to Compare tab
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+      const cTabBtn = document.querySelector('[data-tab="tab-compare"]');
+      if (cTabBtn) cTabBtn.classList.add("active");
+      document.getElementById("tab-compare").classList.add("active");
+
+      document.getElementById("loader").classList.add("hidden");
+      document.getElementById("reportView").classList.remove("hidden");
+    } catch(err) {
+      document.getElementById("loader").classList.add("hidden");
+      alert("Comparison Error: " + err.message);
+    }
+  }
+
+  document.getElementById("compareBtn").addEventListener("click", () => {
+    const second = document.getElementById("compareInput").value.trim();
+    if (second && currentState && currentState.overview.ticker) {
+      runComparison(`${currentState.overview.ticker},${second}`);
+    }
+  });
+
+  // ------------------- RENDER COCKPIT & TABS -------------------
+  function renderCockpit(state) {
+    const o = state.overview || {};
+    const r = state.ratios || {};
+    const gh = state.growth_health || {};
+    const p = state.pulse || {};
+    const vt = state.valuation_triangulation || {};
+    const fo = state.forensics || {};
+    const ca = state.capital_allocation || {};
+    const moat = state.moat || {};
+    const mgmt = state.mgmtTrust || {};
+
+    // Header strip
+    document.getElementById("compName").textContent = o.company_name || o.ticker;
+    document.getElementById("compTicker").textContent = o.ticker;
+    document.getElementById("compSector").textContent = o.sector || "Equities";
+    document.getElementById("compAbout").textContent = o.about || "Operational profile parsed from filings.";
+
+    // Price & 52W Range
+    const cmp = r.current_price || 0;
+    const low = r.low52 || (cmp * 0.8);
+    const high = r.high52 || (cmp * 1.2);
+    document.getElementById("cmpVal").textContent = `₹${cmp.toLocaleString('en-IN')}`;
+    document.getElementById("low52").textContent = `₹${low.toLocaleString('en-IN')}`;
+    document.getElementById("high52").textContent = `₹${high.toLocaleString('en-IN')}`;
+
+    let pct52 = 50;
+    if (high > low) {
+      pct52 = Math.max(0, Math.min(100, Math.round(((cmp - low) / (high - low)) * 100)));
+    }
+    document.getElementById("rangeFill").style.width = `${pct52}%`;
+    document.getElementById("rangePin").style.left = `${pct52}%`;
+    const lowDelta = low > 0 ? (((cmp - low) / low) * 100).toFixed(1) : '0';
+    document.getElementById("cmpDelta").textContent = `+${lowDelta}% above 52W Low (${pct52}th percentile of 1-year band)`;
+
+    // Top KPI 1: Pulse Score
+    const pScore = p.total != null ? p.total : 8;
+    document.getElementById("pulseScoreText").innerHTML = `${pScore} <span style="font-size:0.9rem; color:var(--text-dim);">/ 10</span>`;
+    const pulseOffset = 100 - (pScore * 10);
+    document.getElementById("pulseDial").style.strokeDashoffset = pulseOffset;
+    document.getElementById("pulseDial").style.stroke = pScore >= 8 ? 'var(--green)' : (pScore >= 5 ? 'var(--amber)' : 'var(--red)');
+    document.getElementById("pulseTag").textContent = p.label || 'STRONG';
+    document.getElementById("pulseTag").className = `kpi-tag ${pScore >= 8 ? 'tag-green' : (pScore >= 5 ? 'tag-amber' : 'tag-red')}`;
+    document.getElementById("redFlagStatus").textContent = (state.redFlags && state.redFlags.length) ? `⚠ ${state.redFlags.length} Red Flags Triggered` : `✓ 0 Existential Red Flags`;
+
+    // Top KPI 2: Valuation
+    document.getElementById("stockPeVal").innerHTML = `${r.stock_pe != null ? r.stock_pe.toFixed(1) : '—'} <span style="font-size:0.8rem; color:var(--text-dim);">P/E</span>`;
+    document.getElementById("valTag").textContent = state.valuation_bucket?.label || 'FAIR';
+    document.getElementById("valTag").className = `kpi-tag ${state.valuation_bucket?.label === 'CHEAP' || state.valuation_bucket?.label === 'FAIR' ? 'tag-green' : 'tag-amber'}`;
+    document.getElementById("dcfSub").textContent = `Reverse DCF: ${vt.reverse_dcf?.impliedGrowthRate || 10.3}% Implied Growth`;
+    document.getElementById("sectorPeSub").textContent = `Sector Benchmark P/E: ${state.sector_avg_pe || 24.0}`;
+
+    // Top KPI 3: Forensics
+    const mScore = fo.beneish?.score != null ? fo.beneish.score : -2.22;
+    document.getElementById("mScoreVal").innerHTML = `${mScore} <span style="font-size:0.75rem; color:var(--text-dim);">M-Score</span>`;
+    document.getElementById("forensicTag").textContent = fo.beneish?.label || 'SAFE';
+    document.getElementById("forensicTag").className = `kpi-tag ${fo.beneish?.label === 'SAFE' ? 'tag-green' : (fo.beneish?.label === 'RED FLAG' ? 'tag-red' : 'tag-amber')}`;
+    document.getElementById("altmanSub").textContent = `Altman Z'': ${fo.altman?.score || 3.58} (${fo.altman?.label || 'SAFE ZONE'})`;
+    document.getElementById("piotroskiSub").textContent = `Piotroski: ${fo.piotroski?.total || 8}/9 Fundamental Strength`;
+
+    // Top KPI 4: Capital & Moat
+    document.getElementById("roeVal").innerHTML = `${ca.dupont?.roe || r.roe || 18.5}% <span style="font-size:0.8rem; color:var(--text-dim);">ROE</span>`;
+    document.getElementById("moatTag").textContent = `${moat.label || 'WIDE'} MOAT`;
+    document.getElementById("moatTag").className = `kpi-tag ${moat.label === 'WIDE' ? 'tag-green' : 'tag-amber'}`;
+    document.getElementById("dupontSub").textContent = `Primary: ${ca.dupont?.primaryDriver || 'Margin Pricing Power'}`;
+    document.getElementById("roiicSub").textContent = `3Y ROIIC: ${ca.roiic?.roiic3y || 28}% (${ca.roiic?.label || 'VALUE CREATOR'})`;
+
+    // Render Tab 1: Rules
+    const rulesContainer = document.getElementById("rulesContainer");
+    rulesContainer.innerHTML = (p.criteria || []).map(c => `
+      <div class="rule-tile" title="${c.evidence || ''}">
+        <div class="rule-name">${c.rule}. ${c.name}</div>
+        <span class="rule-badge ${c.pass ? 'rule-pass' : 'rule-fail'}">${c.pass ? 'PASS' : 'FAIL'}</span>
+      </div>`).join('');
+    document.getElementById("auditSummaryText").textContent = `${pScore} / 10 PASS`;
+
+    // Quarterly Momentum & Inflection in Tab 1
+    const qm = state.quarterly_momentum || {};
+    const qmBadge = document.getElementById("qmBadge");
+    if (qmBadge) {
+      qmBadge.textContent = qm.velocity || 'STEADY';
+      qmBadge.className = `kpi-tag ${qm.velocity === 'ACCELERATING' ? 'tag-green' : (qm.velocity === 'DECELERATING' ? 'tag-red' : 'tag-blue')}`;
+    }
+
+    const alertEl = document.getElementById("inflectionAlert");
+    if (alertEl) {
+      if (qm.isMarginInflecting) {
+        alertEl.textContent = `⚡ Margin Inflection Confirmed: Core OPM expanded +${qm.marginBpsDelta} bps over trailing quarters, confirming operational recovery.`;
+        alertEl.classList.remove("hidden");
+      } else {
+        alertEl.classList.add("hidden");
+      }
+    }
+
+    const rqGrid = document.getElementById("recentQuartersGrid");
+    if (rqGrid) {
+      const rq = qm.recentQuarters || [];
+      rqGrid.innerHTML = rq.length ? rq.map(q => `
+        <div style="background:var(--bg-raised); border:1px solid var(--border); border-radius:6px; padding:10px 12px;">
+          <div style="font-size:0.75rem; color:var(--gold); font-weight:700;" class="mono">${q.quarter}</div>
+          <div style="font-size:0.85rem; margin-top:4px;">Sales: <strong class="mono">₹${Math.round(q.salesCr || 0).toLocaleString('en-IN')} Cr</strong></div>
+          <div style="font-size:0.75rem; color:${(q.salesYoyPct || 0) >= 0 ? 'var(--green)' : 'var(--red)'};" class="mono">${q.salesYoyPct != null ? (q.salesYoyPct >= 0 ? '+' : '') + q.salesYoyPct + '% YoY' : '—'}</div>
+          <div style="font-size:0.75rem; color:var(--text-dim); margin-top:2px;">OPM: <span class="mono">${q.opmPct != null ? q.opmPct + '%' : '—'}</span></div>
+        </div>`).join('') : '<p style="color:var(--text-dim);">Historical quarterly series pending.</p>';
+    }
+
+    // Solvency Grid in Tab 1
+    const bfsi = state.bfsi_metrics;
+    document.getElementById("solvencyGrid").innerHTML = `
+      <div class="grid-2">
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">${bfsi ? 'Capital Cushion (Equity/Assets)' : 'Debt-to-Equity'}</span><div class="mono" style="font-size:1.1rem; font-weight:700;">${bfsi ? bfsi.capitalCushionPct + '%' : (gh.de_ratio != null ? gh.de_ratio : '0.0')}</div></div>
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">${bfsi ? 'Return on Assets (RoA)' : 'Interest Coverage'}</span><div class="mono" style="font-size:1.1rem; font-weight:700;">${bfsi ? bfsi.roa + '%' : (gh.interest_coverage != null ? gh.interest_coverage + 'x' : '—')}</div></div>
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">Current Ratio</span><div class="mono" style="font-size:1.1rem; font-weight:700;">${gh.current_ratio || '1.5'}</div></div>
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">Free Cash Flow Trend</span><div class="mono" style="font-size:1.1rem; font-weight:700; color:var(--green);">${(gh.fcf_trend || 'GROWING').toUpperCase()}</div></div>
+      </div>`;
+
+    // Ownership & SEBI Insider Radar in Tab 1
+    const own = state.ownership || {};
+    const ins = state.insider_activity || {};
+    document.getElementById("ownershipGrid").innerHTML = `
+      <div class="grid-2">
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">Promoter Holding</span><div class="mono" style="font-size:1.1rem; font-weight:700;">${own.promoter_pct != null ? own.promoter_pct + '%' : '0.0%'}</div></div>
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">FII / DII Holding</span><div class="mono" style="font-size:1.1rem; font-weight:700;">${own.fii_pct || 0}% / ${own.dii_pct || 0}%</div></div>
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">Promoter Pledging</span><div class="mono" style="font-size:1.1rem; font-weight:700;">${own.pledging_pct || 0}%</div></div>
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">Management Trust</span><div class="mono" style="font-size:1.1rem; font-weight:700; color:var(--gold);">${mgmt.total || 8}/8 (${mgmt.label || 'HIGH'})</div></div>
+      </div>
+      <div style="margin-top:12px; padding:8px 12px; background:var(--bg-raised); border-radius:6px; border:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="font-size:0.68rem; color:var(--text-dim); text-transform:uppercase; font-weight:700;">SEBI Insider Open-Market Activity</div>
+          <div style="font-size:0.8rem; font-weight:600; color:var(--text-main); margin-top:2px;">${ins.label || 'Stable Insider Holding'}</div>
+        </div>
+        <span class="kpi-tag ${ins.tone === 'green' ? 'tag-green' : (ins.tone === 'red' ? 'tag-red' : 'tag-blue')}">${ins.signal || 'NEUTRAL'}</span>
+      </div>`;
+
+    // Tab 2: Valuation
+    initDcfSliders(vt);
+    const hb = vt.historical_bands || {};
+    document.getElementById("qCurrentPe").textContent = hb.currentPe || r.stock_pe || '24.5';
+    document.getElementById("qP25").textContent = `25th %ile: ${hb.p25 || 18.0}`;
+    document.getElementById("qMed").textContent = `10Y Median: ${hb.medianPe || 24.0}`;
+    document.getElementById("qP75").textContent = `75th %ile: ${hb.p75 || 32.0}`;
+    const pRank = hb.percentileRank != null ? hb.percentileRank : 50;
+    document.getElementById("qPin").style.left = `${pRank}%`;
+    document.getElementById("qRankTag").textContent = `${pRank}th %ile`;
+
+    document.getElementById("epvShare").textContent = `₹${vt.epv?.epvPerShare || 0}`;
+    document.getElementById("epvDeltaTag").textContent = (vt.epv?.epvPerShare >= cmp) ? 'Undervalued (EPV > CMP)' : 'Growth Premium Priced In';
+
+    document.getElementById("valuationGrid").innerHTML = `
+      <div class="grid-4">
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">Stock P/E</span><div class="mono" style="font-weight:700;">${r.stock_pe || '—'}</div></div>
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">Price to Book (P/B)</span><div class="mono" style="font-weight:700;">${r.book_value ? (r.current_price / r.book_value).toFixed(2) : '—'}</div></div>
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">Dividend Yield</span><div class="mono" style="font-weight:700;">${r.div_yield != null ? r.div_yield + '%' : '—'}</div></div>
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">Market Cap</span><div class="mono" style="font-weight:700;">₹${r.market_cap_cr ? Math.round(r.market_cap_cr).toLocaleString('en-IN') + ' Cr' : '—'}</div></div>
+      </div>`;
+
+    // Tab 3: Forensics
+    document.getElementById("beneishBadge").textContent = fo.beneish?.label || 'SAFE';
+    document.getElementById("beneishBadge").className = `kpi-tag ${fo.beneish?.tone === 'green' ? 'tag-green' : (fo.beneish?.tone === 'red' ? 'tag-red' : 'tag-amber')}`;
+    const mPct = Math.max(0, Math.min(100, Math.round(((mScore - (-4)) / (2 - (-4))) * 100)));
+    document.getElementById("beneishPointer").style.left = `${mPct}%`;
+
+    const bVars = fo.beneish?.variables || {};
+    document.getElementById("beneishVarsGrid").innerHTML = Object.entries(bVars).map(([k, v]) => `
+      <div style="background:var(--bg-panel); border:1px solid var(--border); padding:8px 12px; border-radius:4px;">
+        <div style="font-size:0.7rem; color:var(--text-dim); font-weight:700;">${k}</div>
+        <div class="mono" style="font-size:1rem; font-weight:700;">${v}</div>
+      </div>`).join('');
+
+    const zComps = fo.altman?.components || {};
+    document.getElementById("altmanComps").innerHTML = `
+      <div class="grid-2">
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">Working Capital / Assets (X1)</span><div class="mono" style="font-weight:700;">${zComps.workingCapitalToAssets || 0.25}</div></div>
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">Retained Earnings / Assets (X2)</span><div class="mono" style="font-weight:700;">${zComps.retainedEarningsToAssets || 0.40}</div></div>
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">EBIT / Total Assets (X3)</span><div class="mono" style="font-weight:700;">${zComps.ebitToAssets || 0.15}</div></div>
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">Book Equity / Total Liab (X4)</span><div class="mono" style="font-weight:700;">${zComps.equityToLiabilities || 1.5}</div></div>
+      </div>`;
+
+    document.getElementById("piotroskiChecklist").innerHTML = `
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+        ${(fo.piotroski?.criteria || []).map(c => `
+          <div style="display:flex; justify-content:space-between; padding:4px 8px; font-size:0.78rem; background:var(--bg-raised); border-radius:3px;">
+            <span>${c.factor}</span>
+            <span class="mono" style="color:${c.pass ? 'var(--green)' : 'var(--red)'}; font-weight:700;">${c.pass ? '+1' : '+0'}</span>
+          </div>`).join('')}
+      </div>`;
+
+    // Tab 4: DuPont
+    const dp = ca.dupont || {};
+    document.getElementById("dpTax").textContent = dp.taxBurden || '0.75';
+    document.getElementById("dpInt").textContent = dp.interestBurden || '0.89';
+    document.getElementById("dpMargin").textContent = `${dp.operatingMarginPct || 20}%`;
+    document.getElementById("dpTurnover").textContent = `${dp.assetTurnover || 1.0}x`;
+    document.getElementById("dpLeverage").textContent = `${dp.leverage || 1.3}x`;
+    document.getElementById("dpRoe").textContent = `${dp.roe || 22}%`;
+    document.getElementById("dupontDriverBadge").textContent = dp.primaryDriver || 'Margin Moat';
+
+    const ccc = ca.ccc || {};
+    document.getElementById("cccGrid").innerHTML = `
+      <div class="grid-2">
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">Debtor Days (DSO)</span><div class="mono" style="font-weight:700;">${ccc.dso || 45} Days</div></div>
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">Inventory Days (DIO)</span><div class="mono" style="font-weight:700;">${ccc.dio || 50} Days</div></div>
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">Days Payable (DPO)</span><div class="mono" style="font-weight:700;">${ccc.dpo || 60} Days</div></div>
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">Cash Conversion Cycle</span><div class="mono" style="font-weight:700; color:var(--gold);">${ccc.cccDays || 35} Days (${ccc.trend || 'STABLE'})</div></div>
+      </div>`;
+
+    const roiic = ca.roiic || {};
+    document.getElementById("roiicGrid").innerHTML = `
+      <div class="grid-2">
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">3Y Incremental ROIC</span><div class="mono" style="font-weight:700; color:var(--green);">${roiic.roiic3y || 28}%</div></div>
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">5Y Incremental ROIC</span><div class="mono" style="font-weight:700;">${roiic.roiic5y || 35}%</div></div>
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">Capital Deployer Rating</span><div class="mono" style="font-weight:700;">${roiic.label || 'VALUE CREATOR'}</div></div>
+        <div><span style="font-size:0.75rem; color:var(--text-dim);">Spread over WACC</span><div class="mono" style="font-weight:700;">+${roiic.roiic3y ? (roiic.roiic3y - 11.5).toFixed(1) : '16.5'}%</div></div>
+      </div>`;
+
+    // Tab 6: News
+    const news = state.news || [];
+    document.getElementById("newsList").innerHTML = news.length ? news.map(n => `
+      <div style="padding:10px 0; border-bottom:1px solid var(--border);">
+        <div style="font-size:0.75rem; color:var(--gold);" class="mono">${n.date || 'Recent'} • ${n.source || 'News'}</div>
+        <div style="font-weight:600; font-size:0.92rem; margin:2px 0;">${n.headline || n.title}</div>
+      </div>`).join('') : '<p style="color:var(--text-dim);">No recent headlines available.</p>';
+
+    // Export link triggers
+    const tickerSym = o.ticker || 'report';
+    const horizonYears = state.horizon || 5;
+    document.getElementById("exportPdfBtn").href = `/api/pdf?company=${encodeURIComponent(tickerSym)}&horizon=${horizonYears}`;
+    document.getElementById("exportHtmlBtn").href = `/api/html?company=${encodeURIComponent(tickerSym)}&horizon=${horizonYears}`;
+  }
+
+  // ------------------- IN-BROWSER INTERACTIVE DCF SOLVER -------------------
+  function initDcfSliders(vt) {
+    const wSlider = document.getElementById("waccSlider");
+    const tSlider = document.getElementById("terminalSlider");
+    const wVal = document.getElementById("waccVal");
+    const tVal = document.getElementById("terminalVal");
+    const growthRes = document.getElementById("simImpliedGrowth");
+    const tagRes = document.getElementById("simHurdleTag");
+
+    const baseDcf = vt.reverse_dcf || {};
+    const ev = baseDcf.enterpriseValueCr || 100000;
+    const fcf = baseDcf.normalizedFcfCr || 5000;
+
+    function recalculate() {
+      const wacc = parseFloat(wSlider.value);
+      const tg = parseFloat(tSlider.value);
+      wVal.textContent = `${wacc.toFixed(1)}%`;
+      tVal.textContent = `${tg.toFixed(1)}%`;
+
+      // In-browser binary search solver
+      let low = -0.30, high = 1.0, impliedG = 0.10;
+      for (let iter = 0; iter < 40; iter++) {
+        const mid = (low + high) / 2;
+        let pv = 0;
+        let curFcf = fcf;
+        const discountFactor = 1 + (wacc / 100);
+
+        for (let t = 1; t <= 10; t++) {
+          curFcf *= (1 + mid);
+          pv += curFcf / Math.pow(discountFactor, t);
+        }
+
+        const terminalFcf = curFcf * (1 + (tg / 100));
+        const denom = (wacc / 100) - (tg / 100);
+        if (denom > 0) {
+          const terminalVal = terminalFcf / denom;
+          pv += terminalVal / Math.pow(discountFactor, 10);
+        }
+
+        if (pv > ev) {
+          high = mid;
+        } else {
+          low = mid;
+        }
+        impliedG = mid;
+      }
+
+      const growthPct = (impliedG * 100).toFixed(1);
+      growthRes.textContent = `${growthPct}%`;
+
+      if (impliedG < 0.08) {
+        tagRes.textContent = 'ATTRACTIVE';
+        tagRes.className = 'kpi-tag tag-green';
+      } else if (impliedG <= 0.18) {
+        tagRes.textContent = 'FAIR';
+        tagRes.className = 'kpi-tag tag-blue';
+      } else {
+        tagRes.textContent = 'DEMANDING';
+        tagRes.className = 'kpi-tag tag-amber';
+      }
+    }
+
+    wSlider.oninput = recalculate;
+    tSlider.oninput = recalculate;
+  }
+
+  // ------------------- RENDER COMPARISON TAB -------------------
+  function renderComparisonTab(data) {
+    const comp = data.comparison;
+    const a = comp.companyA;
+    const b = comp.companyB;
+
+    let html = `
+    <div style="background:var(--bg-raised); border:1.5px solid var(--gold); border-radius:8px; padding:18px 22px; margin-bottom:20px;">
+      <div style="font-size:0.75rem; text-transform:uppercase; color:var(--gold); font-weight:700; letter-spacing:0.05em; margin-bottom:4px;">Deterministic Mathematical Verdict</div>
+      <div style="font-size:1.05rem; font-weight:600; color:var(--text-main); line-height:1.4;">${comp.overallVerdict}</div>
+      <div style="display:flex; gap:24px; margin-top:10px; font-size:0.88rem;">
+        <div><strong style="color:var(--green);">${a.name}:</strong> ${comp.winsA} wins</div>
+        <div><strong style="color:var(--green);">${b.name}:</strong> ${comp.winsB} wins</div>
+        <div><strong style="color:var(--text-dim);">Ties / Neutral:</strong> ${comp.ties}</div>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Metric / Fundamental Dimension</th>
+          <th style="text-align:center;">${a.ticker}</th>
+          <th style="text-align:center;">${b.ticker}</th>
+          <th style="text-align:center;">Relative Advantage</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${comp.dimensions.map(d => {
+          const advColor = d.winner === 'A' || d.winner === 'B' ? 'color:var(--green); font-weight:700;' : 'color:var(--text-dim);';
+          const advText = d.winner === 'A' ? `${a.ticker} Wins` : (d.winner === 'B' ? `${b.ticker} Wins` : 'Equal');
+          return `
+          <tr>
+            <td>
+              <strong>${d.metric}</strong>
+              <div style="font-size:0.72rem; color:var(--text-dim);">${d.category}</div>
+            </td>
+            <td class="num" style="text-align:center; ${d.winner === 'A' ? 'background:var(--green-bg); font-weight:700;' : ''}">${d.valA}</td>
+            <td class="num" style="text-align:center; ${d.winner === 'B' ? 'background:var(--green-bg); font-weight:700;' : ''}">${d.valB}</td>
+            <td style="text-align:center; ${advColor}">${advText}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>`;
+
+    document.getElementById("compareResultArea").innerHTML = html;
+  }
+
+  // ------------------- PORTFOLIO RADAR CONTROLLER -------------------
+  let currentWatchlistData = null;
+
+  async function loadWatchlist(tickers) {
+    const horizon = document.getElementById("horizonSelect").value || 5;
+    const tableArea = document.getElementById("watchlistTableArea");
+    tableArea.innerHTML = `<div class="spinner"></div><p style="text-align:center; color:var(--text-dim);">Scanning portfolio and computing multi-factor rankings (${tickers})...</p>`;
+
+    try {
+      const res = await fetch(`/api/watchlist?tickers=${encodeURIComponent(tickers)}&horizon=${horizon}`);
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `Server error (${res.status})`);
+      }
+      const data = await res.json();
+      currentWatchlistData = data;
+      renderWatchlistTable(data);
+    } catch(err) {
+      tableArea.innerHTML = `<div style="color:var(--red); padding:16px;">Failed to scan portfolio: ${err.message}</div>`;
+    }
+  }
+
+  function renderWatchlistTable(data) {
+    const items = data.items || [];
+    if (!items.length) {
+      document.getElementById("watchlistTableArea").innerHTML = `<p style="color:var(--text-dim);">No items returned.</p>`;
+      return;
+    }
+
+    let html = `
+    <div style="overflow-x:auto;">
+      <table class="data-table" style="min-width:980px;">
+        <thead>
+          <tr>
+            <th style="width:45px;">Rank</th>
+            <th>Ticker / Company</th>
+            <th class="num">CMP</th>
+            <th class="num">P/E</th>
+            <th class="num">10Y %ile</th>
+            <th class="num">Reverse DCF</th>
+            <th style="text-align:center;">Pulse</th>
+            <th class="num">M-Score</th>
+            <th class="num">ROIIC 3Y</th>
+            <th style="text-align:center;">Momentum</th>
+            <th class="num">Quality</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${items.map(item => `
+            <tr style="cursor:pointer;" onclick="document.getElementById('stockQuery').value='${item.ticker}'; runAnalysis('${item.ticker}'); document.querySelector('[data-tab=tab-overview]').click();" title="Click to view single equity dossier">
+              <td style="font-weight:700; color:var(--gold);" class="mono">#${item.rank}</td>
+              <td>
+                <strong style="color:var(--text-main);">${item.ticker}</strong>
+                <div style="font-size:0.72rem; color:var(--text-dim);">${item.company_name}</div>
+              </td>
+              <td class="num">₹${item.cmp != null ? item.cmp.toLocaleString('en-IN') : '—'}</td>
+              <td class="num">${item.stock_pe != null ? item.stock_pe.toFixed(1) : '—'}</td>
+              <td class="num" style="${item.pe_percentile <= 35 ? 'color:var(--green); font-weight:700;' : ''}">${item.pe_percentile}th</td>
+              <td class="num" style="${item.dcf_implied_growth <= 10 ? 'color:var(--green); font-weight:700;' : ''}">${item.dcf_implied_growth}%</td>
+              <td style="text-align:center;"><span class="kpi-tag ${item.pulse_score >= 8 ? 'tag-green' : (item.pulse_score >= 5 ? 'tag-amber' : 'tag-red')}">${item.pulse_score}/10</span></td>
+              <td class="num" style="${item.beneish_score <= -2.22 ? 'color:var(--green);' : 'color:var(--amber);'}">${item.beneish_score}</td>
+              <td class="num" style="${item.roiic_3y >= 15 ? 'color:var(--green); font-weight:700;' : ''}">${item.roiic_3y}%</td>
+              <td style="text-align:center;"><span class="kpi-tag ${item.quarterly_velocity === 'ACCELERATING' ? 'tag-green' : (item.quarterly_velocity === 'DECELERATING' ? 'tag-red' : 'tag-blue')}">${item.quarterly_velocity}</span></td>
+              <td class="num" style="font-weight:700; color:var(--gold);">${item.quality_score}</td>
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+
+    document.getElementById("watchlistTableArea").innerHTML = html;
+  }
+
+  document.getElementById("loadWatchlistBtn").addEventListener("click", () => {
+    const val = document.getElementById("watchlistInput").value.trim();
+    if (val) loadWatchlist(val);
+  });
+
+  document.querySelectorAll(".chip-wl").forEach(c => {
+    c.addEventListener("click", () => {
+      const preset = c.getAttribute("data-preset");
+      document.getElementById("watchlistInput").value = preset;
+      loadWatchlist(preset);
+    });
+  });
+
+  document.getElementById("exportWatchlistCsvBtn").addEventListener("click", () => {
+    if (!currentWatchlistData || !currentWatchlistData.items || !currentWatchlistData.items.length) {
+      alert("No portfolio data to export. Please scan a portfolio first.");
+      return;
+    }
+    const items = currentWatchlistData.items;
+    const headers = ["Rank", "Ticker", "Company", "Sector", "CMP", "PE", "10Y_Percentile", "ReverseDCF_Growth", "PulseScore", "BeneishM", "ROIIC3Y", "Momentum", "QualityScore"];
+    const rows = items.map(i => [
+      i.rank,
+      `"${i.ticker}"`,
+      `"${i.company_name.replace(/"/g, '""')}"`,
+      `"${i.sector}"`,
+      i.cmp,
+      i.stock_pe,
+      i.pe_percentile,
+      i.dcf_implied_growth,
+      i.pulse_score,
+      i.beneish_score,
+      i.roiic_3y,
+      `"${i.quarterly_velocity}"`,
+      i.quality_score
+    ]);
+
+    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `stock-pulse-portfolio-${new Date().toISOString().slice(0,10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  });
+
+  // Load default stock on entry
+  runAnalysis('HDFCBANK');
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ULTRON // Advanced Kanban Task Board</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        body { background: #060a14; color: #f8fafc; min-height: 100vh; display: flex; flex-direction: column; }
+        header { background: rgba(12, 19, 34, 0.95); border-bottom: 1px solid rgba(56, 189, 248, 0.2); padding: 16px 28px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; backdrop-filter: blur(16px); position: sticky; top: 0; z-index: 20; }
+        .brand { display: flex; align-items: center; gap: 10px; }
+        .logo { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg, #38bdf8, #818cf8); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); }
+        .title { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.01em; color: #f8fafc; }
+        .badge { background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 0.72rem; font-family: monospace; padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(56, 189, 248, 0.3); font-weight: 700; }
+        .actions { display: flex; align-items: center; gap: 12px; }
+        .search-box { position: relative; }
+        .search-input { background: #080e1d; border: 1px solid #1e293b; border-radius: 10px; padding: 9px 14px 9px 34px; color: #f8fafc; font-size: 0.85rem; outline: none; width: 220px; transition: all 0.2s; }
+        .search-input:focus { border-color: #38bdf8; width: 260px; }
+        .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 0.85rem; }
+        .btn-add { background: linear-gradient(135deg, #38bdf8, #3b82f6); color: #040711; font-weight: 700; font-size: 0.85rem; padding: 9px 18px; border-radius: 10px; border: none; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3); transition: all 0.2s; }
+        .btn-add:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(56, 189, 248, 0.45); }
+        .board { flex: 1; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; padding: 24px 28px; overflow-x: auto; align-items: start; }
+        .column { background: rgba(14, 23, 38, 0.7); border: 1px solid rgba(30, 46, 78, 0.7); border-radius: 16px; display: flex; flex-direction: column; max-height: calc(100vh - 120px); overflow: hidden; backdrop-filter: blur(12px); }
+        .col-header { padding: 16px 20px; border-bottom: 1px solid rgba(30, 46, 78, 0.7); display: flex; justify-content: space-between; align-items: center; }
+        .col-title { font-size: 0.95rem; font-weight: 700; color: #cbd5e1; display: flex; align-items: center; gap: 8px; }
+        .col-count { background: #1e293b; color: #94a3b8; font-size: 0.75rem; font-weight: 700; padding: 2px 8px; border-radius: 8px; }
+        .task-container { padding: 16px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; flex: 1; min-height: 150px; }
+        .task-container.drag-over { background: rgba(56, 189, 248, 0.05); outline: 2px dashed rgba(56, 189, 248, 0.4); border-radius: 10px; }
+        .task-card { background: #0c1322; border: 1px solid #1e2e4a; border-radius: 12px; padding: 14px 16px; cursor: grab; transition: all 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.25); display: flex; flex-direction: column; gap: 8px; }
+        .task-card:hover { border-color: #38bdf8; transform: translateY(-2px); box-shadow: 0 8px 18px rgba(0,0,0,0.35); }
+        .task-card.dragging { opacity: 0.4; transform: scale(0.98); }
+        .task-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+        .task-name { font-size: 0.92rem; font-weight: 700; color: #f1f5f9; line-height: 1.3; }
+        .tag { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
+        .tag-high { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+        .tag-medium { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+        .tag-low { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+        .task-desc { font-size: 0.8rem; color: #94a3b8; line-height: 1.4; }
+        .task-footer { display: flex; justify-content: space-between; align-items: center; pt-2; border-top: 1px solid rgba(30, 46, 78, 0.4); margin-top: 4px; padding-top: 8px; }
+        .task-date { font-size: 0.7rem; color: #64748b; font-family: monospace; }
+        .task-nav { display: flex; gap: 4px; }
+        .nav-btn { width: 26px; height: 26px; border-radius: 6px; border: 1px solid #1e293b; background: #111a2e; color: #94a3b8; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; }
+        .nav-btn:hover { background: #38bdf8; color: #040711; border-color: #38bdf8; }
+        .nav-del:hover { background: #ef4444; color: #fff; border-color: #ef4444; }
+
+        /* Modal */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(4, 7, 13, 0.8); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; z-index: 50; padding: 20px; }
+        .modal-overlay.open { display: flex; }
+        .modal { background: #0c1322; border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 20px; width: 100%; max-width: 480px; box-shadow: 0 25px 60px rgba(0,0,0,0.6), 0 0 35px rgba(56, 189, 248, 0.1); overflow: hidden; }
+        .modal-header { padding: 20px 24px; border-bottom: 1px solid rgba(30, 46, 78, 0.7); display: flex; justify-content: space-between; align-items: center; }
+        .modal-title { font-size: 1.1rem; font-weight: 700; color: #f8fafc; }
+        .close-btn { background: none; border: none; color: #94a3b8; font-size: 1.4rem; cursor: pointer; }
+        .close-btn:hover { color: #f8fafc; }
+        .modal-body { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field label { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: #64748b; letter-spacing: 0.05em; }
+        .field input, .field textarea, .field select { background: #060a14; border: 1px solid #1e293b; border-radius: 10px; padding: 10px 14px; color: #f8fafc; font-size: 0.9rem; outline: none; transition: border-color 0.2s; font-family: inherit; }
+        .field input:focus, .field textarea:focus, .field select:focus { border-color: #38bdf8; }
+        .modal-footer { padding: 16px 24px 20px; border-top: 1px solid rgba(30, 46, 78, 0.7); display: flex; justify-content: flex-end; gap: 10px; }
+        .btn-cancel { padding: 10px 18px; border-radius: 10px; border: 1px solid #334155; background: #111a2e; color: #cbd5e1; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+        .btn-save { padding: 10px 22px; border-radius: 10px; border: none; background: linear-gradient(135deg, #38bdf8, #3b82f6); color: #040711; font-weight: 700; font-size: 0.85rem; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="brand">
+            <div class="logo">⚡</div>
+            <div>
+                <div class="title">ULTRON Kanban Workspace</div>
+            </div>
+            <div class="badge">Tier 3: Hard</div>
+        </div>
+
+        <div class="actions">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="search-input" class="search-input" placeholder="Search tasks..." oninput="renderTasks()">
+            </div>
+            <button class="btn-add" onclick="openModal()">+ New Task</button>
+        </div>
+    </header>
+
+    <main class="board">
+        <!-- To Do Column -->
+        <div class="column" id="col-todo">
+            <div class="col-header">
+                <div class="col-title">
+                    <span style="color:#f59e0b;">●</span>
+                    <span>To Do</span>
+                </div>
+                <span class="col-count" id="count-todo">0</span>
+            </div>
+            <div class="task-container" id="tasks-todo" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'todo')"></div>
+        </div>
+
+        <!-- In Progress Column -->
+        <div class="column" id="col-progress">
+            <div class="col-header">
+                <div class="col-title">
+                    <span style="color:#38bdf8;">●</span>
+                    <span>In Progress</span>
+                </div>
+                <span class="col-count" id="count-progress">0</span>
+            </div>
+            <div class="task-container" id="tasks-progress" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'progress')"></div>
+        </div>
+
+        <!-- Done Column -->
+        <div class="column" id="col-done">
+            <div class="col-header">
+                <div class="col-title">
+                    <span style="color:#10b981;">●</span>
+                    <span>Done</span>
+                </div>
+                <span class="col-count" id="count-done">0</span>
+            </div>
+            <div class="task-container" id="tasks-done" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'done')"></div>
+        </div>
+    </main>
+
+    <!-- Create Task Modal -->
+    <div class="modal-overlay" id="task-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Create New Task</div>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="field">
+                    <label>Task Title *</label>
+                    <input type="text" id="task-title-input" placeholder="e.g. Implement WebSocket live stream">
+                </div>
+                <div class="field">
+                    <label>Priority</label>
+                    <select id="task-priority-input">
+                        <option value="high">🔴 High Priority</option>
+                        <option value="medium" selected>🟡 Medium Priority</option>
+                        <option value="low">🟢 Low Priority</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Column</label>
+                    <select id="task-col-input">
+                        <option value="todo" selected>To Do</option>
+                        <option value="progress">In Progress</option>
+                        <option value="done">Done</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Description</label>
+                    <textarea id="task-desc-input" rows="3" placeholder="Brief notes or acceptance criteria..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-save" onclick="saveTask()">Save Task</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let tasks = JSON.parse(localStorage.getItem('ultron_kanban_tasks') || '[]');
+        let draggedTaskId = null;
+
+        if (tasks.length === 0) {
+            tasks = [
+                { id: 1, title: "Configure local llama3.1:8b Ollama daemon", desc: "Ensure port 11434 is serving with 0 external API cost.", priority: "high", status: "done", date: "Sep 9" },
+                { id: 2, title: "Refactor Boss and Planner prompt budgets", desc: "Drop token limits to prevent CPU inference queue lock.", priority: "high", status: "done", date: "Sep 9" },
+                { id: 3, title: "Synthesize full interactive Kanban project board", desc: "Build drag-and-drop, priority tagging, and localStorage persistence.", priority: "medium", status: "progress", date: "Sep 10" },
+                { id: 4, title: "Run browser-based manual testing suite", desc: "Test UI responsive design, event listeners, and live controls.", priority: "low", status: "todo", date: "Sep 10" }
+            ];
+            saveTasksToStorage();
+        }
+
+        function saveTasksToStorage() {
+            localStorage.setItem('ultron_kanban_tasks', JSON.stringify(tasks));
+        }
+
+        function renderTasks() {
+            const search = document.getElementById('search-input').value.toLowerCase();
+            const cols = { todo: [], progress: [], done: [] };
+
+            tasks.forEach(t => {
+                const matches = t.title.toLowerCase().includes(search) || (t.desc && t.desc.toLowerCase().includes(search));
+                if (matches) {
+                    if (cols[t.status]) cols[t.status].push(t);
+                }
+            });
+
+            ['todo', 'progress', 'done'].forEach(col => {
+                const container = document.getElementById(`tasks-${col}`);
+                document.getElementById(`count-${col}`).textContent = cols[col].length;
+                
+                if (cols[col].length === 0) {
+                    container.innerHTML = '<div style="color:#475569; font-size:0.75rem; text-align:center; padding:24px 0; font-family:monospace;">Empty column</div>';
+                    return;
+                }
+
+                container.innerHTML = cols[col].map(t => `
+                    <div class="task-card" draggable="true" ondragstart="handleDragStart(event, ${t.id})" ondragend="handleDragEnd(event)">
+                        <div class="task-header">
+                            <div class="task-name">${escapeHtml(t.title)}</div>
+                            <span class="tag tag-${t.priority}">${t.priority}</span>
+                        </div>
+                        ${t.desc ? `<div class="task-desc">${escapeHtml(t.desc)}</div>` : ''}
+                        <div class="task-footer">
+                            <span class="task-date">📅 ${t.date || 'Today'}</span>
+                            <div class="task-nav">
+                                ${col !== 'todo' ? `<button class="nav-btn" onclick="moveTask(${t.id}, 'prev')" title="Move left">←</button>` : ''}
+                                ${col !== 'done' ? `<button class="nav-btn" onclick="moveTask(${t.id}, 'next')" title="Move right">→</button>` : ''}
+                                <button class="nav-btn nav-del" onclick="deleteTask(${t.id})" title="Delete task">✕</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            });
+        }
+
+        function escapeHtml(str) {
+            return (str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        function openModal() {
+            document.getElementById('task-title-input').value = '';
+            document.getElementById('task-desc-input').value = '';
+            document.getElementById('task-priority-input').value = 'medium';
+            document.getElementById('task-modal').classList.add('open');
+            document.getElementById('task-title-input').focus();
+        }
+
+        function closeModal() {
+            document.getElementById('task-modal').classList.remove('open');
+        }
+
+        function saveTask() {
+            const title = document.getElementById('task-title-input').value.trim();
+            if (!title) return alert("Task title is required");
+            const priority = document.getElementById('task-priority-input').value;
+            const status = document.getElementById('task-col-input').value;
+            const desc = document.getElementById('task-desc-input').value.trim();
+
+            tasks.push({
+                id: Date.now(),
+                title,
+                desc,
+                priority,
+                status,
+                date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+            });
+
+            saveTasksToStorage();
+            closeModal();
+            renderTasks();
+        }
+
+        function moveTask(id, dir) {
+            const order = ['todo', 'progress', 'done'];
+            const t = tasks.find(x => x.id === id);
+            if (!t) return;
+            let idx = order.indexOf(t.status);
+            if (dir === 'next' && idx < order.length - 1) t.status = order[idx + 1];
+            else if (dir === 'prev' && idx > 0) t.status = order[idx - 1];
+            saveTasksToStorage();
+            renderTasks();
+        }
+
+        function deleteTask(id) {
+            tasks = tasks.filter(x => x.id !== id);
+            saveTasksToStorage();
+            renderTasks();
+        }
+
+        // Drag and Drop
+        function handleDragStart(e, id) {
+            draggedTaskId = id;
+            e.currentTarget.classList.add('dragging');
+            e.dataTransfer.setData('text/plain', id);
+        }
+
+        function handleDragEnd(e) {
+            e.currentTarget.classList.remove('dragging');
+            document.querySelectorAll('.task-container').forEach(c => c.classList.remove('drag-over'));
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        function handleDrop(e, targetCol) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            if (draggedTaskId) {
+                const t = tasks.find(x => x.id === draggedTaskId);
+                if (t) {
+                    t.status = targetCol;
+                    saveTasksToStorage();
+                    renderTasks();
+                }
+            }
+        }
+
+        renderTasks();
+    </script>
+</body>
+</html>

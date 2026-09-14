@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @page { size: A4; margin: 16mm 14mm 18mm 14mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: #1a1f2b;
+    font-size: 9.5pt;
+    line-height: 1.35;
+  }
+  .header {
+    background: linear-gradient(135deg, #0f1e3d 0%, #1b3a68 100%);
+    color: #fff;
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+  }
+  .header .eyebrow { font-size: 8pt; letter-spacing: 1.5px; color: #9db4d8; text-transform: uppercase; }
+  .header h1 { font-size: 17pt; margin: 2px 0 2px 0; }
+  .header .sub { font-size: 8.5pt; color: #c7d5ec; }
+  .badge-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .badge { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 4px; padding: 4px 9px; font-size: 8pt; }
+  .badge b { color: #ffce54; }
+
+  .corrections-box {
+    background: #fff7e6;
+    border: 1.5px solid #e6a817;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: 8.3pt;
+  }
+  .corrections-box .title { font-weight: 700; color: #8a5a00; font-size: 9pt; margin-bottom: 4px; }
+  .corrections-box ul { margin: 4px 0 0 16px; padding: 0; }
+  .corrections-box li { margin-bottom: 2px; }
+
+  .section { margin-bottom: 13px; page-break-inside: avoid; }
+  .section-title {
+    font-size: 10.5pt; font-weight: 700; color: #0f1e3d;
+    border-bottom: 2px solid #0f1e3d; padding-bottom: 3px; margin-bottom: 8px;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .section-title .tag { font-size: 8pt; font-weight: 700; padding: 2px 8px; border-radius: 3px; }
+  .tag-weak { background: #fdeaea; color: #c0392b; }
+  .tag-fair { background: #eaf7ee; color: #1e8449; }
+  .tag-watch { background: #fef6e0; color: #b7791f; }
+  .tag-mixed { background: #eef1fb; color: #3949ab; }
+  .tag-narrow { background: #fef6e0; color: #b7791f; }
+  .tag-moderate { background: #eef1fb; color: #3949ab; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .stat-grid.cols3 { grid-template-columns: repeat(3, 1fr); }
+  .stat-grid.cols2 { grid-template-columns: repeat(2, 1fr); }
+  .stat {
+    background: #f4f6fa; border: 1px solid #e2e6ee; border-radius: 5px;
+    padding: 7px 9px;
+  }
+  .stat .label { font-size: 7pt; color: #6b7488; text-transform: uppercase; letter-spacing: 0.4px; }
+  .stat .value { font-size: 11.5pt; font-weight: 700; color: #0f1e3d; margin-top: 1px; }
+  .stat .value.fixed { color: #1e8449; }
+  .stat .note { font-size: 7.3pt; color: #6b7488; margin-top: 2px; }
+  .stat .note.healthy { color: #1e8449; }
+  .stat .note.weak { color: #c0392b; }
+  .stat .note.watch { color: #b7791f; }
+
+  p.body-text { font-size: 8.6pt; color: #2c3345; margin: 4px 0; }
+  .note-box { background: #f4f6fa; border-left: 3px solid #1b3a68; padding: 6px 10px; font-size: 8.2pt; color: #3a4257; margin-top: 6px; border-radius: 3px; }
+  .fix-note { background: #eaf7ee; border-left: 3px solid #1e8449; padding: 6px 10px; font-size: 8.1pt; color: #1e5631; margin-top: 6px; border-radius: 3px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 8.2pt; margin-top: 4px; }
+  th { background: #0f1e3d; color: #fff; text-align: left; padding: 5px 7px; font-size: 7.6pt; text-transform: uppercase; letter-spacing: 0.3px; }
+  td { padding: 5px 7px; border-bottom: 1px solid #e2e6ee; }
+  tr:nth-child(even) td { background: #f8f9fc; }
+  td.num { text-align: right; }
+  .strike { text-decoration: line-through; color: #b0563d; opacity: 0.75; }
+  .fixed-val { color: #1e8449; font-weight: 700; }
+
+  .moat-table td.score { font-weight: 700; text-align: center; }
+  .footer-note { font-size: 7.3pt; color: #8b93a3; margin-top: 10px; border-top: 1px solid #e2e6ee; padding-top: 6px; }
+  .pagebreak { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="eyebrow">Stock Pulse &middot; Institutional Research Report &middot; v3.1 (Corrected)</div>
+  <h1>UltraTech Cement Ltd <span style="font-weight:400; font-size:12pt; color:#c7d5ec;">(ULTRACEMCO &middot; NSE/BSE)</span></h1>
+  <div class="sub">Sector: Commodities &nbsp;|&nbsp; Horizon: 5Y &nbsp;|&nbsp; Corrected edition — see corrections summary below</div>
+  <div class="badge-row">
+    <div class="badge">Pulse Score <b>4/10 (WEAK)</b></div>
+    <div class="badge">Data Confidence <b>14/14 (HIGH)</b></div>
+    <div class="badge">Moat <b>6/14 (NARROW)</b></div>
+    <div class="badge">Management Trust <b>5/8 (MODERATE)</b></div>
+  </div>
+</div>
+
+<div class="corrections-box">
+  <div class="title">⚠ Corrections applied in this edition — see changes.md for full detail</div>
+  <ul>
+    <li><b>Section 10 (What-If Matrix):</b> Base and Bull Case projected PAT had been calculated using the Bear Case's 7.3% margin instead of each scenario's own stated margin (9.3% / 10.8%). Corrected below — Base Case PAT CAGR moves from 5.1% to 10.33%, and the 5Y Total Return Model output moves from ~Rs. 1,41,637 to ~Rs. 1,79,751.</li>
+    <li><b>Section 03 (Valuation):</b> the "Implied P/E from CMP/EPS" footnote showed 38.8, but Rs. 11,400 &divide; Rs. 289.77 actually equals 39.3. The sourced Stock P/E (38.8) and the "% vs Sector" figure (4.0%) were internally consistent and are unchanged — only the mislabeled footnote is corrected.</li>
+    <li><b>Section 04 (Growth):</b> the blanket "SLOWING" tag conflicts with the Profit CAGR data (3Y 6.96% &gt; 5Y 3.17%, i.e. accelerating), while Revenue is genuinely slowing (3Y 9.02% &lt; 5Y 11.8%). Relabeled "MIXED" with both trends called out explicitly.</li>
+  </ul>
+</div>
+
+<div class="section">
+  <div class="section-title">01 &nbsp;Overview &amp; Market Standing</div>
+  <div class="stat-grid">
+    <div class="stat"><div class="label">Current Market Price</div><div class="value">Rs. 11,400</div></div>
+    <div class="stat"><div class="label">52-Week High / Low</div><div class="value" style="font-size:10pt;">Rs. 13,110 / Rs. 10,325</div></div>
+    <div class="stat"><div class="label">Market Capitalisation</div><div class="value" style="font-size:10pt;">Rs. 3,34,474 Cr</div></div>
+    <div class="stat"><div class="label">Primary Sector</div><div class="value" style="font-size:10pt;">Commodities</div></div>
+  </div>
+  <p class="body-text">CMP (Rs. 11,400) is +10.4% above 52W Low (Rs. 10,325) and -13.0% below 52W High (Rs. 13,110) — trading in mid-range (39th percentile of 1-year band). <em>(Verified: internally consistent, unchanged.)</em></p>
+</div>
+
+<div class="section">
+  <div class="section-title">02 &nbsp;Business &amp; Operational Overview</div>
+  <p class="body-text">UltraTech Cement is engaged in the manufacturing and sale of cement and cement-related products primarily across the globe. <b>Market Leadership:</b> the company is the 3rd largest cement company in the world, excluding China. It is also the largest cement manufacturer in India with a 28% share of grey cement capacity.</p>
+</div>
+
+<div class="section">
+  <div class="section-title">03 &nbsp;Valuation Multiples &amp; Benchmark Banding <span class="tag tag-fair">FAIR</span></div>
+  <div class="stat-grid">
+    <div class="stat"><div class="label">Stock P/E Ratio</div><div class="value">38.8</div><div class="note">Fair Band: 31.7 – 42.9</div></div>
+    <div class="stat"><div class="label">Price to Book (P/B)</div><div class="value">4.38</div><div class="note">BV: Rs. 2,600</div></div>
+    <div class="stat"><div class="label">Dividend Yield</div><div class="value">2.11%</div><div class="note">Face Value: Rs. 10</div></div>
+    <div class="stat"><div class="label">Sector Benchmark P/E</div><div class="value">37.3</div><div class="note">4.0% vs Sector</div></div>
+  </div>
+  <div class="fix-note"><b>Corrected footnote:</b> Trading within the normal &plusmn;15% fair benchmark band [31.7–42.9] derived from the sector median (avg. of peer P/Es 39.8, 50.9, 21.2 = 37.3 — verified correct). CMP &divide; trailing diluted EPS = Rs. 11,400 &divide; Rs. 289.77 = <span class="fixed-val">39.3</span>, not <span class="strike">38.8</span> as the original footnote stated. The sourced Stock P/E of 38.8 itself is unchanged and stays within the fair band either way — this is a footnote arithmetic fix, not a valuation-verdict change.</div>
+</div>
+
+<div class="section">
+  <div class="section-title">04 &nbsp;Growth &amp; Operating Trajectory <span class="tag tag-mixed">MIXED</span></div>
+  <div class="stat-grid">
+    <div class="stat"><div class="label">Revenue 3Y / 5Y CAGR</div><div class="value" style="font-size:10.5pt;">9.02% / 11.8%</div><div class="note">TTM Sales: Rs. 91,884 Cr</div></div>
+    <div class="stat"><div class="label">Profit 3Y / 5Y CAGR</div><div class="value" style="font-size:10.5pt;">6.96% / 3.17%</div><div class="note">TTM PAT: Rs. 8,571 Cr</div></div>
+    <div class="stat"><div class="label">EBITDA Margin Profile</div><div class="value" style="font-size:10.5pt;">TTM 19%</div><div class="note">Latest Qtr (Jun 2026): 20%</div></div>
+    <div class="stat"><div class="label">Net Margin Profile</div><div class="value" style="font-size:10.5pt;">TTM 9.33%</div><div class="note">Pre-Tax Bridge</div></div>
+  </div>
+  <div class="stat-grid cols2" style="margin-top:8px;">
+    <div class="stat"><div class="label">Trailing Diluted EPS</div><div class="value">Rs. 289.77</div><div class="note">3Y EPS CAGR: 6.09%</div></div>
+    <div class="stat"><div class="label">Operating Cash Flow</div><div class="value" style="font-size:10.5pt; color:#1e8449;">GROWING</div><div class="note">Cash Flow Quality</div></div>
+  </div>
+  <div class="fix-note"><b>Corrected label:</b> Revenue growth is genuinely slowing (3Y 9.02% &lt; 5Y 11.8%), but Profit CAGR is accelerating on a 3-year view (6.96%) versus the 5-year trend (3.17%). A single "SLOWING" tag for the section overstated the weakness — relabeled "MIXED" to reflect both trends accurately.</div>
+  <div class="note-box">Margin Bridge: TTM EBITDA margin (19%) reflects operating cash profitability before D&amp;A; Net margin (9.33%) accounts for D&amp;A, interest, and taxes.</div>
+</div>
+
+<div class="section">
+  <div class="section-title">05 &nbsp;Financial Health &amp; Solvency (Aggregated) <span class="tag tag-watch">WATCH</span></div>
+  <div class="stat-grid">
+    <div class="stat"><div class="label">Debt to Equity (D/E)</div><div class="value">0.31</div><div class="note healthy">HEALTHY (&le;0.5)</div></div>
+    <div class="stat"><div class="label">Interest Coverage</div><div class="value">48.38x</div><div class="note healthy">HEALTHY (&ge;5.0x)</div></div>
+    <div class="stat"><div class="label">Current Ratio</div><div class="value">0.66</div><div class="note weak">WEAK (&ge;1.0 healthy)</div></div>
+    <div class="stat"><div class="label">Free Cash Flow Trend</div><div class="value" style="color:#1e8449;">GROWING</div><div class="note healthy">HEALTHY</div></div>
+  </div>
+  <div class="note-box">Solvency Context: Benchmark thresholds — D/E &le;0.5 Healthy, Interest Coverage &ge;5x Healthy, Current Ratio &ge;1.0 Healthy. Sub-1.0 liquidity is common in heavy-capex sectors when operating cash flow is positive.</div>
+</div>
+
+<div class="section">
+  <div class="section-title">06 &nbsp;Return Quality &amp; Capital Allocation <span class="tag tag-watch">WATCH</span></div>
+  <div class="stat-grid cols2">
+    <div class="stat"><div class="label">Return on Equity (ROE)</div><div class="value">11.1%</div><div class="note watch">WATCH (&ge;15% cutoff)</div></div>
+    <div class="stat"><div class="label">Return on Capital Employed (ROCE)</div><div class="value">12.7%</div><div class="note watch">WATCH (&ge;15% cutoff)</div></div>
+  </div>
+</div>
+
+<div class="pagebreak"></div>
+
+<div class="section">
+  <div class="section-title">07 &nbsp;Competitive Moat Analysis <span class="tag tag-narrow">6/14 NARROW</span></div>
+  <table class="moat-table">
+    <tr><th>Moat Factor</th><th style="text-align:center;">Score</th><th>Evidence</th></tr>
+    <tr><td>Brand Power</td><td class="score">1/2</td><td>Recognized industry presence and commercial goodwill.</td></tr>
+    <tr><td>Switching Costs</td><td class="score">1/2</td><td>Established B2B operational integration and contractual terms.</td></tr>
+    <tr><td>Network Effects</td><td class="score">0/2</td><td>Standard operating structure without direct network externalities.</td></tr>
+    <tr><td>Cost Advantage</td><td class="score">2/2</td><td>Operational efficiencies and supply chain optimization; resilient operating margins.</td></tr>
+    <tr><td>Regulatory License</td><td class="score">0/2</td><td>Standard statutory operating permissions.</td></tr>
+    <tr><td>Patents / IP</td><td class="score">0/2</td><td>Conventional industry technology and processes.</td></tr>
+    <tr><td>Scale Advantage</td><td class="score">2/2</td><td>Mega-cap balance sheet (Rs. 3,34,474 Cr) drives structural procurement scale.</td></tr>
+  </table>
+  <p class="body-text" style="margin-top:4px;"><em>Verified: factor scores sum correctly to 6/14.</em></p>
+</div>
+
+<div class="section">
+  <div class="section-title">08 &nbsp;Peer Comparison &amp; Recent Events</div>
+  <table>
+    <tr><th>Peer Company</th><th class="num">P/E</th><th class="num">ROCE</th><th class="num">Market Cap</th><th>Relationship</th></tr>
+    <tr><td>Grasim Industries Ltd</td><td class="num">39.8</td><td class="num">8.01%</td><td class="num">Rs. 2,28,486 Cr</td><td>Industry Peer</td></tr>
+    <tr><td>Shree Cement Ltd</td><td class="num">50.9</td><td class="num">10.3%</td><td class="num">Rs. 82,957 Cr</td><td>Industry Peer</td></tr>
+    <tr><td>Ambuja Cements Ltd</td><td class="num">21.2</td><td class="num">5.61%</td><td class="num">Rs. 99,555 Cr</td><td>Industry Peer</td></tr>
+  </table>
+  <p class="body-text" style="margin-top:4px;"><em>Verified: average of peer P/Es (39.8+50.9+21.2)/3 = 37.3, matching the Sector Benchmark P/E in Section 03.</em></p>
+  <p class="body-text" style="margin-top:6px;"><b>Recent Corporate News Headlines (most recent first):</b></p>
+  <ul style="font-size:8.2pt; margin:2px 0 0 16px; color:#2c3345;">
+    <li>[26 Jul 2026] UltraTech Cement Limited (NSE:ULTRACEMCO) looks interesting, and it's about to pay a dividend — simplywall.st</li>
+    <li>[20 Jul 2026] India's UltraTech Cement first-quarter profit rises on strong volumes — marketscreener.com</li>
+    <li>[19 Feb 2026] UltraTech Cement share price fell 2.97% to close at Rs. 12,664 amid broad sector weakness — HDFC Sky</li>
+  </ul>
+</div>
+
+<div class="section">
+  <div class="section-title">09 &nbsp;Ownership Structure &amp; Management Trust <span class="tag tag-moderate">5/8 MODERATE</span></div>
+  <div class="stat-grid">
+    <div class="stat"><div class="label">Promoter Holding</div><div class="value">59.33%</div><div class="note">Trend: FALLING</div></div>
+    <div class="stat"><div class="label">Institutional FII / DII</div><div class="value" style="font-size:10.5pt;">12.36% / 19.69%</div><div class="note">High Institutional</div></div>
+    <div class="stat"><div class="label">Promoter Pledging</div><div class="value">0%</div><div class="note healthy">CLEAN</div></div>
+    <div class="stat"><div class="label">Quarterly Track Record</div><div class="value" style="font-size:10.5pt;">1 Qtrs</div><div class="note weak">Contraction</div></div>
+  </div>
+  <div class="note-box">
+    <b>Strengths (+5):</b> +2 Regulatory compliance | +1 Pledging &lt;5% | +1 FII stake &ge;10% | +1 Cycle resilience<br>
+    <b>Unmet criteria (+0):</b> Quarterly earnings delivery consistency | Promoter trend stable/rising
+  </div>
+</div>
+
+<div class="pagebreak"></div>
+
+<div class="section">
+  <div class="section-title">10 &nbsp;The Pulse Score &amp; What-If Matrix <span class="tag tag-weak">4/10 WEAK PULSE</span></div>
+  <p class="body-text"><b>PASS:</b> Zero existential balance sheet or governance red flags (operational watch items tracked in Sections 05 &amp; 09).</p>
+  <p class="body-text"><b>Baseline Financials (TTM):</b> Revenue Rs. 91,884 Cr | Net Profit (PAT) Rs. 8,571 Cr | EPS Rs. 289.77 | Margin 9.3% | Dividend Yield 2.11%</p>
+
+  <table>
+    <tr><th>Scenario (Mathematical Model)</th><th class="num">Rev CAGR</th><th class="num">Projected Revenue (5Y)</th><th class="num">Projected PAT (5Y)</th></tr>
+    <tr>
+      <td>Bear Case (&minus;5.0% vs Base | 7.3% Margin)</td>
+      <td class="num">5.4%</td>
+      <td class="num">Rs. 1,19,521 Cr</td>
+      <td class="num"><span class="strike">Rs. 8,614 Cr</span><br><span class="fixed-val">Rs. 8,725 Cr</span></td>
+    </tr>
+    <tr>
+      <td>Base Case (Historical Avg | 9.3% Margin)</td>
+      <td class="num">10.4%</td>
+      <td class="num">Rs. 1,50,690 Cr</td>
+      <td class="num"><span class="strike">Rs. 10,991 Cr</span><br><span class="fixed-val">Rs. 14,014 Cr</span></td>
+    </tr>
+    <tr>
+      <td>Bull Case (+3.5% vs Base | 10.8% Margin)</td>
+      <td class="num">13.9%</td>
+      <td class="num">Rs. 1,76,140 Cr</td>
+      <td class="num"><span class="strike">Rs. 12,947 Cr</span><br><span class="fixed-val">Rs. 19,023 Cr</span></td>
+    </tr>
+  </table>
+
+  <div class="fix-note">
+    <b>Root cause:</b> the original PAT figures for all three scenarios implied a margin of ~7.2–7.35% regardless of scenario — i.e. the Bear Case's 7.3% margin was applied uniformly instead of each scenario's own stated margin. Corrected PAT = Projected Revenue &times; that scenario's own margin.
+  </div>
+
+  <p class="body-text" style="margin-top:8px;"><b>Total Return Model</b> (Rs. 1,00,000 investment):</p>
+  <table class="stat-grid" style="display:table;">
+    <tr><th>Metric</th><th class="num">Original (incorrect)</th><th class="num">Corrected</th></tr>
+    <tr><td>Base Case PAT CAGR (5Y)</td><td class="num strike">5.1%</td><td class="num fixed-val">10.33%</td></tr>
+    <tr><td>+ Dividend Yield</td><td class="num">2.11%</td><td class="num">2.11%</td></tr>
+    <tr><td><b>Total Return CAGR</b></td><td class="num strike">7.21%</td><td class="num fixed-val">12.44%</td></tr>
+    <tr><td><b>5Y value of Rs. 1,00,000</b></td><td class="num strike">~Rs. 1,41,637</td><td class="num fixed-val">~Rs. 1,79,751</td></tr>
+    <tr><td>Mean-reversion adjusted CAGR (P/E 38.8&rarr;37.3)</td><td class="num strike">6.37%</td><td class="num fixed-val">11.66%</td></tr>
+    <tr><td>5Y value, mean-reversion adjusted</td><td class="num strike">~Rs. 1,36,175</td><td class="num fixed-val">~Rs. 1,73,560</td></tr>
+  </table>
+  <p class="body-text" style="margin-top:4px;">* Valuation Sensitivity: assumes constant valuation multiple (P/E 38.8 sustained) unless the mean-reversion row is used, which reverts to the sector average P/E (37.3).</p>
+
+  <div class="note-box">
+    <b>Scoring Methodology:</b> Pulse Score synthesizes 10 binary fundamental rules (Valuation, Growth, Profit expansion, Solvency, ROE, ROCE, Promoter trend, Pledging, Moat, Trust). Moat evaluates 7 structural barriers (/14). Management Trust evaluates 6 governance benchmarks and penalty deductions (/8). Data confidence scores data completeness and freshness (14/14 HIGH). <em>Note: the per-rule pass/fail thresholds for the 10-rule Pulse Score itself are not disclosed elsewhere in the report, so the 4/10 total could not be independently re-derived — recommend the generation pipeline surface which of the 10 rules passed/failed for auditability.</em>
+  </div>
+</div>
+
+<div class="footer-note">
+  Regulatory Disclaimer: Stock Pulse is an automated fundamental computational tool and does not issue buy, sell, or hold recommendations, nor price targets. Figures parsed directly from public filings (Screener.in, NSE, BSE) at generation time. Not investment advice.<br>
+  Stock Pulse v3.1 &middot; Institutional Research Report &middot; Corrected Edition &middot; Original report dated with data as of 26 Jul 2026
+</div>
+
+</body>
+</html>

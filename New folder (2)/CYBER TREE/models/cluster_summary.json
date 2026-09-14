@@ -1,0 +1,1370 @@
+{
+  "0": {
+    "id": 0,
+    "label": "Cluster 0: Vulnerability (vulnerability, CWE-22)",
+    "size": 62,
+    "top_tags": [
+      "vulnerability",
+      "CWE-22",
+      "CWE-78"
+    ],
+    "top_types": [
+      "vulnerability"
+    ],
+    "example_nodes": [
+      {
+        "id": "994f192e-45e1-44ed-a7ee-c0fb7dde8d4a",
+        "title": "CVE-2002-1851: Buffer overflow in WS_FTP Pro 7.5 allows remote attackers to...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "af39e399-3260-4944-bec4-e8f84bd69f20",
+        "title": "CVE-2002-2026: Buffer overflow in BrowseFTP 1.62 client allows remote FTP s...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "9957b6ae-8a63-4ba2-b0d2-769ef9f1aadf",
+        "title": "CVE-2002-1545: CooolSoft Personal FTP Server 2.24 allows remote attackers t...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "8e193c64-961f-4285-9618-29b7d863b873",
+        "title": "CVE-2000-0837: FTP Serv-U 2.5e allows remote attackers to cause a denial of...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "8bd81d0f-1e4b-4a32-b3d4-6fa1ee6432ec",
+        "title": "CVE-2002-2387: Directory traversal vulnerability in Hyperion FTP server 2.8...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "1": {
+    "id": 1,
+    "label": "Cluster 1: Vulnerability (vulnerability, CWE-19)",
+    "size": 934,
+    "top_tags": [
+      "vulnerability",
+      "CWE-19",
+      "CWE-9"
+    ],
+    "top_types": [
+      "vulnerability"
+    ],
+    "example_nodes": [
+      {
+        "id": "2923b707-fee2-4f21-8dcc-d13437da3487",
+        "title": "CVE-2022-10478: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "22471295-c348-45bb-b36d-54d0cf24e3b8",
+        "title": "CVE-2022-14678: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "b2e9087a-9af2-4d7b-adcf-8a3ecb988920",
+        "title": "CVE-2022-14818: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "929a8c03-ddf5-4a6b-aeef-f4e1b7592de9",
+        "title": "CVE-2022-15028: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "a1201db0-e40f-4f8f-8ca5-d10cc581d5b8",
+        "title": "CVE-2022-15518: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "2": {
+    "id": 2,
+    "label": "Cluster 2: Technique & Incident (attack-pattern, Windows)",
+    "size": 143,
+    "top_tags": [
+      "attack-pattern",
+      "Windows",
+      "Linux"
+    ],
+    "top_types": [
+      "technique",
+      "incident",
+      "news"
+    ],
+    "example_nodes": [
+      {
+        "id": "05e57f59-1f2e-444f-b57c-a142f9227149",
+        "title": "Protocol or Service Impersonation",
+        "node_type": "technique",
+        "confidence": 0.5
+      },
+      {
+        "id": "2c1f24a0-9901-4233-8b7f-662d64687255",
+        "title": "Subvert Trust Controls",
+        "node_type": "technique",
+        "confidence": 0.5
+      },
+      {
+        "id": "9ccea135-4a87-411a-9a9a-acad6365b032",
+        "title": "Transmitted Data Manipulation",
+        "node_type": "technique",
+        "confidence": 0.5
+      },
+      {
+        "id": "bea080ff-6e2b-49af-98d5-3acdcf34f016",
+        "title": "Sharepoint",
+        "node_type": "technique",
+        "confidence": 0.5
+      },
+      {
+        "id": "fcc9baaa-7df2-4ba9-a1a1-c18e05f6fd58",
+        "title": "Compromise Infrastructure",
+        "node_type": "technique",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "3": {
+    "id": 3,
+    "label": "Cluster 3: Vulnerability & Technique (vulnerability, CWE-119)",
+    "size": 183,
+    "top_tags": [
+      "vulnerability",
+      "CWE-119",
+      "CWE-120"
+    ],
+    "top_types": [
+      "vulnerability",
+      "technique"
+    ],
+    "example_nodes": [
+      {
+        "id": "58be6c5f-fc92-4fc7-b1e4-45de577052fa",
+        "title": "CVE-2000-0238: Buffer overflow in the web server for Norton AntiVirus for I...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "26f463c9-e0fe-4f3d-b944-d67f4b0a8ce4",
+        "title": "CVE-1999-0107: Buffer overflow in Apache 1.2.5 and earlier allows a remote ...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "fe9b0b27-a7f0-4edc-8c3b-803c6c79f93f",
+        "title": "CVE-2002-2205: Buffer overflow in Webresolve 0.1.0 and earlier allows remot...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "18bc704d-404d-475d-9b09-461d40416ee8",
+        "title": "CVE-2002-1792: Buffer overflow in Fake Identd 0.9 through 1.4 allows remote...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "82254b9e-e163-496d-ba97-2de562c45dad",
+        "title": "CVE-2000-0626: Buffer overflow in Alibaba web server allows remote attacker...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "4": {
+    "id": 4,
+    "label": "Cluster 4: Technique & Incident (bleeping_computer, technique)",
+    "size": 132,
+    "top_tags": [
+      "bleeping_computer",
+      "technique",
+      "incident"
+    ],
+    "top_types": [
+      "technique",
+      "incident",
+      "news"
+    ],
+    "example_nodes": [
+      {
+        "id": "885e3f36-3ea3-46cd-86e8-4f54f8cb094c",
+        "title": "GhostApproval Symlink Flaws Could Let Malicious Repos Run Code in AI Coding Agents",
+        "node_type": "incident",
+        "confidence": 0.5
+      },
+      {
+        "id": "f98ccc5c-1228-470d-9ecc-f02a80803353",
+        "title": "CISA orders feds to patch max severity ColdFusion flaw by Friday",
+        "node_type": "news",
+        "confidence": 0.5
+      },
+      {
+        "id": "39ca8010-3305-4f2a-a3bd-609288a3e0ef",
+        "title": "AI Coding: Do Security Risks Outweigh Productivity Gains?",
+        "node_type": "incident",
+        "confidence": 0.5
+      },
+      {
+        "id": "0c8cc171-2454-49ea-b2ea-406ae01e2751",
+        "title": "Vietnam arrests suspects behind HiAnime anime piracy service",
+        "node_type": "technique",
+        "confidence": 0.5
+      },
+      {
+        "id": "07055b67-0da8-4618-ab95-2529417c9d75",
+        "title": "New ChocoPoC RAT Targets Vulnerability Researchers via Fake PoC Exploit Repos",
+        "node_type": "malware",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "5": {
+    "id": 5,
+    "label": "Cluster 5: Technique (attack-pattern, capec)",
+    "size": 180,
+    "top_tags": [
+      "attack-pattern",
+      "capec",
+      "Linux"
+    ],
+    "top_types": [
+      "technique"
+    ],
+    "example_nodes": [
+      {
+        "id": "850f1dbb-af72-41c6-8f1f-c8c297cb76a6",
+        "title": "CAPEC-117: Interception",
+        "node_type": "technique",
+        "confidence": 0.5
+      },
+      {
+        "id": "6afc6bbd-ef68-4930-995c-68cba33bbf62",
+        "title": "CAPEC-260: DEPRECATED: Passively Sniffing and Capturing Application Code Bound for an Authorized Client During Initial Distribution",
+        "node_type": "technique",
+        "confidence": 0.5
+      },
+      {
+        "id": "9982dffb-1723-4ed9-a465-8ea76fe984e0",
+        "title": "CAPEC-65: Sniff Application Code",
+        "node_type": "technique",
+        "confidence": 0.5
+      },
+      {
+        "id": "d4e8c68e-24bf-4d1e-8812-963a306fd26e",
+        "title": "CAPEC-259: DEPRECATED: Passively Sniffing and Capturing Application Code Bound for an Authorized Client During Patching",
+        "node_type": "technique",
+        "confidence": 0.5
+      },
+      {
+        "id": "6c65ef48-741e-4531-a2d7-0e9b2f592c3b",
+        "title": "CAPEC-192: Protocol Analysis",
+        "node_type": "technique",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "6": {
+    "id": 6,
+    "label": "Cluster 6: Vulnerability & Technique (vulnerability, actively_exploited)",
+    "size": 226,
+    "top_tags": [
+      "vulnerability",
+      "actively_exploited",
+      "CWE-94"
+    ],
+    "top_types": [
+      "vulnerability",
+      "technique"
+    ],
+    "example_nodes": [
+      {
+        "id": "9ffb280f-6c8c-41c1-88bf-acd3de42e1ba",
+        "title": "CVE-2002-2240: Directory traversal vulnerability in MyServer 0.11 and 0.2 a...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "9eb124e9-2929-431c-b04f-3fb2147e2cdb",
+        "title": "CVE-2000-0773: Bajie HTTP web server 0.30a allows remote attackers to read ...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "9de050d0-13be-4050-8172-94565cafd670",
+        "title": "CVE-2002-1736: Unknown vulnerability in CGINews before 1.06 allow remote at...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "578721cd-f730-4c37-9655-894c6dc28eac",
+        "title": "CVE-1999-0174: The view-source CGI program allows remote attackers to read ...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "3937df2a-8cd4-441c-b42d-24768515812f",
+        "title": "CVE-2002-1864: Directory traversal vulnerability in Simple Web Server (SWS)...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "7": {
+    "id": 7,
+    "label": "Cluster 7: Weakness (weakness, cwe)",
+    "size": 123,
+    "top_tags": [
+      "weakness",
+      "cwe"
+    ],
+    "top_types": [
+      "weakness"
+    ],
+    "example_nodes": [
+      {
+        "id": "384dcb80-627e-4ce0-a5bf-efb38f18f589",
+        "title": "CWE-659: Weakness Type Description 659",
+        "node_type": "weakness",
+        "confidence": 0.5
+      },
+      {
+        "id": "2e74a336-09c7-4f1a-961e-8f3dd32d8d06",
+        "title": "CWE-736: Weakness Type Description 736",
+        "node_type": "weakness",
+        "confidence": 0.5
+      },
+      {
+        "id": "1583e4c8-9b71-4432-b432-311f7f08ea32",
+        "title": "CWE-797: Weakness Type Description 797",
+        "node_type": "weakness",
+        "confidence": 0.5
+      },
+      {
+        "id": "b97e010b-3664-40e2-bcad-b256c6aa355f",
+        "title": "CWE-694: Weakness Type Description 694",
+        "node_type": "weakness",
+        "confidence": 0.5
+      },
+      {
+        "id": "444f73d8-f77b-4175-a6c9-f2c76253e324",
+        "title": "CWE-697: Weakness Type Description 697",
+        "node_type": "weakness",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "8": {
+    "id": 8,
+    "label": "Cluster 8: Vulnerability (vulnerability, actively_exploited)",
+    "size": 159,
+    "top_tags": [
+      "vulnerability",
+      "actively_exploited",
+      "CWE-119"
+    ],
+    "top_types": [
+      "vulnerability"
+    ],
+    "example_nodes": [
+      {
+        "id": "2aa18288-dd94-4d53-9dbd-7154a53a4e01",
+        "title": "CVE-1999-1329: Buffer overflow in SysVInit in Red Hat Linux 5.1 and earlier...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "bc924a97-f5ae-4370-9cce-db69d2ec0e62",
+        "title": "CVE-1999-0055: Buffer overflows in Sun libnsl allow root access....",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "fa8ee981-70a6-4ee4-9414-0ba68c51f96e",
+        "title": "CVE-1999-1327: Buffer overflow in linuxconf 1.11r11-rh2 on Red Hat Linux 5....",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "c92c4331-7bf1-44d2-94b0-386a09b54a42",
+        "title": "CVE-2003-0062: Buffer overflow in Eset Software NOD32 for UNIX before 1.013...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "b8de772e-bb0b-428f-b998-3bbb43ca7aca",
+        "title": "CVE-1999-0373: Buffer overflow in the \"Super\" utility in Debian GNU/Linux, ...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "9": {
+    "id": 9,
+    "label": "Cluster 9: Vulnerability (vulnerability, CWE-10)",
+    "size": 940,
+    "top_tags": [
+      "vulnerability",
+      "CWE-10",
+      "CWE-20"
+    ],
+    "top_types": [
+      "vulnerability"
+    ],
+    "example_nodes": [
+      {
+        "id": "3c21fa43-c774-4d44-a753-4ac3051ee6c5",
+        "title": "CVE-2025-10649: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "d1121c83-b4bb-4446-ad4e-b4c2d6433065",
+        "title": "CVE-2025-14429: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "ea22724d-5e82-425f-ab0e-53c8b43fe278",
+        "title": "CVE-2026-12029: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "0b0943d9-99af-4e8c-81c8-785ca47f55f2",
+        "title": "CVE-2022-12529: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "c434e1b2-bc1e-4266-af65-d5edc4efe571",
+        "title": "CVE-2022-13649: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "10": {
+    "id": 10,
+    "label": "Cluster 10: Vulnerability (vulnerability, CWE-11)",
+    "size": 1926,
+    "top_tags": [
+      "vulnerability",
+      "CWE-11",
+      "CWE-1"
+    ],
+    "top_types": [
+      "vulnerability"
+    ],
+    "example_nodes": [
+      {
+        "id": "cf1d22e9-c6d1-4cca-a7cf-2a8e77b8d87f",
+        "title": "CVE-2026-12365: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "3977726a-412e-46bc-856e-cce23d597ab5",
+        "title": "CVE-2026-14465: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "5c8dc71a-4028-4a7e-9a61-1ec397e0a47a",
+        "title": "CVE-2026-10965: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "68c6e98e-68a9-41a2-93f0-a3768c5513e9",
+        "title": "CVE-2026-14115: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "4791d3d1-a999-4ccb-91ec-cbb962d6e771",
+        "title": "CVE-2026-11315: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "11": {
+    "id": 11,
+    "label": "Cluster 11: Vulnerability & Technique (vulnerability, CWE-79)",
+    "size": 66,
+    "top_tags": [
+      "vulnerability",
+      "CWE-79",
+      "capec"
+    ],
+    "top_types": [
+      "vulnerability",
+      "technique"
+    ],
+    "example_nodes": [
+      {
+        "id": "9c0de0fd-52c7-4c9a-872e-f75cf2212f7f",
+        "title": "CVE-2002-1806: Cross-site scripting (XSS) vulnerability in Drupal 4.0.0 all...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "016b97e3-8d8b-48b0-9adb-c45a95211881",
+        "title": "CVE-2002-1807: Cross-site scripting (XSS) vulnerability in phpWebSite 0.8.3...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "31f23b57-5b31-4721-b782-f47f267f0e34",
+        "title": "CVE-2002-2178: Cross-site scripting (XSS) vulnerability in article.php modu...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "1dcaf2e8-46e0-451b-b702-17d47a4aff1a",
+        "title": "CVE-2002-1681: Cross-site scripting (XSS) vulnerability in Slashcode CVS re...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "f845f751-84c0-44df-9d59-9160810ed4cf",
+        "title": "CVE-2002-2364: Cross-site scripting (XSS) vulnerability in PHP Ticket 0.5 a...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "12": {
+    "id": 12,
+    "label": "Cluster 12: Vulnerability & Technique (vulnerability, attack-pattern)",
+    "size": 200,
+    "top_tags": [
+      "vulnerability",
+      "attack-pattern",
+      "CWE-119"
+    ],
+    "top_types": [
+      "vulnerability",
+      "technique"
+    ],
+    "example_nodes": [
+      {
+        "id": "97bdd848-1362-4173-a804-1d4d4a15e574",
+        "title": "CVE-1999-1031: counter.exe 2.70 allows a remote attacker to cause a denial ...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "489e0e52-0a44-4801-828d-389fa2a9baea",
+        "title": "CVE-1999-0220: Attackers can do a denial of service of IRC by crashing the ...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "7e93c286-8ed9-4848-93f3-63998d9c3882",
+        "title": "CVE-1999-1532: Netscape Messaging Server 3.54, 3.55, and 3.6 allows a remot...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "5ab1e2b9-12c2-46aa-88a5-7ae81c3bc6a9",
+        "title": "CVE-1999-1028: Symantec pcAnywhere 8.0 allows remote attackers to cause a d...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "f06e3345-26ea-4e64-9193-d99a5ef42bc0",
+        "title": "CVE-2000-0440: NetBSD 1.4.2 and earlier allows remote attackers to cause a ...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "13": {
+    "id": 13,
+    "label": "Cluster 13: Vulnerability & Technique (vulnerability, actively_exploited)",
+    "size": 126,
+    "top_tags": [
+      "vulnerability",
+      "actively_exploited",
+      "attack-pattern"
+    ],
+    "top_types": [
+      "vulnerability",
+      "technique"
+    ],
+    "example_nodes": [
+      {
+        "id": "355af8b1-72ba-4e99-8e3d-9c0ff0a68344",
+        "title": "CVE-1999-1252: Vulnerability in a certain system call in SCO UnixWare 2.0.x...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "88de031a-48ef-4390-8620-202aae5db833",
+        "title": "CVE-1999-1303: Vulnerability in prwarn in SCO UNIX 4.2 and earlier allows l...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "87d5e38c-a9ab-4649-a360-2f2cffbb6473",
+        "title": "CVE-2000-0215: Vulnerability in SCO cu program in UnixWare 7.x allows local...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "b3e7e88d-b578-48f9-a7aa-3837a5e48ea3",
+        "title": "CVE-1999-1304: Vulnerability in login in SCO UNIX 4.2 and earlier allows lo...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "16987f5e-5dd3-40d3-b8f1-c27a99ab40f5",
+        "title": "CVE-1999-1305: Vulnerability in \"at\" program in SCO UNIX 4.2 and earlier al...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "14": {
+    "id": 14,
+    "label": "Cluster 14: Malware & Threat Actor (malware, Windows)",
+    "size": 90,
+    "top_tags": [
+      "malware",
+      "Windows",
+      "Linux"
+    ],
+    "top_types": [
+      "malware",
+      "threat_actor",
+      "tool"
+    ],
+    "example_nodes": [
+      {
+        "id": "f89d924a-d47f-499e-b940-3ebf3f9d7d87",
+        "title": "BADNEWS",
+        "node_type": "malware",
+        "confidence": 0.5
+      },
+      {
+        "id": "5391439e-4143-4de9-8aaf-f537b0c11242",
+        "title": "build_downer",
+        "node_type": "malware",
+        "confidence": 0.5
+      },
+      {
+        "id": "4d699b10-2b0e-4faf-95f4-d449c1a00ec5",
+        "title": "OnionDuke",
+        "node_type": "malware",
+        "confidence": 0.5
+      },
+      {
+        "id": "f0a11cfb-43e9-47c0-9d98-3fe0a9df8736",
+        "title": "SoreFang",
+        "node_type": "malware",
+        "confidence": 0.5
+      },
+      {
+        "id": "ce877fb2-a6f1-4d27-890b-3ef14b324d66",
+        "title": "BBK",
+        "node_type": "malware",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "15": {
+    "id": 15,
+    "label": "Cluster 15: Technique & Vulnerability (attack-pattern, capec)",
+    "size": 105,
+    "top_tags": [
+      "attack-pattern",
+      "capec",
+      "macOS"
+    ],
+    "top_types": [
+      "technique",
+      "vulnerability"
+    ],
+    "example_nodes": [
+      {
+        "id": "bfb8824a-43c2-4921-b445-25aaa7403496",
+        "title": "CAPEC-165: File Manipulation",
+        "node_type": "technique",
+        "confidence": 0.5
+      },
+      {
+        "id": "ecb53f82-8fda-4ee4-88cd-5f195e0317d0",
+        "title": "CAPEC-35: Leverage Executable Code in Non-Executable Files",
+        "node_type": "technique",
+        "confidence": 0.5
+      },
+      {
+        "id": "06c0d96b-4f05-4a56-894f-59c7275af865",
+        "title": "CAPEC-23: File Content Injection",
+        "node_type": "technique",
+        "confidence": 0.5
+      },
+      {
+        "id": "301866e0-8616-4086-a4bc-7c5714f4b6ff",
+        "title": "CAPEC-562: Modify Shared File",
+        "node_type": "technique",
+        "confidence": 0.5
+      },
+      {
+        "id": "7ec511a0-5a26-4ad4-bb48-8aec38b48865",
+        "title": "CAPEC-635: Alternative Execution Due to Deceptive Filenames",
+        "node_type": "technique",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "16": {
+    "id": 16,
+    "label": "Cluster 16: Vulnerability (vulnerability, actively_exploited)",
+    "size": 55,
+    "top_tags": [
+      "vulnerability",
+      "actively_exploited",
+      "CWE-400"
+    ],
+    "top_types": [
+      "vulnerability"
+    ],
+    "example_nodes": [
+      {
+        "id": "a216b441-fc72-4474-b749-d0620c993d65",
+        "title": "CVE-2017-3881: Cisco IOS and IOS XE Remote Code Execution Vulnerability",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "0cad5393-3561-4c50-8684-5d9aedb8e1fe",
+        "title": "CVE-2018-0151: Cisco IOS Software and Cisco IOS XE Software Quality of Service Remote Code Execution Vulnerability",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "8e4fbf2d-c15b-4093-8d07-65015f88555b",
+        "title": "CVE-2017-12232: Cisco IOS Software for Cisco Integrated Services Routers Denial-of-Service Vulnerability",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "da51be61-92d3-40d5-8eea-84f561fe71b2",
+        "title": "CVE-2017-6663: Cisco IOS Software and Cisco IOS XE Software Denial-of-Service Vulnerability",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "d382355c-b1e6-4102-a99d-b59c38be807b",
+        "title": "CVE-2018-0156: Cisco IOS Software and Cisco IOS XE Software Smart Install Denial-of-Service Vulnerability",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "17": {
+    "id": 17,
+    "label": "Cluster 17: Vulnerability & Technique (vulnerability, actively_exploited)",
+    "size": 103,
+    "top_tags": [
+      "vulnerability",
+      "actively_exploited",
+      "CWE-200"
+    ],
+    "top_types": [
+      "vulnerability",
+      "technique"
+    ],
+    "example_nodes": [
+      {
+        "id": "901e8041-2589-4f0b-b69d-90cf1cbd584a",
+        "title": "CVE-1999-1466: Vulnerability in Cisco routers versions 8.2 through 9.1 allo...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "9a9fa233-c9b3-464e-a01c-873575cd8927",
+        "title": "CVE-1999-1216: Cisco routers 9.17 and earlier allow remote attackers to byp...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "19610bf8-b343-4954-a39c-44ea66cb795e",
+        "title": "CVE-2017-6077: NETGEAR DGN2200 Remote Code Execution Vulnerability",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "0b5a04e4-fe2f-4fb9-8888-f4eea71b6424",
+        "title": "CVE-1999-0507: An account on a router, firewall, or other network device ha...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "3ed4e2b7-2345-4203-88c9-e54b2ae2feb2",
+        "title": "CVE-2001-0057: Cisco 600 routers running CBOS 2.4.1 and earlier allow remot...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "18": {
+    "id": 18,
+    "label": "Cluster 18: Vulnerability (vulnerability, actively_exploited)",
+    "size": 275,
+    "top_tags": [
+      "vulnerability",
+      "actively_exploited",
+      "CWE-200"
+    ],
+    "top_types": [
+      "vulnerability"
+    ],
+    "example_nodes": [
+      {
+        "id": "2ba94484-ac5f-4b59-9fde-7fe760cc25a3",
+        "title": "CVE-2002-2425: Sun AnswerBook2 1.2 through 1.4.2 allows remote attackers to...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "7bbe7a64-52eb-4d64-a4e5-cbc3d9d63d19",
+        "title": "CVE-2002-2252: SQL injection vulnerability in auth.inc.php in Thatware 0.5....",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "575da072-4a15-4ecd-9ad6-80f92be5b4fc",
+        "title": "CVE-2021-35211: SolarWinds Serv-U Remote Code Execution Vulnerability",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "b2edd47f-d53d-469d-8171-278493afb137",
+        "title": "CVE-2019-0604: Microsoft SharePoint Remote Code Execution Vulnerability",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "b32f3563-9aef-4acd-b189-f66eff2a9912",
+        "title": "CVE-1999-0452: A service or application has a backdoor password that was pl...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "19": {
+    "id": 19,
+    "label": "Cluster 19: Vulnerability & Technique (vulnerability, actively_exploited)",
+    "size": 125,
+    "top_tags": [
+      "vulnerability",
+      "actively_exploited",
+      "attack-pattern"
+    ],
+    "top_types": [
+      "vulnerability",
+      "technique",
+      "news"
+    ],
+    "example_nodes": [
+      {
+        "id": "73c76c5f-53a8-4653-84a1-55c1bcb0e668",
+        "title": "CVE-2020-0986: Microsoft Windows Kernel Privilege Escalation Vulnerability",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "73aa8227-a8df-4fb3-9bd0-7ad238376cca",
+        "title": "CVE-2019-1322: Microsoft Windows Privilege Escalation Vulnerability",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "881c085b-6929-4178-826f-c892bc32ed92",
+        "title": "CVE-2019-1132: Microsoft Win32k Privilege Escalation Vulnerability",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "5b2f984b-4e7b-4886-90e3-cb59262be614",
+        "title": "CVE-2019-1215: Microsoft Windows Privilege Escalation Vulnerability",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "8ded7ec5-4cd5-451c-87dc-3bfabb19c37e",
+        "title": "CVE-2019-0803: Microsoft Win32k Privilege Escalation Vulnerability",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "20": {
+    "id": 20,
+    "label": "Cluster 20: Tool & Technique (Windows, tool)",
+    "size": 85,
+    "top_tags": [
+      "Windows",
+      "tool",
+      "attack-pattern"
+    ],
+    "top_types": [
+      "tool",
+      "technique",
+      "vulnerability"
+    ],
+    "example_nodes": [
+      {
+        "id": "73113144-de61-4848-a81c-7cc6d4d8c021",
+        "title": "Net",
+        "node_type": "tool",
+        "confidence": 0.5
+      },
+      {
+        "id": "ca376d7b-e467-4597-8a05-a2a337a0e45e",
+        "title": "PowerSploit",
+        "node_type": "tool",
+        "confidence": 0.5
+      },
+      {
+        "id": "963f5bef-1f44-49bb-8d48-f17d16e091d1",
+        "title": "cmd",
+        "node_type": "tool",
+        "confidence": 0.5
+      },
+      {
+        "id": "abfccf21-2783-4705-b4e2-65f2cb5eb2da",
+        "title": "netsh",
+        "node_type": "tool",
+        "confidence": 0.5
+      },
+      {
+        "id": "564eaebf-f8d1-48b3-96a6-205b2fffd812",
+        "title": "BITSAdmin",
+        "node_type": "tool",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "21": {
+    "id": 21,
+    "label": "Cluster 21: Vulnerability & Technique (vulnerability, actively_exploited)",
+    "size": 100,
+    "top_tags": [
+      "vulnerability",
+      "actively_exploited",
+      "attack-pattern"
+    ],
+    "top_types": [
+      "vulnerability",
+      "technique"
+    ],
+    "example_nodes": [
+      {
+        "id": "061000ec-e4d1-4155-b9db-20486e23ffd4",
+        "title": "CVE-2002-2357: MailEnable 1.5 015 through 1.5 018 allows remote attackers t...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "8fa3ebc3-9da5-4f7a-9f71-c56e892b497f",
+        "title": "CVE-2000-0319: mail.local in Sendmail 8.10.x does not properly identify the...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "210c845d-97a2-4f6b-b58c-ac871a771702",
+        "title": "CVE-2000-0507: Imate Webmail Server 2.5 allows remote attackers to cause a ...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "33d85082-eae7-45f7-ad73-31d7d44d8c3e",
+        "title": "CVE-1999-0512: A mail server is explicitly configured to allow SMTP mail re...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "11361fd5-b3e4-4568-b771-477bd6f8fc0a",
+        "title": "CVE-1999-0204: Sendmail 8.6.9 allows remote attackers to execute root comma...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "22": {
+    "id": 22,
+    "label": "Cluster 22: Vulnerability (vulnerability)",
+    "size": 28,
+    "top_tags": [
+      "vulnerability"
+    ],
+    "top_types": [
+      "vulnerability"
+    ],
+    "example_nodes": [
+      {
+        "id": "d3be2234-fcb5-4ed5-8948-6e2b4f9ab665",
+        "title": "CVE-1999-0648: Rejected reason: DO NOT USE THIS CANDIDATE NUMBER.  ConsultI...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "97a398c9-12ce-4744-a5c1-0d50fd5f8fb9",
+        "title": "CVE-1999-0642: Rejected reason: DO NOT USE THIS CANDIDATE NUMBER.  ConsultI...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "b41da878-7aa8-48aa-8b67-a3966a5d6dc2",
+        "title": "CVE-1999-0623: Rejected reason: DO NOT USE THIS CANDIDATE NUMBER.  ConsultI...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "898ac932-242e-444d-bae5-40475178ea60",
+        "title": "CVE-1999-0621: Rejected reason: DO NOT USE THIS CANDIDATE NUMBER.  ConsultI...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "27c758a6-7294-46bd-b3c6-b77dbde560e3",
+        "title": "CVE-1999-0620: Rejected reason: DO NOT USE THIS CANDIDATE NUMBER.  ConsultI...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "23": {
+    "id": 23,
+    "label": "Cluster 23: Vulnerability & Technique (vulnerability, actively_exploited)",
+    "size": 169,
+    "top_tags": [
+      "vulnerability",
+      "actively_exploited",
+      "CWE-59"
+    ],
+    "top_types": [
+      "vulnerability",
+      "technique"
+    ],
+    "example_nodes": [
+      {
+        "id": "e7e570fb-8635-43e7-8d9c-4f7a0ff80e90",
+        "title": "CVE-2001-0466: Directory traversal vulnerability in ustorekeeper 1.61 allow...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "9ad9caed-a5fd-47cf-b339-f10c908decca",
+        "title": "CVE-2002-1270: Mac OS X 10.2.2 allows local users to read files that only a...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "9f7142ba-e055-4974-afee-7458120bf395",
+        "title": "CVE-1999-0857: FreeBSD gdc program allows local users to modify files via a...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "fd9e5c6c-f4f6-4934-b545-95c8c9a5d2ff",
+        "title": "CVE-2002-2382: cvsupd.sh in CVSup 1.2 allows local users to overwrite arbit...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "27583477-7bad-42a6-9c54-6da39ad79d74",
+        "title": "CVE-2003-0076: Unknown vulnerability in the directory parser for Direct Con...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "24": {
+    "id": 24,
+    "label": "Cluster 24: Vulnerability (vulnerability, actively_exploited)",
+    "size": 64,
+    "top_tags": [
+      "vulnerability",
+      "actively_exploited"
+    ],
+    "top_types": [
+      "vulnerability"
+    ],
+    "example_nodes": [
+      {
+        "id": "470b642b-96e6-4707-9ee5-69c92239d6a6",
+        "title": "CVE-1999-0309: HP-UX vgdisplay program gives root access to local users....",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "64c4c0a5-dc4b-40d8-98fe-ab07c781694f",
+        "title": "CVE-1999-1238: Vulnerability in CORE-DIAG fileset in HP message catalog in ...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "665d97cd-7b07-4748-9f45-5889f87b913b",
+        "title": "CVE-2000-0005: HP-UX aserver program allows local users to gain privileges ...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "fb04b3d0-1887-44fe-8b53-b1e27ba999a0",
+        "title": "CVE-1999-1161: Vulnerability in ppl in HP-UX 10.x and earlier allows local ...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "ea3b62c3-ed20-4f5d-9dde-020834b3c40d",
+        "title": "CVE-1999-0326: Vulnerability in HP-UX mediainit program....",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "25": {
+    "id": 25,
+    "label": "Cluster 25: Technique (attack-pattern, capec)",
+    "size": 71,
+    "top_tags": [
+      "attack-pattern",
+      "capec",
+      "Windows"
+    ],
+    "top_types": [
+      "technique"
+    ],
+    "example_nodes": [
+      {
+        "id": "20eb62ad-11f7-4b90-b306-766362f1c7b3",
+        "title": "CAPEC-440: Hardware Integrity Attack",
+        "node_type": "technique",
+        "confidence": 0.5
+      },
+      {
+        "id": "4514da72-6fb5-475f-89e8-faf3ff34e3b6",
+        "title": "CAPEC-534: Malicious Hardware Update",
+        "node_type": "technique",
+        "confidence": 0.5
+      },
+      {
+        "id": "04a0829c-1552-4318-ab19-25631d7ee6a4",
+        "title": "CAPEC-212: Functionality Misuse",
+        "node_type": "technique",
+        "confidence": 0.5
+      },
+      {
+        "id": "11e7e9cd-0dd0-430e-8510-c0b9aa02e220",
+        "title": "CAPEC-454: DEPRECATED: Modification of Existing Components with Counterfeit Hardware",
+        "node_type": "technique",
+        "confidence": 0.5
+      },
+      {
+        "id": "ce2a162c-9503-4572-bdfd-0109122b8efc",
+        "title": "CAPEC-455: DEPRECATED: Malicious Logic Insertion via Inclusion of Counterfeit Hardware Components",
+        "node_type": "technique",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "26": {
+    "id": 26,
+    "label": "Cluster 26: Malware & Technique (malware, Windows)",
+    "size": 93,
+    "top_tags": [
+      "malware",
+      "Windows",
+      "Linux"
+    ],
+    "top_types": [
+      "malware",
+      "technique"
+    ],
+    "example_nodes": [
+      {
+        "id": "6283fd64-5eed-424b-8c72-560e439bb37f",
+        "title": "DownPaper",
+        "node_type": "malware",
+        "confidence": 0.5
+      },
+      {
+        "id": "277ea276-8ba8-4917-ade3-a5d56d4f2061",
+        "title": "Denis",
+        "node_type": "malware",
+        "confidence": 0.5
+      },
+      {
+        "id": "0918c5ad-1fd8-4368-803e-bccc171be14b",
+        "title": "PHOREAL",
+        "node_type": "malware",
+        "confidence": 0.5
+      },
+      {
+        "id": "4069ae4d-3742-4403-8941-eff08f4e3840",
+        "title": "Mis-Type",
+        "node_type": "malware",
+        "confidence": 0.5
+      },
+      {
+        "id": "dc2049ad-97ce-4315-b502-2521bb4ce7ff",
+        "title": "Pasam",
+        "node_type": "malware",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "27": {
+    "id": 27,
+    "label": "Cluster 27: Threat Actor & Incident (intrusion-set, threat_actor)",
+    "size": 80,
+    "top_tags": [
+      "intrusion-set",
+      "threat_actor",
+      "incident"
+    ],
+    "top_types": [
+      "threat_actor",
+      "incident"
+    ],
+    "example_nodes": [
+      {
+        "id": "7f91b202-80f4-4de0-8d38-bd45f9ab8527",
+        "title": "TA551",
+        "node_type": "threat_actor",
+        "confidence": 0.5
+      },
+      {
+        "id": "e97b3bfb-6bbd-441b-b51d-bfe2bdfeda05",
+        "title": "APT18",
+        "node_type": "threat_actor",
+        "confidence": 0.5
+      },
+      {
+        "id": "9201c740-3770-42e8-8720-ad11be5266bf",
+        "title": "APT12",
+        "node_type": "threat_actor",
+        "confidence": 0.5
+      },
+      {
+        "id": "555d5495-901f-4996-b12f-2f97866b0fba",
+        "title": "APT41",
+        "node_type": "threat_actor",
+        "confidence": 0.5
+      },
+      {
+        "id": "4e124638-b723-48d1-8497-fefffab2074c",
+        "title": "APT19",
+        "node_type": "threat_actor",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "28": {
+    "id": 28,
+    "label": "Cluster 28: Vulnerability (vulnerability, CWE-3)",
+    "size": 4190,
+    "top_tags": [
+      "vulnerability",
+      "CWE-3",
+      "CWE-8"
+    ],
+    "top_types": [
+      "vulnerability"
+    ],
+    "example_nodes": [
+      {
+        "id": "9d32b069-7cc3-40f1-b8c7-8b15117c1dc2",
+        "title": "CVE-2024-12321: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "4494ac22-3237-47af-a6f4-19a7e343a4ea",
+        "title": "CVE-2026-15921: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "70ea73f5-e52d-4709-a199-cb06defd0cda",
+        "title": "CVE-2023-17220: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "6a0c33df-8168-41fc-8d44-b2f2bfb486a6",
+        "title": "CVE-2023-14721: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "d2e049db-933e-414b-ba47-97157b0439a5",
+        "title": "CVE-2025-14121: Remote Code Execution",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  },
+  "29": {
+    "id": 29,
+    "label": "Cluster 29: Vulnerability & Technique (vulnerability, actively_exploited)",
+    "size": 119,
+    "top_tags": [
+      "vulnerability",
+      "actively_exploited",
+      "CWE-200"
+    ],
+    "top_types": [
+      "vulnerability",
+      "technique"
+    ],
+    "example_nodes": [
+      {
+        "id": "47c48979-5da1-4384-b43e-ae21f1892603",
+        "title": "CVE-1999-0488: Internet Explorer 4.0 and 5.0 allows a remote attacker to ex...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "605edea7-f451-43af-b680-31152313d894",
+        "title": "CVE-2002-2031: Internet Explorer 5.0, 5.0.1 and 5.5 with JavaScript executi...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "9a0dc786-8201-4387-92e2-e4f2f82775e7",
+        "title": "CVE-2017-0222: Microsoft Internet Explorer Remote Code Execution Vulnerability",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "ed8b0d1e-3440-4293-9d1f-13122626e6ed",
+        "title": "CVE-2002-1714: Microsoft Internet Explorer 5.0 through 6.0 allows remote at...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      },
+      {
+        "id": "e24ed62a-4db7-401d-87c0-52b938f5f549",
+        "title": "CVE-2002-1254: Internet Explorer 5.5 and 6.0 allows remote attackers to byp...",
+        "node_type": "vulnerability",
+        "confidence": 0.5
+      }
+    ]
+  }
+}

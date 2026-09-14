@@ -1,0 +1,37 @@
+=== CYBER TREE Classifier Training Report ===
+
+{
+  "trained_at": "2026-06-18T10:32:23.263588",
+  "total_samples": 13072,
+  "test_accuracy": 0.990822,
+  "real_world_audited_accuracy": 0.9,
+  "classes": [
+    "incident",
+    "malware",
+    "news",
+    "research",
+    "technique",
+    "threat_actor",
+    "tool",
+    "vulnerability",
+    "weakness"
+  ]
+}
+
+=== Classification Report ===
+
+               precision    recall  f1-score   support
+
+     incident     0.5000    0.1667    0.2500         6
+      malware     0.9536    0.9730    0.9632       148
+         news     0.5714    0.6667    0.6154         6
+     research     1.0000    0.5000    0.6667         2
+    technique     0.9608    0.9966    0.9784       295
+ threat_actor     0.9730    0.9000    0.9351        40
+         tool     1.0000    0.7895    0.8824        19
+vulnerability     1.0000    0.9984    0.9992      1923
+     weakness     1.0000    1.0000    1.0000       176
+
+     accuracy                         0.9908      2615
+    macro avg     0.8843    0.7768    0.8100      2615
+ weighted avg     0.9904    0.9908    0.9902      2615

@@ -1,0 +1,104 @@
+const test = require("node:test");
+const assert = require("node:assert/strict");
+const {
+  computeOverallCvssScore,
+  extractFindingTags,
+  generateComplianceSummary,
+  mapFindingsToOwasp
+} = require("../services/complianceMapper");
+
+test("extractFindingTags infers useful compliance tags", () => {
+  const tags = extractFindingTags({
+    category: "header-hardening",
+    title: "Missing Content-Security-Policy Header",
+    description: "No CSP makes script injection impact higher",
+    severity: "medium"
+  });
+
+  assert.ok(tags.includes("header-hardening"));
+  assert.ok(tags.includes("headers"));
+  assert.ok(tags.includes("csp"));
+  assert.ok(tags.includes("misconfiguration"));
+});
+
+test("mapFindingsToOwasp maps findings to expected categories", () => {
+  const mapped = mapFindingsToOwasp([
+    {
+      severity: "high",
+      category: "known-cve",
+      title: "Known vulnerable component version",
+      description: "CVE-driven vulnerable component exposure",
+      cve: "CVE-2026-1234"
+    },
+    {
+      severity: "medium",
+      category: "header-hardening",
+      title: "Missing Content-Security-Policy Header",
+      description: "missing CSP"
+    }
+  ]);
+
+  assert.ok(mapped.A06);
+  assert.ok(mapped.A05);
+  assert.equal(Boolean(mapped.A03), false);
+  assert.equal(Boolean(mapped.A04), false);
+});
+
+test("CSP wording with 'injection classes' does not map to A03", () => {
+  const mapped = mapFindingsToOwasp([
+    {
+      severity: "medium",
+      category: "header-hardening",
+      title: "Missing Content-Security-Policy Header",
+      description:
+        "CSP is not present, reducing browser-side mitigation for script injection classes."
+    }
+  ]);
+
+  assert.ok(mapped.A05);
+  assert.equal(Boolean(mapped.A03), false);
+});
+
+test("computeOverallCvssScore blends max and average severity", () => {
+  const score = computeOverallCvssScore([
+    { severity: "high", cvssScore: 8.8 },
+    { severity: "medium", cvssScore: 5.3 },
+    { severity: "low", cvssScore: 3.1 }
+  ]);
+  assert.ok(score >= 7.5 && score <= 9.5);
+});
+
+test("computeOverallCvssScore defaults medium-only header findings to 5.0", () => {
+  const score = computeOverallCvssScore([
+    {
+      severity: "medium",
+      category: "header-hardening",
+      title: "Missing Content-Security-Policy Header",
+      description: "CSP not present"
+    }
+  ]);
+  assert.equal(score, 5.0);
+});
+
+test("generateComplianceSummary returns cvss + owasp breakdown", () => {
+  const summary = generateComplianceSummary([
+    {
+      severity: "critical",
+      category: "known-cve",
+      title: "Known CVE exposure",
+      description: "Potential remote code execution via known component CVE",
+      cve: "CVE-2026-9999"
+    },
+    {
+      severity: "medium",
+      category: "header-hardening",
+      title: "Missing Content-Security-Policy Header",
+      description: "No CSP observed"
+    }
+  ]);
+
+  assert.ok(summary.cvssOverallScore > 0);
+  assert.ok(["LOW", "MEDIUM", "HIGH", "CRITICAL"].includes(summary.cvssSeverity));
+  assert.ok(summary.owaspCoverage >= 1);
+  assert.ok(Array.isArray(summary.remediationPriority));
+});

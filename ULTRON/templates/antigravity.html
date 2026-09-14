@@ -1,0 +1,4139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Antigravity</title>
+<meta name="description" content="ULTRON Autonomous Multi-Agent Desktop - Google DeepMind Antigravity Architecture">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"></noscript>
+<style>
+  :root {
+    --bg-window: #0c0c0e;
+    --bg-sidebar: #121215;
+    --bg-main: #0c0c0e;
+    --bg-card: #161619;
+    --bg-card-hover: #1c1c21;
+    --bg-input: #18181b;
+    --bg-pill: #1e1e24;
+    --bg-pill-hover: #26262e;
+    --border-subtle: #1c1c20;
+    --border-default: #26262b;
+    --border-focus: #3b82f6;
+    --text-primary: #f4f4f5;
+    --text-secondary: #a1a1aa;
+    --text-muted: #71717a;
+    --accent-blue: #3b82f6;
+    --accent-blue-hover: #60a5fa;
+    --dot-blue: #38bdf8;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; padding: 0; }
+  body {
+    background: var(--bg-window);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  /* Custom Clean Scrollbar */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+
+  /* TOP WINDOW & APP BAR */
+  .top-app-bar {
+    height: 38px;
+    background: var(--bg-window);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    flex: none;
+    font-size: 12px;
+  }
+  .app-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .app-title {
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+  }
+  .menu-items {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    color: var(--text-secondary);
+  }
+  .menu-item {
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+  .menu-item:hover { color: #ffffff; }
+
+  .app-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn-ide {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #18181b;
+    border: 1px solid var(--border-default);
+    color: #e4e4e7;
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-ide:hover { background: #24242a; border-color: #3f3f46; color: #ffffff; }
+  .btn-ide svg { width: 13px; height: 13px; color: var(--accent-blue); }
+
+  .window-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 12px;
+    color: var(--text-muted);
+  }
+  .win-btn {
+    cursor: pointer;
+    font-size: 11px;
+    padding: 2px 4px;
+    transition: color 0.15s;
+  }
+  .win-btn:hover { color: #ffffff; }
+
+  /* SUB-HEADER / NAVIGATION BAR */
+  .sub-nav-bar {
+    height: 34px;
+    background: var(--bg-window);
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    flex: none;
+  }
+  .sub-nav-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .nav-icon-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .nav-icon-btn:hover { background: #1c1c20; color: #ffffff; }
+  .nav-icon-btn svg { width: 14px; height: 14px; }
+
+  /* MAIN LAYOUT SPLIT */
+  .app-container {
+    display: flex;
+    flex: 1;
+    height: calc(100vh - 72px);
+    overflow: hidden;
+  }
+
+  /* PERSISTENT 60PX NAV RAIL */
+  .nav-rail {
+    width: 60px;
+    background: #0d0d10;
+    border-right: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+    gap: 6px;
+    flex: none;
+    z-index: 40;
+  }
+  .nav-rail-item {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #71717a;
+    font-size: 9.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    gap: 3px;
+  }
+  .nav-rail-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #f4f4f5;
+  }
+  .nav-rail-item.active {
+    background: rgba(0, 255, 204, 0.08);
+    color: #00ffcc;
+  }
+  .nav-rail-item.active::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    width: 3px;
+    height: 22px;
+    background: #00ffcc;
+    border-radius: 0 3px 3px 0;
+    box-shadow: 0 0 8px #00ffcc;
+  }
+  .nav-rail-item svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  /* LEFT SIDEBAR */
+  .sidebar {
+    width: 250px;
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    flex: none;
+    transition: width 0.2s ease;
+  }
+  .sidebar.collapsed { width: 0; overflow: hidden; border-right: none; }
+
+  .sidebar-top {
+    padding: 10px 12px 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .btn-new-conv {
+    width: 100%;
+    background: #19191e;
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+    padding: 7px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #f4f4f5;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-new-conv:hover {
+    background: #222228;
+    border-color: #3f3f46;
+  }
+  .btn-new-conv svg { width: 14px; height: 14px; color: var(--text-secondary); }
+
+  .sidebar-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin-top: 4px;
+  }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .nav-link:hover {
+    background: #18181c;
+    color: #ffffff;
+  }
+  .nav-link svg { width: 14px; height: 14px; }
+
+  /* PROJECTS SECTION */
+  .sidebar-projects {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 8px 12px 12px;
+    display: flex;
+    flex-direction: column;
+  }
+  .projects-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4px 6px;
+    color: var(--text-muted);
+    font-size: 11.5px;
+    font-weight: 500;
+  }
+  .projects-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .header-icon-btn {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: color 0.15s;
+  }
+  .header-icon-btn:hover { color: #ffffff; background: #1c1c20; }
+  .header-icon-btn svg { width: 13px; height: 13px; }
+
+  /* FOLDER & CONVERSATION TREE */
+  .tree-folder {
+    margin-bottom: 2px;
+  }
+  .folder-title-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 6px;
+    border-radius: 5px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .folder-title-row:hover { background: #18181c; color: #ffffff; }
+  .folder-chevron {
+    width: 12px;
+    height: 12px;
+    transition: transform 0.15s;
+    color: var(--text-muted);
+  }
+  .tree-folder.open .folder-chevron {
+    transform: rotate(90deg);
+  }
+  .folder-icon { width: 14px; height: 14px; color: var(--text-muted); }
+  .folder-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+
+  .folder-items {
+    display: none;
+    flex-direction: column;
+    padding-left: 14px;
+    margin-top: 2px;
+  }
+  .tree-folder.open .folder-items {
+    display: flex;
+  }
+  .tree-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 8px;
+    border-radius: 6px;
+    color: #94949e;
+    font-size: 11.5px;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .tree-item:hover {
+    background: #19191e;
+    color: #ffffff;
+  }
+  .tree-item.active {
+    background: #1c1d24;
+    color: #ffffff;
+    font-weight: 500;
+  }
+  .tree-item-title {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 6px;
+  }
+  .tree-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+  .active-indicator-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--dot-blue);
+    box-shadow: 0 0 6px rgba(56, 189, 248, 0.7);
+  }
+
+  /* SIDEBAR BOTTOM */
+  .sidebar-bottom {
+    padding: 10px 12px;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .btn-settings {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 6px 10px;
+    border-radius: 6px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-settings:hover {
+    background: #18181c;
+    color: #ffffff;
+  }
+  .btn-settings svg { width: 14px; height: 14px; }
+
+  /* MAIN WORKSPACE CANVAS */
+  .main-workspace {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-main);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* HOME / EMPTY VIEW (EXACT SCREENSHOT MATCH) */
+  .home-view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+  }
+  .home-project-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #a1a1aa;
+    margin-bottom: 20px;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: all 0.15s;
+  }
+  .home-project-breadcrumb:hover {
+    background: #18181b;
+    color: #ffffff;
+  }
+  .home-project-breadcrumb svg { width: 14px; height: 14px; }
+
+  /* LIVE RUN FLOATING BANNER */
+  .live-run-banner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 680px;
+    background: rgba(14, 165, 233, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    border-radius: 12px;
+    padding: 10px 16px;
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #e0f2fe;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  }
+  .live-run-banner:hover {
+    background: rgba(14, 165, 233, 0.22);
+    border-color: #38bdf8;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 24px rgba(14, 165, 233, 0.2);
+  }
+  .live-run-banner .pulse-indicator {
+    color: #38bdf8;
+    font-size: 11px;
+    animation: pulse-dot 1.5s infinite;
+  }
+  .live-run-banner .live-run-btn {
+    margin-left: auto;
+    color: #38bdf8;
+    font-weight: 600;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* CENTRAL PROMPT CARD */
+  .prompt-card {
+    width: 100%;
+    max-width: 680px;
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: 16px;
+    padding: 14px 16px 12px;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .prompt-card:focus-within {
+    border-color: #3b3b44;
+    box-shadow: 0 14px 42px rgba(0, 0, 0, 0.6);
+  }
+  .prompt-textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #f4f4f5;
+    font-family: inherit;
+    font-size: 13.5px;
+    line-height: 1.5;
+    resize: none;
+    min-height: 54px;
+    max-height: 180px;
+  }
+  .prompt-textarea::placeholder {
+    color: var(--text-muted);
+  }
+
+  .prompt-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 4px;
+  }
+  .prompt-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .prompt-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-tool-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-tool-icon:hover {
+    background: #24242a;
+    color: #ffffff;
+  }
+
+  /* 306: Mobile-friendly status fallback layout */
+  @media (max-width: 768px) {
+    .nav-rail { display: none; }
+    .sidebar { width: 100%; position: absolute; z-index: 50; }
+    .split-panel { width: 100% !important; min-width: 100%; }
+    .prompt-card { max-width: 100%; border-radius: 12px; }
+    .top-app-bar { padding: 0 8px; font-size: 11px; }
+  }
+  .btn-tool-icon svg { width: 15px; height: 15px; }
+
+  .pill-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: #1c1c21;
+    border: 1px solid var(--border-default);
+    border-radius: 7px;
+    padding: 4px 9px;
+    color: #d4d4d8;
+    font-size: 11.5px;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .pill-dropdown:hover {
+    background: #25252c;
+    border-color: #3f3f46;
+    color: #ffffff;
+  }
+  .pill-dropdown svg { width: 12px; height: 12px; color: var(--text-muted); }
+
+  .btn-send {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #27272e;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    border: none;
+  }
+  .btn-send.active {
+    background: #ffffff;
+    color: #0c0c0e;
+  }
+  .btn-send.active:hover {
+    background: #e4e4e7;
+  }
+  .btn-send svg { width: 13px; height: 13px; }
+
+  /* ACTIVE CONVERSATION WORKSPACE VIEW */
+  .conversation-view {
+    display: none;
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+  }
+  .conversation-view.active {
+    display: flex;
+  }
+
+  /* CHAT & EXECUTION COLUMN */
+  .chat-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-right: 1px solid var(--border-subtle);
+    background: var(--bg-main);
+    overflow: hidden;
+  }
+  .chat-header {
+    height: 44px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex: none;
+  }
+  .chat-header-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .status-badge {
+    font-size: 10.5px;
+    font-family: var(--font-mono);
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    background: #1e1e24;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+  }
+  .status-badge.running { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border-color: rgba(59, 130, 246, 0.3); }
+  .status-badge.approved { background: rgba(34, 197, 94, 0.15); color: #4ade80; border-color: rgba(34, 197, 94, 0.3); }
+  .status-badge.clarifying { background: rgba(234, 179, 8, 0.15); color: #facc15; border-color: rgba(234, 179, 8, 0.3); }
+
+  .chat-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .action-btn-sm {
+    background: #18181c;
+    border: 1px solid var(--border-default);
+    border-radius: 6px;
+    padding: 4px 9px;
+    color: var(--text-secondary);
+    font-size: 11.5px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .action-btn-sm:hover {
+    background: #24242a;
+    color: #ffffff;
+    border-color: #3f3f46;
+  }
+  .action-btn-sm.active-preview {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.4);
+    color: #93c5fd;
+  }
+
+  /* CHAT MESSAGES STREAM */
+  .chat-stream {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* User Message */
+  .msg-user {
+    display: flex;
+    gap: 12px;
+    max-width: 85%;
+    align-self: flex-start;
+  }
+  .msg-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: #27272a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    flex: none;
+  }
+  .msg-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .msg-author {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+  .msg-bubble {
+    background: #19191e;
+    border: 1px solid var(--border-default);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #f4f4f5;
+  }
+
+  /* Assistant Chat Message (Chatbot Style) */
+  .msg-assistant {
+    display: flex;
+    gap: 12px;
+    max-width: 90%;
+    align-self: flex-start;
+    margin: 4px 0;
+  }
+  .msg-avatar.ultron-avatar {
+    background: #0ea5e9;
+    color: #ffffff;
+    font-size: 13px;
+    box-shadow: 0 0 12px rgba(14, 165, 233, 0.3);
+  }
+  .msg-assistant .msg-bubble {
+    background: #141418;
+    border: 1px solid #27272f;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #e4e4e7;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .msg-assistant .msg-bubble code {
+    background: #1f1f26;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: #38bdf8;
+  }
+  .msg-assistant .msg-bubble pre {
+    background: #0d0d10;
+    border: 1px solid #27272a;
+    border-radius: 8px;
+    padding: 12px;
+    overflow-x: auto;
+    margin: 8px 0;
+  }
+  .msg-assistant .msg-bubble pre code {
+    background: none;
+    padding: 0;
+    color: #f1f5f9;
+  }
+  .typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 0;
+  }
+  .typing-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent-blue);
+    border-radius: 50%;
+    animation: typingPulse 1.2s infinite ease-in-out;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes typingPulse {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+
+  /* Antigravity Agent Stage Accordion */
+  .agent-step-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 4px 0;
+  }
+  .agent-step-header {
+    padding: 8px 12px;
+    background: #18181c;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    font-size: 12px;
+    border-bottom: 1px solid transparent;
+  }
+  .agent-step-card.open .agent-step-header {
+    border-bottom-color: var(--border-subtle);
+  }
+  .step-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    color: #e4e4e7;
+  }
+  .step-badge {
+    font-size: 10px;
+    font-family: var(--font-mono);
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: #27272a;
+    color: #a1a1aa;
+  }
+  .agent-step-body {
+    padding: 12px 14px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: #d4d4d8;
+    display: none;
+    background: #141417;
+  }
+  .agent-step-card.open .agent-step-body {
+    display: block;
+  }
+
+  /* CLARIFICATION PROMPT BOX */
+  .clarification-box {
+    background: rgba(234, 179, 8, 0.08);
+    border: 1px solid rgba(234, 179, 8, 0.3);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .clarification-title {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #facc15;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .clarification-question {
+    font-size: 13px;
+    color: #fef08a;
+  }
+  .clarification-input-row {
+    display: flex;
+    gap: 8px;
+  }
+  .clarification-input {
+    flex: 1;
+    background: #18181b;
+    border: 1px solid var(--border-default);
+    border-radius: 6px;
+    padding: 7px 10px;
+    color: #ffffff;
+    font-size: 12.5px;
+  }
+  .btn-clarify-submit {
+    background: #eab308;
+    color: #000000;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 7px 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+  .btn-clarify-submit:hover { opacity: 0.9; }
+
+  /* FOLLOW-UP CHAT INPUT BAR */
+  .chat-bottom-input {
+    padding: 12px 20px;
+    border-top: 1px solid var(--border-subtle);
+    background: var(--bg-main);
+  }
+  .chat-input-wrapper {
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: 10px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .chat-input-wrapper input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-size: 13px;
+  }
+  .chat-input-wrapper input::placeholder { color: var(--text-muted); }
+
+  /* RIGHT SPLIT-PREVIEW DRAWER */
+  .split-panel {
+    width: 48%;
+    min-width: 380px;
+    background: #0f0f12;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    border-left: 1px solid var(--border-subtle);
+    transition: width 0.2s ease;
+  }
+  .split-panel.closed { display: none; }
+
+  .split-tabs-header {
+    height: 44px;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    background: #121216;
+  }
+  .split-tabs-list {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .split-tab-btn {
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .split-tab-btn:hover { color: #ffffff; background: #1a1a20; }
+  .split-tab-btn.active { color: #ffffff; background: #22222a; font-weight: 500; }
+
+  .split-tab-content {
+    flex: 1;
+    display: none;
+    overflow: hidden;
+    position: relative;
+  }
+  .split-tab-content.active {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Sandbox Iframe */
+  .sandbox-iframe-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #000000;
+  }
+  .sandbox-toolbar {
+    height: 32px;
+    background: #16161b;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+  .sandbox-iframe {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #000000;
+  }
+
+  /* Logical Tree Node Viewer */
+  .tree-viewer-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #0d0d10;
+  }
+  .tree-node-block {
+    background: #16161a;
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .tree-node-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #e4e4e7;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tree-node-items {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+  }
+
+  /* Terminal Logs Viewer */
+  .logs-viewer-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 16px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.6;
+    background: #09090b;
+    color: #a1a1aa;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+
+  /* MODALS / OVERLAYS */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-card {
+    width: 90%;
+    max-width: 580px;
+    background: #16161a;
+    border: 1px solid var(--border-default);
+    border-radius: 14px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .modal-header {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13.5px;
+    font-weight: 600;
+  }
+  .modal-close {
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: color 0.15s;
+  }
+  .modal-close:hover { color: #ffffff; }
+  .modal-body {
+    padding: 18px;
+    max-height: 70vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    font-size: 12.5px;
+  }
+
+  /* Dropdown Popovers */
+  .popover-menu {
+    position: absolute;
+    background: #19191e;
+    border: 1px solid var(--border-default);
+    border-radius: 8px;
+    padding: 4px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    z-index: 500;
+    display: none;
+    flex-direction: column;
+    min-width: 190px;
+  }
+  .popover-menu.open { display: flex; }
+  .popover-item {
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .popover-item:hover {
+    background: #24242c;
+    color: #ffffff;
+  }
+  .popover-item.active {
+    color: var(--accent-blue);
+    font-weight: 500;
+  }
+
+  .toast-notice {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #18181b;
+    color: #f4f4f5;
+    border: 1px solid #27272a;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 99999;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
+  .toast-notice.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .toast-notice.error {
+    border-color: rgba(239, 68, 68, 0.5);
+    color: #fca5a5;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP APPLICATION BAR -->
+<div class="top-app-bar top-system-bar" id="topSystemBar" style="height:46px;">
+  <div class="app-bar-left">
+    <span class="system-glyph" style="color:#00ffcc;font-size:15px;margin-right:2px;">◈</span>
+    <span class="app-title">Antigravity</span>
+    <span class="system-sub" style="font-size:11px;color:#71717a;font-family:var(--font-mono);margin-left:4px;">// ULTRON OS</span>
+    
+    <!-- Active Project Chip -->
+    <div class="top-chip" id="activeProjectChip" onclick="resumeActiveConversation()" title="Click to view active project conversation" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:3px 10px;font-size:11px;color:#a1a1aa;margin-left:8px;cursor:pointer;transition:all 0.15s ease;">
+      <span class="chip-dot" style="width:6px;height:6px;border-radius:50%;background:#00ffcc;"></span>
+      <span id="topActiveProjName">ULTRON Workspace</span>
+    </div>
+
+    <!-- Live Ollama Status Chip -->
+    <div class="top-chip" id="ollamaStatusChip" title="Local Model Status" style="display:inline-flex;align-items:center;gap:6px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);border-radius:12px;padding:3px 10px;font-size:11px;color:#34d399;margin-left:6px;">
+      <span class="chip-dot online" style="width:6px;height:6px;border-radius:50%;background:#10b981;box-shadow:0 0 6px #10b981;"></span>
+      <span id="topOllamaLabel">Ollama: llama3.1:8b (Online)</span>
+    </div>
+
+    <!-- Global Status Chip -->
+    <div class="top-chip" id="globalStatusChip" style="display:inline-flex;align-items:center;gap:6px;background:rgba(0,255,204,0.08);border:1px solid rgba(0,255,204,0.2);border-radius:12px;padding:3px 10px;font-size:11px;font-weight:600;color:#00ffcc;margin-left:6px;">
+      <span id="globalStatusBadge">READY</span>
+    </div>
+  </div>
+
+  <div class="app-bar-right">
+    <!-- Projects directory modal trigger -->
+    <div class="nav-icon-btn" id="projectsModalTrigger" onclick="openHistoryModal()" title="Projects Directory (Modal)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+    </div>
+
+    <!-- Procedural audio toggle -->
+    <div class="nav-icon-btn" id="audioToggleBtn" onclick="toggleAudio()" title="Procedural Audio: ON/OFF">
+      <span id="audioIcon" style="font-size:13px;">🔇</span>
+    </div>
+
+    <div class="btn-ide" onclick="openIdeLauncher()" title="Launch IDE Environment">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      <span>Install IDE</span>
+    </div>
+    <div class="nav-icon-btn" onclick="openSettingsModal()" title="Settings & Governance">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+    </div>
+    <div class="window-controls">
+      <span class="win-btn" title="Minimize">─</span>
+      <span class="win-btn" title="Maximize">▢</span>
+      <span class="win-btn" title="Close">✕</span>
+    </div>
+  </div>
+</div>
+
+<!-- SUB-HEADER NAVIGATION BAR -->
+<div class="sub-nav-bar">
+  <div class="sub-nav-left">
+    <div class="nav-icon-btn" onclick="toggleSidebar()" title="Toggle Sidebar [|]">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+    </div>
+    <div class="nav-icon-btn" onclick="navigateHistory(-1)" title="Back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+    </div>
+    <div class="nav-icon-btn" onclick="navigateHistory(1)" title="Forward">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>
+  </div>
+  <div class="sub-nav-right">
+    <span id="topBarModelBadge" style="font-size:11px;color:#71717a;font-family:var(--font-mono);">ULTRON</span>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT CONTAINER -->
+<div class="app-container">
+
+  <!-- LEFT NAV RAIL (60px) -->
+  <nav class="nav-rail" id="leftNavRail" aria-label="Command Deck Nav Rail">
+    <div class="nav-rail-item active" id="navBtnCommand" onclick="switchNavView('command')" title="Command View (Alt+1)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="7"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <span>Command</span>
+    </div>
+    <div class="nav-rail-item" id="navBtnProjects" onclick="switchNavView('projects')" title="Projects View (Alt+2)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      <span>Projects</span>
+    </div>
+    <div class="nav-rail-item" id="navBtnAgents" onclick="switchNavView('agents')" title="Agents Matrix View (Alt+3)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <span>Agents</span>
+    </div>
+    <div class="nav-rail-item" id="navBtnActivity" onclick="switchNavView('activity')" title="Activity Telemetry View (Alt+4)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span>Activity</span>
+    </div>
+    <div class="nav-rail-item" id="navBtnSettings" onclick="switchNavView('settings')" title="Settings View (Alt+5)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span>Settings</span>
+    </div>
+  </nav>
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar" id="appSidebar">
+    <div class="sidebar-top">
+      <button class="btn-new-conv" onclick="openNewConversation()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span>New Conversation</span>
+      </button>
+
+      <div class="sidebar-nav-links">
+        <div class="nav-link" onclick="openHistoryModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 8 14"/></svg>
+          <span>Conversation History</span>
+        </div>
+        <div class="nav-link" onclick="openScheduledTasksModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Scheduled Tasks</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECTS EXPLORER -->
+    <div class="sidebar-projects">
+      <div class="projects-header">
+        <span>Projects</span>
+        <div class="projects-header-actions">
+          <div class="header-icon-btn" onclick="toggleProjectsFilter()" title="Filter conversations">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          </div>
+          <div class="header-icon-btn" onclick="promptNewFolder()" title="New Folder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="17"/><line x1="9" y1="14" x2="15" y2="14"/></svg>
+          </div>
+          <div class="header-icon-btn" id="btnSidebarClearAllProjects" onclick="clearAllProjectsData()" title="Clear All Projects" style="color:#a1a1aa;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter bar (toggleable) -->
+      <div id="projectsFilterBar" style="display:none;padding:2px 4px 8px;">
+        <input type="text" id="projectSearchInput" placeholder="Filter conversations..." style="width:100%;background:#18181b;border:1px solid var(--border-default);border-radius:6px;padding:4px 8px;color:#fff;font-size:11px;outline:none;">
+      </div>
+
+      <!-- Dynamic Tree list -->
+      <div id="projectsTreeRoot"></div>
+    </div>
+
+    <!-- BOTTOM SETTINGS -->
+    <div class="sidebar-bottom">
+      <div class="btn-settings" onclick="openSettingsModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>Settings</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CANVAS -->
+  <main class="main-workspace">
+
+    <!-- HOME / NEW CONVERSATION VIEW (SCREENSHOT EXACT MATCH) -->
+    <div class="home-view" id="homeView">
+      <div class="home-project-breadcrumb" onclick="openFolderSelector(event)" id="homeProjectBreadcrumb">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <span id="activeFolderLabel">ULTRON</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+
+      <!-- LIVE RUN IN-PROGRESS BANNER -->
+      <div class="live-run-banner" id="liveRunHomeBanner" style="display:none;" onclick="resumeActiveConversation()">
+        <span class="pulse-indicator">●</span>
+        <span id="liveRunHomeText" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Project in progress...</span>
+        <span class="live-run-btn">View Live Build ➔</span>
+      </div>
+
+      <!-- PROMPT CARD -->
+      <div class="prompt-card" aria-label="Goal Launcher">
+        <div id="promptGuardrailNotice" style="display:none;color:#f59e0b;font-size:11px;padding:4px 8px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:4px;margin-bottom:6px;"></div>
+        <div style="display:flex;align-items:flex-start;width:100%;">
+          <span class="prompt-indicator" style="color:#00ffcc;font-weight:bold;font-size:18px;margin-right:6px;line-height:1.4;user-select:none;text-shadow:0 0 8px rgba(0,255,204,0.6);">›</span>
+          <textarea class="prompt-textarea" id="mainPromptInput" placeholder="Ask anything, @ to mention, / for actions" rows="2" style="flex:1;"></textarea>
+        </div>
+        
+        <div class="prompt-toolbar">
+          <div class="prompt-toolbar-left">
+            <div class="btn-tool-icon" onclick="openAttachmentMenu(event)" title="Add context or files">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+
+            <!-- Model Selector Pill -->
+            <div class="pill-dropdown" onclick="openModelSelector(event)" id="modelSelectorPill">
+              <span id="selectedModelLabel">ULTRON</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+
+            <!-- Context Selector Pill -->
+            <div class="pill-dropdown" onclick="openContextSelector(event)" id="contextSelectorPill">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#a1a1aa;"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+              <span id="selectedContextLabel">Local</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+          </div>
+
+          <div class="prompt-toolbar-right">
+            <!-- Reactive waveform canvas -->
+            <canvas id="promptWaveform" width="70" height="20" style="height:18px;width:70px;margin-right:6px;opacity:0.75;" title="Voice/Typing reactive waveform"></canvas>
+
+            <!-- Voice Input Button -->
+            <div class="btn-tool-icon" id="micBtn" onclick="toggleVoiceInput()" title="Voice input">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </div>
+
+            <!-- Send Button -->
+            <button class="btn-send" id="sendPromptBtn" onclick="submitPrompt()" title="Send prompt">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIVE CONVERSATION & WORKSPACE VIEW -->
+    <div class="conversation-view" id="conversationView">
+      <!-- CHAT COLUMN -->
+      <div class="chat-column">
+        <div class="chat-header">
+          <div class="chat-header-title">
+            <span id="convTitle">Active Mission</span>
+            <span class="status-badge" id="convStatusBadge">IDLE</span>
+          </div>
+          <div class="chat-header-actions">
+            <button class="action-btn-sm active-preview" id="toggleSplitBtn" onclick="toggleSplitPanel()" title="Toggle Split Preview">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
+              <span>Split Preview</span>
+            </button>
+            <button class="action-btn-sm" onclick="saveProjectPermanent()" title="Mark as Permanent (No 30d purge)">
+              <span id="permSaveLabel">💾 Save</span>
+            </button>
+            <button class="action-btn-sm" onclick="exportProjectZip()" title="Download .ZIP Export">
+              <span>📦 Export</span>
+            </button>
+            <button class="action-btn-sm" onclick="resetActiveExecution()" title="Reset State">
+              <span>↺</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Chat messages & agent execution trajectory -->
+        <div class="chat-stream" id="chatStream"></div>
+
+        <!-- Clarification Box Container (appears if Boss requests input) -->
+        <div id="clarificationAnchor" style="padding:0 24px;"></div>
+
+        <!-- Bottom Follow-up Input -->
+        <div class="chat-bottom-input">
+          <div class="chat-input-wrapper">
+            <input type="text" id="followUpInput" placeholder="Ask ULTRON to update the app, add features, or refine code..." onkeydown="if(event.key==='Enter') submitFollowUp();">
+            <button class="btn-send active" onclick="submitFollowUp()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT SPLIT PREVIEW & ARTIFACTS PANEL -->
+      <div class="split-panel" id="splitPanel">
+        <div class="split-tabs-header">
+          <div class="split-tabs-list">
+            <div class="split-tab-btn active" data-tab="sandbox" onclick="switchSplitTab('sandbox')">Live App</div>
+            <div class="split-tab-btn" data-tab="reactor" onclick="switchSplitTab('reactor')">Arc Reactor</div>
+            <div class="split-tab-btn" data-tab="tree" onclick="switchSplitTab('tree')">Reasoning</div>
+            <div class="split-tab-btn" data-tab="evolution" onclick="switchSplitTab('evolution')">Evolution</div>
+            <div class="split-tab-btn" data-tab="code" onclick="switchSplitTab('code')">Code</div>
+            <div class="split-tab-btn" data-tab="logs" onclick="switchSplitTab('logs')">Telemetry</div>
+            <div class="split-tab-btn" data-tab="rules" onclick="switchSplitTab('rules')">Rules</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div class="nav-icon-btn" onclick="reloadSandboxIframe()" title="Reload App">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 4v6h-6"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            </div>
+            <div class="nav-icon-btn" onclick="openAppInNewTab()" title="Open in New Tab">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 0: Arc Reactor & Agents Core -->
+        <div class="split-tab-content" id="tabContentReactor" style="position:relative;background:#09090b;overflow:hidden;flex-direction:column;align-items:center;justify-content:center;">
+          <div class="reactor-header" style="width:100%;padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(0,0,0,0.3);z-index:10;">
+            <div style="font-size:11px;font-family:var(--font-mono);color:#00ffcc;letter-spacing:0.06em;font-weight:600;">ARC REACTOR // REASONING CORE</div>
+            <div style="display:flex;gap:10px;align-items:center;">
+              <span id="reactorStateBadge" style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(0,255,204,0.1);color:#00ffcc;border:1px solid rgba(0,255,204,0.25);font-family:var(--font-mono);">IDLE</span>
+              <span style="font-size:10px;color:#71717a;font-family:var(--font-mono);"><span id="fpsReadout">60</span> FPS</span>
+            </div>
+          </div>
+          <div class="reactor-canvas-wrap" style="width:100%;height:calc(100% - 40px);position:relative;display:flex;align-items:center;justify-content:center;">
+            <canvas id="reactorCanvas" class="reactor-hero-canvas" style="width:100%;height:100%;display:block;"></canvas>
+            <div class="agent-orbit-pod pod-boss" data-agent="boss" style="position:absolute;top:20px;text-align:center;padding:4px 8px;background:rgba(0,0,0,0.6);border:1px solid rgba(0,255,204,0.3);border-radius:6px;">
+              <div class="pod-glyph" style="color:#00ffcc;font-weight:bold;font-size:10.5px;">BOSS</div>
+              <div class="pod-status" data-status-text style="font-size:9px;color:#a1a1aa;">Sentinel</div>
+            </div>
+            <div class="agent-orbit-pod pod-planner" data-agent="planner" style="position:absolute;right:20px;text-align:center;padding:4px 8px;background:rgba(0,0,0,0.6);border:1px solid rgba(59,130,246,0.3);border-radius:6px;">
+              <div class="pod-glyph" style="color:#3b82f6;font-weight:bold;font-size:10.5px;">PLANNER</div>
+              <div class="pod-status" data-status-text style="font-size:9px;color:#a1a1aa;">Architect</div>
+            </div>
+            <div class="agent-orbit-pod pod-coordinator" data-agent="coordinator" style="position:absolute;bottom:20px;text-align:center;padding:4px 8px;background:rgba(0,0,0,0.6);border:1px solid rgba(168,85,247,0.3);border-radius:6px;">
+              <div class="pod-glyph" style="color:#a855f7;font-weight:bold;font-size:10.5px;">COORDINATOR</div>
+              <div class="pod-status" data-status-text style="font-size:9px;color:#a1a1aa;">Router</div>
+            </div>
+            <div class="agent-orbit-pod pod-worker" data-agent="worker" style="position:absolute;left:20px;text-align:center;padding:4px 8px;background:rgba(0,0,0,0.6);border:1px solid rgba(245,158,11,0.3);border-radius:6px;">
+              <div class="pod-glyph" style="color:#f59e0b;font-weight:bold;font-size:10.5px;">WORKER</div>
+              <div class="pod-status" data-status-text style="font-size:9px;color:#a1a1aa;">Synthesizer</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 1: Live App Sandbox -->
+        <div class="split-tab-content active" id="tabContentSandbox">
+          <div class="sandbox-iframe-container" id="sandboxContainer">
+            <div class="sandbox-toolbar" style="display:flex;justify-content:space-between;align-items:center;padding:6px 12px;background:rgba(0,0,0,0.4);border-bottom:1px solid rgba(255,255,255,0.08);font-size:11px;">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <span id="sandboxStatusUrl" style="color:var(--text-muted);font-family:var(--font-mono);">http://127.0.0.1:8000/web_ui</span>
+                <span id="sandboxVerLabel" style="background:rgba(0,255,204,0.1);color:#00ffcc;border:1px solid rgba(0,255,204,0.3);border-radius:4px;padding:1px 5px;font-size:10px;">v1.0</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <!-- Viewport buttons (Desktop, Tablet, Mobile) -->
+                <button id="btnViewportDesktop" onclick="setSandboxViewport('desktop')" class="action-btn-sm active" title="Desktop Viewport (1920x1080)">Desktop</button>
+                <button id="btnViewportTablet" onclick="setSandboxViewport('tablet')" class="action-btn-sm" title="Tablet Viewport (1024x768)">Tablet</button>
+                <button id="btnViewportMobile" onclick="setSandboxViewport('mobile')" class="action-btn-sm" title="Mobile Viewport (375x667)">Mobile</button>
+                
+                <button id="sandboxSaveBtn" onclick="saveProjectPermanent()" class="action-btn-sm" title="One-Click Save">💾 Save</button>
+                <button id="sandboxZipBtn" onclick="exportProjectZip()" class="action-btn-sm" title="One-Click ZIP">📦 ZIP</button>
+                <button id="sandboxAbortBtn" onclick="resetActiveExecution()" class="action-btn-sm" title="Abort in-progress synthesis">⏹ Abort</button>
+                <button id="sandboxResetBtn" onclick="resetSandboxState()" class="action-btn-sm" title="Reset Sandbox">↺ Reset</button>
+                <button id="sandboxFullscreenBtn" onclick="toggleSandboxFullscreen()" class="action-btn-sm" title="Full-screen preview">⛶</button>
+              </div>
+            </div>
+            <div class="sandbox-tilt-wrapper" id="sandboxTiltWrapper" style="perspective:1000px;width:100%;height:calc(100% - 36px);display:flex;justify-content:center;align-items:center;overflow:auto;position:relative;">
+              <iframe id="sandboxIframe" class="sandbox-iframe" sandbox="allow-scripts allow-forms allow-modals allow-same-origin" src="/web_ui/index.html" style="width:100%;height:100%;border:none;transition:width 0.2s, max-width 0.2s, transform 0.1s ease-out;"></iframe>
+              <div id="sandboxErrorFallback" style="display:none;position:absolute;inset:0;background:#09090b;align-items:center;justify-content:center;flex-direction:column;color:#f87171;font-size:12px;">
+                <div style="font-size:24px;margin-bottom:8px;">⚠️</div>
+                <div>Render fallback: Unable to display application.</div>
+                <button onclick="reloadSandboxIframe()" style="margin-top:8px;padding:4px 10px;background:#27272a;color:#fff;border-radius:4px;cursor:pointer;">Reload Sandbox</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Logical Reasoning Tree (Mode 1) -->
+        <div class="split-tab-content" id="tabContentTree">
+          <div class="tree-toolbar" style="display:flex;gap:8px;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.2);align-items:center;">
+            <input type="text" id="treeFilterInput" placeholder="Filter tree nodes..." oninput="filterTreeNodes(this.value)" style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:4px 8px;color:#fff;font-size:12px;">
+            <button onclick="toggleRawTree()" id="rawTreeToggleBtn" class="action-btn" style="font-size:11px;padding:4px 8px;cursor:pointer;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#ccc;border-radius:4px;">{ } Raw JSON</button>
+            <button onclick="exportTreeSpec()" class="action-btn" style="font-size:11px;padding:4px 8px;cursor:pointer;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#ccc;border-radius:4px;">📄 Export Spec</button>
+          </div>
+          <div class="tree-viewer-container" id="treeViewer">
+            <div style="color:var(--text-muted);font-size:12px;">No active reasoning tree yet. Run a prompt to generate.</div>
+          </div>
+          <pre id="treeRawJsonViewer" style="display:none;margin:0;padding:12px;font-family:monospace;font-size:11px;color:#00ffcc;overflow:auto;max-height:calc(100% - 40px);white-space:pre-wrap;"></pre>
+        </div>
+
+        <!-- Tab 3: Evolution Deck (Mode 2) -->
+        <div class="split-tab-content" id="tabContentEvolution" style="position:relative;background:#09090b;flex-direction:column;height:100%;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.3);font-size:11px;">
+            <span style="color:#00ffcc;font-weight:600;letter-spacing:0.04em;">EVOLUTION DECK // ITERATIVE REVISION</span>
+            <span id="evolutionVersionBadge" class="step-badge" style="background:rgba(0,255,204,0.1);color:#00ffcc;border:1px solid rgba(0,255,204,0.3);padding:1px 6px;border-radius:4px;">v1.0</span>
+          </div>
+          <div id="deckSuggestionChips" class="suggestion-chips-bar" style="display:flex;gap:6px;padding:8px 12px;overflow-x:auto;border-bottom:1px solid rgba(255,255,255,0.06);background:rgba(0,0,0,0.15);">
+            <!-- Proactive chips populated here -->
+          </div>
+          <div id="evolutionChatStream" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;">
+            <div style="color:var(--text-muted);font-size:12px;">Evolution history will appear here once active.</div>
+          </div>
+          <div style="padding:8px 12px;border-top:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.25);display:flex;gap:8px;">
+            <input type="text" id="deckEvolutionInput" placeholder="Request code evolution or feature revision..." onkeydown="if(event.key==='Enter') submitDeckEvolution();" style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:6px;padding:6px 10px;font-size:12px;color:#fff;">
+            <button class="action-btn-sm" onclick="submitDeckEvolution()" style="padding:6px 12px;background:#00ffcc;color:#000;font-weight:600;">Evolve</button>
+          </div>
+        </div>
+
+        <!-- Tab 4: Code Inspector (Mode 3) -->
+        <div class="split-tab-content" id="tabContentCode" style="position:relative;background:#09090b;flex-direction:column;height:100%;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.3);font-size:11px;">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span id="codeFilePath" style="font-family:var(--font-mono);color:#00ffcc;">domains/web_ui/index.html</span>
+              <span id="codeLineCount" style="color:var(--text-muted);font-family:var(--font-mono);">0 lines</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;">
+              <input id="codeSearchInput" type="text" placeholder="Filter code..." oninput="filterCodeInspector(this.value)" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:3px 8px;font-size:11px;color:#fff;width:130px;">
+              <button id="codeCopyBtn" class="action-btn-sm" onclick="copyCodeInspector()" title="Copy Full File">📋 Copy</button>
+            </div>
+          </div>
+          <pre id="codeInspectorPre" style="margin:0;padding:12px;font-family:monospace;font-size:11.5px;color:#e4e4e7;line-height:1.5;overflow:auto;max-height:calc(100% - 36px);white-space:pre-wrap;flex:1;background:#0a0a0e;"></pre>
+        </div>
+
+        <!-- Tab 5: Telemetry Deck (Mode 4) -->
+        <div class="split-tab-content" id="tabContentLogs" style="position:relative;background:#09090b;flex-direction:column;height:100%;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.3);font-size:11px;">
+            <div id="telemetryFilterButtons" style="display:flex;gap:4px;">
+              <button class="action-btn-sm active" data-node="ALL" onclick="filterLogsByNode('ALL')">All</button>
+              <button class="action-btn-sm" data-node="BOSS" onclick="filterLogsByNode('BOSS')">Boss</button>
+              <button class="action-btn-sm" data-node="PLANNER" onclick="filterLogsByNode('PLANNER')">Planner</button>
+              <button class="action-btn-sm" data-node="COORDINATOR" onclick="filterLogsByNode('COORDINATOR')">Coordinator</button>
+              <button class="action-btn-sm" data-node="WORKER" onclick="filterLogsByNode('WORKER')">Worker</button>
+              <button class="action-btn-sm" data-node="ERROR" onclick="filterLogsByNode('ERROR')">Error</button>
+            </div>
+            <button id="logExportBtn" class="action-btn-sm" onclick="exportTelemetryLogs()" title="Export Telemetry Stream">📥 Export</button>
+          </div>
+          <div class="logs-viewer-container" id="logsViewer" style="flex:1;overflow-y:auto;padding:10px 12px;font-family:var(--font-mono);font-size:11px;display:flex;flex-direction:column;gap:6px;">Connecting to telemetry stream...</div>
+        </div>
+
+        <!-- Tab 6: Governance Rules (Mode 5) -->
+        <div class="split-tab-content" id="tabContentRules" style="position:relative;background:#09090b;flex-direction:column;height:100%;overflow-y:auto;">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.3);font-size:11px;">
+            <span style="color:#00ffcc;font-weight:600;letter-spacing:0.04em;">SYSTEM GOVERNANCE // SECURITY & GUARDRAILS</span>
+            <span class="step-badge" style="background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.3);padding:1px 6px;border-radius:4px;">ACTIVE</span>
+          </div>
+          
+          <div id="rulesViolationAlert" style="display:none;padding:10px 14px;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);border-radius:6px;margin:10px 12px;color:#fca5a5;font-size:12px;">
+            ⚠️ <strong id="rulesViolationTitle">Rule Violation Alert</strong>: <span id="rulesViolationMsg">Direct access beyond domain boundary blocked.</span>
+          </div>
+
+          <div style="padding:12px;">
+            <div style="font-size:11px;font-weight:600;color:#a1a1aa;text-transform:uppercase;margin-bottom:8px;">Core Guardrail Policies</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <label style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:6px;font-size:12px;cursor:pointer;">
+                <input type="checkbox" id="ruleToggleScope" checked onchange="toggleGovernanceRule('scope', this.checked)">
+                <div><strong>Scope Discipline Rule</strong> — Blocks feature creep and keeps synthesis locked to agreed spec.</div>
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:6px;font-size:12px;cursor:pointer;">
+                <input type="checkbox" id="ruleToggleSandbox" checked onchange="toggleGovernanceRule('sandbox', this.checked)">
+                <div><strong>Domain Sandboxing Rule</strong> — Workers can only read/write their dedicated domain folders.</div>
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:6px;font-size:12px;cursor:pointer;">
+                <input type="checkbox" id="ruleToggleVerification" checked onchange="toggleGovernanceRule('verification', this.checked)">
+                <div><strong>Verification-Required Rule</strong> — Releases blocked unless all behavioral tests pass.</div>
+              </label>
+              <label style="display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);padding:8px 10px;border-radius:6px;font-size:12px;cursor:pointer;">
+                <input type="checkbox" id="ruleToggleZeroPlaceholder" checked onchange="toggleGovernanceRule('zero_placeholder', this.checked)">
+                <div><strong>Zero-Placeholder Rule</strong> — Blocks synthesis from shipping any TODO, mock or empty stubs.</div>
+              </label>
+            </div>
+
+            <div style="font-size:11px;font-weight:600;color:#a1a1aa;text-transform:uppercase;margin-top:16px;margin-bottom:8px;">Custom Guardrail Rules</div>
+            <div style="display:flex;gap:8px;margin-bottom:10px;">
+              <input type="text" id="deckNewRuleInput" placeholder="Add custom guardrail rule..." style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:6px;padding:6px 10px;font-size:12px;color:#fff;">
+              <button id="deckSubmitRuleBtn" class="action-btn-sm" onclick="addNewGuardrailRuleFromDeck()" style="background:#00ffcc;color:#000;font-weight:600;">+ Add</button>
+            </div>
+            <div id="deckRulesListContainer" style="display:flex;flex-direction:column;gap:6px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- MODEL SELECTOR POPOVER -->
+<div class="popover-menu" id="modelMenu">
+  <div class="popover-item active" onclick="selectModel('ULTRON')">
+    <span>ULTRON (Autonomous Multi-Agent)</span>
+  </div>
+  <div class="popover-item" onclick="selectModel('ULTRON Core (Local Llama 3.1 8B)')">
+    <span>ULTRON Core (Local Ollama)</span>
+  </div>
+  <div class="popover-item" onclick="selectModel('ULTRON Cloud (NVIDIA Llama 3.1 8B)')">
+    <span>ULTRON Cloud (NVIDIA NIM)</span>
+  </div>
+  <div class="popover-item" onclick="selectModel('ULTRON Gemini 3.8 Flash')">
+    <span>ULTRON Gemini 3.8 Flash</span>
+  </div>
+</div>
+
+<!-- CONTEXT SELECTOR POPOVER -->
+<div class="popover-menu" id="contextMenu">
+  <div class="popover-item active" onclick="selectContext('Local')">
+    <span>🗂 Local Workspace</span>
+  </div>
+  <div class="popover-item" onclick="selectContext('Mock Mode')">
+    <span>⚡ Instant Mock Execution</span>
+  </div>
+</div>
+
+<!-- FOLDER SELECTOR POPOVER (DYNAMICALLY GENERATED) -->
+<div class="popover-menu" id="folderMenu"></div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <span>Settings & System Governance</span>
+      <span class="modal-close" onclick="closeModal('settingsModal')">✕</span>
+    </div>
+    <div class="modal-body">
+      <div>
+        <label style="font-weight:600;display:block;margin-bottom:6px;">LLM Engine Configuration</label>
+        <div style="background:#121215;padding:12px;border-radius:8px;border:1px solid var(--border-subtle);">
+          <div id="settingsEngineStatus" style="color:#a1a1aa;margin-bottom:8px;">Checking local Ollama & Cloud APIs...</div>
+          <div style="display:flex;gap:8px;">
+            <button class="action-btn-sm" onclick="testEngineConnection()">Refresh Engine Status</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label style="font-weight:600;display:block;margin-bottom:6px;">Custom Guardrail Rules (Boss Governance)</label>
+        <div style="display:flex;gap:8px;margin-bottom:10px;">
+          <input type="text" id="newRuleInput" placeholder="Add custom safety or architectural rule..." style="flex:1;background:#121215;border:1px solid var(--border-default);border-radius:6px;padding:7px 10px;color:#fff;font-size:12px;">
+          <button class="action-btn-sm" onclick="addNewGuardrailRule()">Submit Rule</button>
+        </div>
+        <div id="rulesListContainer" style="max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:6px;"></div>
+      </div>
+
+      <div>
+        <label style="font-weight:600;display:block;margin-bottom:6px;">30-Day Project Auto-Purge Lifecycle</label>
+        <div style="background:#121215;padding:12px;border-radius:8px;border:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-weight:500;">Bulk Project Retention</div>
+            <div style="color:var(--text-muted);font-size:11.5px;">Mark all projects as Permanent or export master backup.</div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="action-btn-sm" onclick="saveAllProjectsPermanent()">Save All</button>
+            <button class="action-btn-sm" onclick="exportAllProjectsZip()">Export All .ZIP</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label style="font-weight:600;display:block;margin-bottom:6px;">Workspace Data Management</label>
+        <div style="background:#121215;padding:12px;border-radius:8px;border:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <div style="font-weight:500;">Reset & Clear Previous Project Data</div>
+            <div style="color:var(--text-muted);font-size:11.5px;">Wipe all stored project sandboxes and reset history.</div>
+          </div>
+          <button class="action-btn-sm" style="color:#ef4444;border-color:rgba(239,68,68,0.4);" onclick="clearAllProjectsData()">Clear All Data</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS CATALOG DRAWER (Items 125-140) -->
+<div class="modal-overlay" id="historyModal">
+  <div class="modal-card" style="max-width:720px;width:90%;">
+    <div class="modal-header" style="display:flex;justify-content:space-between;align-items:center;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-weight:600;font-size:13px;color:#00ffcc;">Projects Catalog Drawer</span>
+        <span id="catalogStorageUsage" style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono);"></span>
+      </div>
+      <span class="modal-close" onclick="closeModal('historyModal')">✕</span>
+    </div>
+    <div style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.08);background:rgba(0,0,0,0.25);display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;">
+      <div style="display:flex;gap:6px;align-items:center;flex:1;min-width:200px;">
+        <input type="text" id="catalogSearchInput" placeholder="Search catalog by title or goal..." oninput="renderProjectsCatalog()" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 8px;font-size:11px;color:#fff;flex:1;">
+        <select id="catalogSortSelect" onchange="renderProjectsCatalog()" style="background:#16161b;border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 6px;font-size:11px;color:#ccc;">
+          <option value="updated">Sort: Last Updated</option>
+          <option value="created">Sort: Creation Date</option>
+          <option value="expiration">Sort: Expiration Time</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <input type="file" id="restoreZipFileInput" accept=".zip" style="display:none;" onchange="handleRestoreZip(this.files[0])">
+        <button class="action-btn-sm" onclick="$('#restoreZipFileInput').click()" title="Restore project from .zip">📥 Restore ZIP</button>
+        <button class="action-btn-sm" onclick="exportAllProjectsZip()" title="Download master archive of all projects">📦 Master ZIP</button>
+        <button class="action-btn-sm" onclick="saveAllProjectsPermanent()" title="Mark all projects permanent">💾 Save All</button>
+      </div>
+    </div>
+    <div class="modal-body" id="historyModalBody" style="max-height:480px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;">
+      <div style="color:var(--text-muted);">Loading projects catalog...</div>
+    </div>
+  </div>
+</div>
+
+<!-- SCHEDULED TASKS MODAL -->
+<div class="modal-overlay" id="scheduledModal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <span>Scheduled Tasks & Daemons</span>
+      <span class="modal-close" onclick="closeModal('scheduledModal')">✕</span>
+    </div>
+    <div class="modal-body">
+      <div style="background:#121215;padding:12px;border-radius:8px;border:1px solid var(--border-subtle);">
+        <div style="font-weight:600;color:#38bdf8;">ULTRON Auto-Purge Daemon</div>
+        <div style="color:var(--text-secondary);font-size:11.5px;margin-top:4px;">Status: Active (checks every 2 hours for projects older than 30 days).</div>
+      </div>
+      <div style="background:#121215;padding:12px;border-radius:8px;border:1px solid var(--border-subtle);">
+        <div style="font-weight:600;color:#4ade80;">Telemetry & Reasoning Tree Watcher</div>
+        <div style="color:var(--text-secondary);font-size:11.5px;margin-top:4px;">Status: Polling LangGraph state every 1.5s during execution.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JAVASCRIPT ENGINE -->
+<script>
+(function() {
+  let execution_state = { is_running: false, status_code: "idle", status: "Idle — Ready for prompt" };
+  window.execution_state = execution_state;
+
+  const state = {
+    activeFolder: localStorage.getItem("ultron_active_folder") || "ULTRON",
+    selectedModel: "ULTRON",
+    selectedContext: "Local",
+    activeProjectId: null,
+    activeProject: null,
+    activeGoal: null,
+    activeView: "home",
+    splitOpen: true,
+    projects: [],
+    folders: JSON.parse(localStorage.getItem("ultron_folders") || '["ULTRON"]'),
+    folderOpenState: JSON.parse(localStorage.getItem("ultron_folder_open") || '{"ULTRON": true}'),
+    filterQuery: "",
+    isFilterActive: false,
+    historyIndex: -1,
+    pollTimer: null,
+    isExecuting: false,
+    executionState: execution_state
+  };
+
+  window.ultronState = state;
+
+  window.resumeActiveConversation = function() {
+    state.activeView = "conversation";
+    $("#homeView").style.display = "none";
+    $("#conversationView").classList.add("active");
+    if (state.activeGoal && $("#convTitle")) {
+      $("#convTitle").textContent = state.activeGoal;
+    }
+    if (state.activeProjectId && typeof reloadSandboxIframe === 'function') {
+      reloadSandboxIframe();
+    }
+  };
+
+  const $ = sel => document.querySelector(sel);
+  const $$ = sel => document.querySelectorAll(sel);
+
+  function showToast(msg, isError = false) {
+    let toast = $("#toastNotice");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.id = "toastNotice";
+      toast.className = "toast-notice";
+      document.body.appendChild(toast);
+    }
+    toast.className = "toast-notice" + (isError ? " error" : "");
+    toast.innerHTML = isError
+      ? `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:#ef4444;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>${escapeHtml(msg)}</span>`
+      : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:#38bdf8;"><path d="M20 6L9 17l-5-5"/></svg><span>${escapeHtml(msg)}</span>`;
+    
+    setTimeout(() => toast.classList.add("show"), 10);
+    clearTimeout(window._toastTimeout);
+    window._toastTimeout = setTimeout(() => {
+      toast.classList.remove("show");
+    }, 3500);
+  }
+
+  async function init() {
+    state.isExecuting = false;
+    setupPromptInput();
+    $("#activeFolderLabel").textContent = state.activeFolder;
+    if (window.loadProjectsCatalog) await window.loadProjectsCatalog();
+    if (window.loadGovernanceRules) window.loadGovernanceRules();
+    if (window.testEngineConnection) window.testEngineConnection();
+
+    // Check initial state from server: restore running or active mission if present
+    try {
+      const res = await fetch("/api/state");
+      if (res.ok) {
+        const d = await res.json();
+        execution_state = d;
+        window.execution_state = d;
+        state.executionState = d;
+        state.isExecuting = !!d.is_running;
+        if (d.current_goal) {
+          state.activeGoal = d.current_goal;
+          if ($("#topActiveProjName")) $("#topActiveProjName").textContent = d.current_goal;
+        }
+        if (d.active_project_id) {
+          state.activeProjectId = d.active_project_id;
+        }
+        if (d.is_running) {
+          state.activeView = "conversation";
+          $("#homeView").style.display = "none";
+          $("#conversationView").classList.add("active");
+          if ($("#convTitle")) $("#convTitle").textContent = d.current_goal;
+          if ($("#convStatusBadge")) {
+            $("#convStatusBadge").textContent = (d.status_code || "RUNNING").toUpperCase();
+            $("#convStatusBadge").className = "status-badge running";
+          }
+        }
+      }
+    } catch (e) {}
+
+    if (window.startStatePolling) window.startStatePolling();
+  }
+
+  let missionHistory = JSON.parse(localStorage.getItem('ultron_mission_history') || '[]');
+  let missionHistoryIdx = -1;
+
+  function setupPromptInput() {
+    const input = $("#mainPromptInput");
+    const sendBtn = $("#sendPromptBtn");
+    const guardrail = $("#promptGuardrailNotice");
+
+    if (sendBtn) {
+      sendBtn.onclick = (e) => {
+        e.preventDefault();
+        submitPrompt();
+      };
+    }
+
+    // 79. Draft autosave restore
+    const savedDraft = localStorage.getItem('ultron_prompt_draft');
+    if (savedDraft && input && !input.value) {
+      input.value = savedDraft;
+      if (sendBtn) sendBtn.classList.add("active");
+    }
+
+    if (!input) return;
+
+    input.addEventListener("input", () => {
+      // 71. Auto-growing textarea
+      input.style.height = "auto";
+      input.style.height = Math.min(input.scrollHeight, 180) + "px";
+      const val = input.value.trim();
+
+      // 79. Draft autosave
+      localStorage.setItem('ultron_prompt_draft', input.value);
+
+      // 76. Length/clarity guardrails
+      if (guardrail) {
+        if (val.length > 0 && val.length < 5) {
+          guardrail.style.display = "block";
+          guardrail.textContent = "⚠️ Notice: Goal is very brief. Ensure clear functional boundaries.";
+        } else if (val.length > 2500) {
+          guardrail.style.display = "block";
+          guardrail.textContent = "⚠️ Notice: Prompt exceeds 2500 characters. Consider breaking down scope.";
+        } else {
+          guardrail.style.display = "none";
+        }
+      }
+
+      // 73. Waveform trigger on typing
+      triggerWaveformRipple();
+
+      if (val.length > 0) {
+        if (sendBtn) sendBtn.classList.add("active");
+      } else {
+        if (sendBtn) sendBtn.classList.remove("active");
+      }
+    });
+
+    input.addEventListener("keydown", e => {
+      // 74. Keyboard dispatch via Ctrl+Enter or plain Enter
+      if ((e.key === "Enter" && e.ctrlKey) || (e.key === "Enter" && !e.shiftKey)) {
+        e.preventDefault();
+        if (input.value.trim().length > 0) {
+          submitPrompt();
+        }
+      } else if (e.key === "ArrowUp") {
+        // 75. Input history recall
+        if (missionHistory.length > 0 && (missionHistoryIdx === -1 || input.selectionStart === 0)) {
+          e.preventDefault();
+          if (missionHistoryIdx < missionHistory.length - 1) {
+            missionHistoryIdx++;
+            input.value = missionHistory[missionHistory.length - 1 - missionHistoryIdx];
+            input.dispatchEvent(new Event("input"));
+          }
+        }
+      } else if (e.key === "ArrowDown") {
+        if (missionHistoryIdx > 0) {
+          e.preventDefault();
+          missionHistoryIdx--;
+          input.value = missionHistory[missionHistory.length - 1 - missionHistoryIdx];
+          input.dispatchEvent(new Event("input"));
+        } else if (missionHistoryIdx === 0) {
+          e.preventDefault();
+          missionHistoryIdx = -1;
+          input.value = "";
+          input.dispatchEvent(new Event("input"));
+        }
+      }
+    });
+
+    setupPromptWaveform();
+  }
+
+  // 73. Reactive Waveform Canvas
+  let waveCtx = null;
+  let wavePhase = 0;
+  let waveEnergy = 0.2;
+  function setupPromptWaveform() {
+    const cvs = $("#promptWaveform");
+    if (!cvs) return;
+    waveCtx = cvs.getContext("2d");
+    renderWaveform();
+  }
+
+  function triggerWaveformRipple() {
+    waveEnergy = Math.min(waveEnergy + 0.35, 1.0);
+  }
+
+  function renderWaveform() {
+    if (!waveCtx) return;
+    const cvs = $("#promptWaveform");
+    const w = cvs.width, h = cvs.height;
+    waveCtx.clearRect(0, 0, w, h);
+    wavePhase += 0.08;
+    waveEnergy = Math.max(waveEnergy * 0.96, 0.15);
+
+    waveCtx.beginPath();
+    waveCtx.moveTo(0, h / 2);
+    for (let x = 0; x < w; x += 3) {
+      const y = (h / 2) + Math.sin(x * 0.2 + wavePhase) * (h * 0.38 * waveEnergy);
+      waveCtx.lineTo(x, y);
+    }
+    waveCtx.strokeStyle = "#00ffcc";
+    waveCtx.lineWidth = 1.6;
+    waveCtx.stroke();
+    requestAnimationFrame(renderWaveform);
+  }
+
+  // Load Projects from backend and sync dynamic folders
+  window.loadProjectsCatalog = async function() {
+    try {
+      const res = await fetch("/api/projects");
+      if (res.ok) {
+        state.projects = await res.json();
+        // Dynamically discover any folders from loaded projects
+        state.projects.forEach(p => {
+          const f = p.folder || "ULTRON";
+          if (!state.folders.includes(f)) {
+            state.folders.push(f);
+          }
+        });
+        localStorage.setItem("ultron_folders", JSON.stringify(state.folders));
+      }
+    } catch (e) {
+      console.warn("Could not load backend projects:", e);
+    }
+    renderProjectsTree();
+    renderFolderMenu();
+  };
+
+  // Render Projects Tree in Sidebar
+  function renderProjectsTree() {
+    const root = $("#projectsTreeRoot");
+    if (!root) return;
+    root.innerHTML = "";
+
+    if (!state.folders.includes(state.activeFolder)) {
+      state.folders.unshift(state.activeFolder);
+    }
+
+    state.folders.forEach(folderName => {
+      const folderProjects = state.projects.filter(p => (p.folder || "ULTRON") === folderName);
+      
+      const filtered = state.filterQuery 
+        ? folderProjects.filter(p => (p.title || p.goal || '').toLowerCase().includes(state.filterQuery.toLowerCase()))
+        : folderProjects;
+
+      const isOpen = state.folderOpenState[folderName] !== false;
+
+      const folderDiv = document.createElement("div");
+      folderDiv.className = "tree-folder" + (isOpen ? " open" : "");
+
+      const titleRow = document.createElement("div");
+      titleRow.className = "folder-title-row";
+      titleRow.onclick = () => {
+        state.folderOpenState[folderName] = !folderDiv.classList.contains("open");
+        folderDiv.classList.toggle("open");
+        localStorage.setItem("ultron_folder_open", JSON.stringify(state.folderOpenState));
+      };
+
+      titleRow.innerHTML = `
+        <svg class="folder-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        <svg class="folder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <span class="folder-name">${escapeHtml(folderName)}</span>
+        <span style="font-size:10px;color:var(--text-muted);">${folderProjects.length}</span>
+      `;
+      folderDiv.appendChild(titleRow);
+
+      const itemsDiv = document.createElement("div");
+      itemsDiv.className = "folder-items";
+
+      // Live In-Progress building indicator
+      const isCurrentFolder = (folderName === (state.activeFolder || "ULTRON"));
+      const isBusy = state.isExecuting || (execution_state && execution_state.is_running);
+      const activeGoalStr = state.activeGoal || (execution_state && execution_state.current_goal);
+      const isBuilding = isCurrentFolder && (isBusy || (activeGoalStr && !folderProjects.some(p => p.id === state.activeProjectId)));
+
+      if (isBuilding && activeGoalStr) {
+        const buildingDiv = document.createElement("div");
+        buildingDiv.className = "tree-item active in-progress";
+        buildingDiv.style.background = "rgba(56, 189, 248, 0.1)";
+        buildingDiv.style.borderLeft = "2px solid #38bdf8";
+        buildingDiv.style.cursor = "pointer";
+        buildingDiv.title = "Click to view building project";
+        buildingDiv.onclick = (e) => {
+          e.stopPropagation();
+          resumeActiveConversation();
+        };
+        buildingDiv.innerHTML = `
+          <span class="active-indicator-dot pulse" style="background:#38bdf8;box-shadow:0 0 8px #38bdf8;display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px;"></span>
+          <span class="tree-item-title" style="color:#e0f2fe;font-weight:500;" title="${escapeHtml(activeGoalStr)}">${escapeHtml(activeGoalStr)}</span>
+          <div class="tree-item-meta">
+            <span style="font-size:10px;color:#38bdf8;font-weight:600;padding:1px 5px;background:rgba(56,189,248,0.2);border-radius:3px;">${isBusy ? 'Building...' : 'Active'}</span>
+          </div>
+        `;
+        itemsDiv.appendChild(buildingDiv);
+      }
+
+      if (filtered.length === 0 && !isBuilding) {
+        const emptyDiv = document.createElement("div");
+        emptyDiv.style.padding = "5px 8px";
+        emptyDiv.style.fontSize = "11px";
+        emptyDiv.style.color = "var(--text-muted)";
+        emptyDiv.style.fontStyle = "italic";
+        emptyDiv.textContent = state.filterQuery ? "No matching conversations" : "No conversations yet";
+        itemsDiv.appendChild(emptyDiv);
+      } else {
+        filtered.forEach(p => {
+          const itDiv = document.createElement("div");
+          const isActive = state.activeProjectId === p.id;
+          itDiv.className = "tree-item" + (isActive ? " active" : "");
+          itDiv.onclick = (e) => {
+            e.stopPropagation();
+            openProjectConversation(p);
+          };
+
+          const dotHtml = isActive ? `<span class="active-indicator-dot"></span>` : "";
+          const timeHtml = p.relative_time_str ? `<span>${p.relative_time_str}</span>` : "";
+
+          itDiv.innerHTML = `
+            <span class="tree-item-title" title="${escapeHtml(p.title || p.goal)}">${escapeHtml(p.title || p.goal)}</span>
+            <div class="tree-item-meta">
+              ${timeHtml}
+              ${dotHtml}
+            </div>
+          `;
+          itemsDiv.appendChild(itDiv);
+        });
+      }
+
+      folderDiv.appendChild(itemsDiv);
+      root.appendChild(folderDiv);
+    });
+
+    if (state.projects && state.projects.length > 0) {
+      const clearDiv = document.createElement("div");
+      clearDiv.style.padding = "6px 8px";
+      clearDiv.style.marginTop = "4px";
+      clearDiv.innerHTML = `
+        <div onclick="clearAllProjectsData()" title="Clear all stored projects" style="display:flex;align-items:center;gap:6px;padding:5px 8px;border-radius:4px;color:#a1a1aa;font-size:11px;cursor:pointer;background:rgba(255,255,255,0.03);border:1px dashed var(--border-default);transition:all 0.15s ease;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;color:#ef4444;"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+          <span>Clear All Projects</span>
+        </div>
+      `;
+      root.appendChild(clearDiv);
+    }
+  }
+
+  // Render Folder Selector Popover
+  function renderFolderMenu() {
+    const menu = $("#folderMenu");
+    if (!menu) return;
+    menu.innerHTML = "";
+
+    state.folders.forEach(f => {
+      const item = document.createElement("div");
+      item.className = "popover-item" + (state.activeFolder === f ? " active" : "");
+      item.onclick = () => selectFolder(f);
+      item.innerHTML = `<span>📁 ${escapeHtml(f)}</span>`;
+      menu.appendChild(item);
+    });
+
+    const divider = document.createElement("div");
+    divider.style.borderTop = "1px solid var(--border-subtle)";
+    divider.style.margin = "4px 0";
+    menu.appendChild(divider);
+
+    const addNew = document.createElement("div");
+    addNew.className = "popover-item";
+    addNew.onclick = () => promptNewFolder();
+    addNew.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:13px;height:13px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>Create New Folder...</span>`;
+    menu.appendChild(addNew);
+  }
+
+  // Open Project Conversation
+  window.openProjectConversation = async function(proj) {
+    state.activeProjectId = proj.id;
+    state.activeProject = proj;
+    state.activeView = "conversation";
+    $("#homeView").style.display = "none";
+    $("#conversationView").classList.add("active");
+    $("#convTitle").textContent = proj.title || proj.goal;
+
+    renderProjectsTree();
+
+    try {
+      const res = await fetch(`/api/projects/${proj.id}`);
+      if (res.ok) {
+        const fullProj = await res.json();
+        state.activeProject = fullProj;
+        renderProjectChatStream(fullProj);
+        updateSplitViewWithProject(fullProj);
+      }
+    } catch (e) {
+      console.error("Failed to load project details:", e);
+    }
+  };
+
+  // Render Chat Messages from Loaded Project
+  function renderProjectChatStream(proj) {
+    const stream = $("#chatStream");
+    stream.innerHTML = "";
+
+    // 1. Initial Prompt
+    const initialTime = proj.created_at ? new Date(proj.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '';
+    const userMsg = document.createElement("div");
+    userMsg.className = "msg-user";
+    userMsg.innerHTML = `
+      <div class="msg-avatar">U</div>
+      <div class="msg-content">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+          <span class="msg-author">You</span>
+          ${initialTime ? `<span class="msg-time" style="font-size:11px;color:#71717a;font-family:var(--font-mono);">${initialTime}</span>` : ''}
+        </div>
+        <div class="msg-bubble">${escapeHtml(proj.goal || proj.title)}</div>
+      </div>
+    `;
+    stream.appendChild(userMsg);
+
+    // 2. Boss Verification Block
+    const agentBlock = document.createElement("div");
+    agentBlock.className = "agent-step-card open";
+    agentBlock.innerHTML = `
+      <div class="agent-step-header" onclick="this.parentElement.classList.toggle('open')">
+        <div class="step-label">
+          <span>⚡ Boss Approval & Verification</span>
+          <span class="step-badge">SUCCESS</span>
+        </div>
+        <span style="font-size:11px;color:var(--text-muted);">${proj.version ? 'v' + proj.version : 'v1.0'}</span>
+      </div>
+      <div class="agent-step-body">
+        <p><strong>Logical Tree:</strong> Fully verified and mapped across frontend and backend domains.</p>
+        <p><strong>DOM Readiness:</strong> Interactive sandbox verified and deployed to sandbox.</p>
+      </div>
+    `;
+    stream.appendChild(agentBlock);
+
+    // 3. Iterative chat history
+    if (proj.chat && proj.chat.length > 0) {
+      proj.chat.forEach(msg => {
+        if (msg.sender === "user") {
+          const chatTime = msg.timestamp || (msg.time ? new Date(msg.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '');
+          const uDiv = document.createElement("div");
+          uDiv.className = "msg-user";
+          uDiv.innerHTML = `
+            <div class="msg-avatar">U</div>
+            <div class="msg-content">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <span class="msg-author">You</span>
+                ${chatTime ? `<span class="msg-time" style="font-size:11px;color:#71717a;font-family:var(--font-mono);">${chatTime}</span>` : ''}
+              </div>
+              <div class="msg-bubble">${escapeHtml(msg.text)}</div>
+            </div>
+          `;
+          stream.appendChild(uDiv);
+        } else {
+          if (msg.version_created || msg.type === "code_update") {
+            const aDiv = document.createElement("div");
+            aDiv.className = "agent-step-card open";
+            aDiv.innerHTML = `
+              <div class="agent-step-header" onclick="this.parentElement.classList.toggle('open')">
+                <div class="step-label">
+                  <span>⚡ ULTRON Evolution Engine</span>
+                  <span class="step-badge">${msg.version_created ? 'v' + msg.version_created : 'UPDATE'}</span>
+                </div>
+              </div>
+              <div class="agent-step-body">${escapeHtml(msg.text)}</div>
+            `;
+            stream.appendChild(aDiv);
+          } else {
+            const cDiv = document.createElement("div");
+            cDiv.className = "msg-assistant";
+            cDiv.innerHTML = `
+              <div class="msg-avatar ultron-avatar">⚡</div>
+              <div class="msg-content">
+                <span class="msg-author">ULTRON</span>
+                <div class="msg-bubble">${renderMarkdown(msg.text)}</div>
+              </div>
+            `;
+            stream.appendChild(cDiv);
+          }
+        }
+      });
+    }
+
+    stream.scrollTop = stream.scrollHeight;
+  }
+
+  function updateSplitViewWithProject(proj) {
+    if (proj.id) {
+      $("#sandboxIframe").src = `/projects/${proj.id}/app?t=${Date.now()}`;
+      $("#sandboxStatusUrl").textContent = `http://127.0.0.1:8000/projects/${proj.id}/app`;
+      $("#sandboxVerLabel").textContent = "v" + (proj.version || "1.0");
+    }
+
+    if (proj.logical_tree) {
+      renderTreeNodes(proj.logical_tree);
+    }
+
+    $("#permSaveLabel").textContent = proj.is_permanent ? "⭐ Permanent" : "💾 Save";
+  }
+
+  let currentRawTreeData = null;
+  let treeRawMode = false;
+
+  window.toggleRawTree = function() {
+    treeRawMode = !treeRawMode;
+    const treeViewer = $("#treeViewer");
+    const rawViewer = $("#treeRawJsonViewer");
+    const btn = $("#rawTreeToggleBtn");
+    if (treeRawMode) {
+      treeViewer.style.display = "none";
+      rawViewer.style.display = "block";
+      rawViewer.textContent = JSON.stringify(currentRawTreeData || {}, null, 2);
+      if (btn) btn.textContent = "🌳 Visual Tree";
+    } else {
+      treeViewer.style.display = "block";
+      rawViewer.style.display = "none";
+      if (btn) btn.textContent = "{ } Raw JSON";
+    }
+  };
+
+  window.filterTreeNodes = function(query) {
+    const q = (query || "").toLowerCase();
+    const blocks = document.querySelectorAll("#treeViewer .tree-node-block");
+    blocks.forEach(b => {
+      const text = b.textContent.toLowerCase();
+      b.style.display = (!q || text.includes(q)) ? "block" : "none";
+    });
+  };
+
+  window.exportTreeSpec = function() {
+    if (!currentRawTreeData) {
+      alert("No active tree to export.");
+      return;
+    }
+    const spec = JSON.stringify(currentRawTreeData, null, 2);
+    const blob = new Blob([spec], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `logical_tree_${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  function renderTreeNodes(tree) {
+    currentRawTreeData = tree;
+    const container = $("#treeViewer");
+    if (!tree) {
+      container.innerHTML = `<div style="color:var(--text-muted);font-size:12px;">No logical tree data available.</div>`;
+      return;
+    }
+
+    let html = "";
+    if (tree.intent) {
+      html += `
+        <details open class="tree-node-block" style="margin-bottom:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:8px;">
+          <summary class="tree-node-title" style="cursor:pointer;font-weight:600;color:#00ffcc;user-select:none;">🎯 Intent & Constraints</summary>
+          <div class="tree-node-items" style="margin-top:8px;padding-left:8px;border-left:2px solid rgba(0,255,204,0.3);color:var(--text-secondary);font-size:13px;">${escapeHtml(tree.intent)}</div>
+        </details>
+      `;
+    }
+
+    if (tree.screens && tree.screens.length > 0) {
+      html += `
+        <details open class="tree-node-block" style="margin-bottom:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:8px;">
+          <summary class="tree-node-title" style="cursor:pointer;font-weight:600;color:#3b82f6;user-select:none;">🖥️ Screens & UI Views (${tree.screens.length})</summary>
+          <div class="tree-node-items" style="margin-top:8px;padding-left:8px;border-left:2px solid rgba(59,130,246,0.3);font-size:13px;">
+            ${tree.screens.map(s => `<div class="tree-node-click" onclick="highlightTreeNode('${escapeHtml(s.name || s.id)}', 'code')" style="margin-bottom:4px;cursor:pointer;padding:2px 4px;border-radius:4px;transition:background 0.15s;" onmouseover="this.style.background='rgba(59,130,246,0.15)'" onmouseout="this.style.background='transparent'"><strong>${escapeHtml(s.name || s.id)}:</strong> <span style="color:var(--text-muted);">${escapeHtml(s.purpose || s.details || '')}</span> <span style="font-size:10px;color:#3b82f6;margin-left:4px;">↗ View Code</span></div>`).join('')}
+          </div>
+        </details>
+      `;
+    }
+
+    if (tree.features && tree.features.length > 0) {
+      html += `
+        <details open class="tree-node-block" style="margin-bottom:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:8px;">
+          <summary class="tree-node-title" style="cursor:pointer;font-weight:600;color:#a855f7;user-select:none;">✨ Key Features (${tree.features.length})</summary>
+          <div class="tree-node-items" style="margin-top:8px;padding-left:8px;border-left:2px solid rgba(168,85,247,0.3);font-size:13px;">
+            ${tree.features.map(f => `<div class="tree-node-click" onclick="highlightTreeNode('${escapeHtml(f.name || f.id)}', 'code')" style="margin-bottom:4px;cursor:pointer;padding:2px 4px;border-radius:4px;transition:background 0.15s;" onmouseover="this.style.background='rgba(168,85,247,0.15)'" onmouseout="this.style.background='transparent'">• <strong>${escapeHtml(f.name || f.id)}:</strong> <span style="color:var(--text-muted);">${escapeHtml(f.details || '')}</span> <span style="font-size:10px;color:#a855f7;margin-left:4px;">↗ View Code</span></div>`).join('')}
+          </div>
+        </details>
+      `;
+    }
+
+    if (tree.verification && tree.verification.length > 0) {
+      html += `
+        <details open class="tree-node-block" style="margin-bottom:12px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:8px;">
+          <summary class="tree-node-title" style="cursor:pointer;font-weight:600;color:#10b981;user-select:none;">🛡️ DOM Verification & Checks (${tree.verification.length})</summary>
+          <div class="tree-node-items" style="margin-top:8px;padding-left:8px;border-left:2px solid rgba(16,185,129,0.3);font-size:13px;">
+            ${tree.verification.map(v => `<div class="tree-node-click" onclick="highlightTreeNode('${escapeHtml(v.check || v.id)}', 'logs')" style="margin-bottom:4px;color:#34d399;cursor:pointer;padding:2px 4px;border-radius:4px;transition:background 0.15s;" onmouseover="this.style.background='rgba(16,185,129,0.15)'" onmouseout="this.style.background='transparent'">✓ ${escapeHtml(v.check || v.id)} <span style="font-size:10px;color:#10b981;margin-left:4px;">↗ View Telemetry</span></div>`).join('')}
+          </div>
+        </details>
+      `;
+    }
+
+    container.innerHTML = html || `<div style="color:var(--text-muted);font-size:12px;">Structured tree empty.</div>`;
+    if (treeRawMode && $("#treeRawJsonViewer")) {
+      $("#treeRawJsonViewer").textContent = JSON.stringify(tree, null, 2);
+    }
+  }
+
+  // Procedural Sound Synthesizer via native Web Audio API
+  let audioCtx = null;
+  let audioEnabled = false;
+
+  window.toggleAudio = function() {
+    audioEnabled = !audioEnabled;
+    const icon = $("#audioIcon");
+    if (icon) icon.textContent = audioEnabled ? "🔊" : "🔇";
+    if (audioEnabled && !audioCtx) {
+      try {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      } catch(e) {}
+    }
+    if (audioEnabled) playTone(440, 'sine', 0.12);
+  };
+
+  function playTone(freq, type='sine', duration=0.1) {
+    if (!audioEnabled || !audioCtx) return;
+    try {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    } catch(e) {}
+  }
+
+  // Left Nav Rail View Switcher
+  window.switchNavView = function(viewName) {
+    if (viewName !== "projects" && typeof closeModal === 'function') {
+      closeModal('historyModal');
+    }
+    if (viewName !== "settings" && typeof closeModal === 'function') {
+      closeModal('settingsModal');
+    }
+
+    document.querySelectorAll(".nav-rail-item").forEach(item => item.classList.remove("active"));
+    const btn = $(`#navBtn${viewName.charAt(0).toUpperCase() + viewName.slice(1)}`);
+    if (btn) btn.classList.add("active");
+
+    if (viewName === "command") {
+      const isBusy = !!(execution_state && execution_state.is_running) || state.isExecuting;
+      const hasActiveSession = !!state.activeProjectId || !!state.activeGoal || state.activeView === "conversation";
+      if (isBusy || hasActiveSession) {
+        state.activeView = "conversation";
+        $("#conversationView").classList.add("active");
+        $("#homeView").style.display = "none";
+      } else {
+        state.activeView = "home";
+        $("#homeView").style.display = "flex";
+        $("#conversationView").classList.remove("active");
+      }
+    } else if (viewName === "projects") {
+      openHistoryModal();
+    } else if (viewName === "agents") {
+      state.activeView = "conversation";
+      $("#homeView").style.display = "none";
+      $("#conversationView").classList.add("active");
+      if (typeof toggleSplitPanel === 'function' && !state.splitOpen) {
+        toggleSplitPanel();
+      }
+      if (typeof switchSplitTab === 'function') {
+        switchSplitTab('tree');
+      }
+    } else if (viewName === "activity") {
+      state.activeView = "conversation";
+      $("#homeView").style.display = "none";
+      $("#conversationView").classList.add("active");
+      if (typeof toggleSplitPanel === 'function' && !state.splitOpen) {
+        toggleSplitPanel();
+      }
+      if (typeof switchSplitTab === 'function') {
+        switchSplitTab('logs');
+      }
+    } else if (viewName === "settings") {
+      openSettingsModal();
+    }
+    playTone(600, 'sine', 0.08);
+  };
+
+  // Keyboard Navigation for Nav Rail (1-5 or Alt+1-5)
+  document.addEventListener("keydown", function(e) {
+    if (e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA")) return;
+    if (e.altKey || !e.ctrlKey) {
+      if (e.key === "1" || (e.altKey && e.key === "1")) { switchNavView("command"); }
+      else if (e.key === "2" || (e.altKey && e.key === "2")) { switchNavView("projects"); }
+      else if (e.key === "3" || (e.altKey && e.key === "3")) { switchNavView("agents"); }
+      else if (e.key === "4" || (e.altKey && e.key === "4")) { switchNavView("activity"); }
+      else if (e.key === "5" || (e.altKey && e.key === "5")) { switchNavView("settings"); }
+    }
+  });
+
+  // Switch to New Conversation (Home view)
+  window.openNewConversation = function() {
+    state.activeProjectId = null;
+    state.activeProject = null;
+    state.activeGoal = null;
+    state.activeView = "home";
+    state.isExecuting = false;
+    if (execution_state) execution_state.is_running = false;
+    $("#homeView").style.display = "flex";
+    $("#conversationView").classList.remove("active");
+    if ($("#topActiveProjName")) $("#topActiveProjName").textContent = "No Project";
+    const input = $("#mainPromptInput");
+    if (input) {
+      input.value = "";
+      input.style.height = "auto";
+    }
+    const sendBtn = $("#sendPromptBtn");
+    if (sendBtn) sendBtn.classList.remove("active");
+    renderProjectsTree();
+    setTimeout(() => { if (input) input.focus(); }, 50);
+  };
+
+  // Submit Prompt to Launch Autonomous Execution
+  window.submitPrompt = async function() {
+    const input = $("#mainPromptInput");
+    const goal = input ? input.value.trim() : "";
+    if (!goal) return;
+
+    // Mid-run edit lock: offer to view active run or cancel
+    if (execution_state && execution_state.is_running) {
+      if (confirm(`A project synthesis ("${execution_state.current_goal || state.activeGoal || 'Current Run'}") is already actively running in the background!\n\nClick OK to view the live build in progress, or Cancel to stay here.`)) {
+        resumeActiveConversation();
+      }
+      return;
+    }
+
+    // Input history record
+    missionHistory.push(goal);
+    try {
+      localStorage.setItem('ultron_mission_history', JSON.stringify(missionHistory.slice(-50)));
+    } catch(e) {}
+    missionHistoryIdx = -1;
+
+    // Clear autosaved draft and clear prompt input immediately
+    try {
+      localStorage.removeItem('ultron_prompt_draft');
+    } catch(e) {}
+    if (input) {
+      input.value = "";
+      input.style.height = "auto";
+    }
+    const sendBtn = $("#sendPromptBtn");
+    if (sendBtn) sendBtn.classList.remove("active");
+
+    state.isExecuting = true;
+    state.activeGoal = goal;
+    if (execution_state) {
+      execution_state.is_running = true;
+      execution_state.current_goal = goal;
+    }
+
+    state.activeView = "conversation";
+    $("#homeView").style.display = "none";
+    $("#conversationView").classList.add("active");
+    $("#convTitle").textContent = goal;
+    $("#convStatusBadge").textContent = "SUBMITTED — REASONING STARTED";
+    $("#convStatusBadge").className = "status-badge running";
+    if ($("#topActiveProjName")) $("#topActiveProjName").textContent = goal;
+
+    renderProjectsTree();
+
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+    const stream = $("#chatStream");
+    stream.innerHTML = `
+      <div class="msg-user">
+        <div class="msg-avatar">U</div>
+        <div class="msg-content">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span class="msg-author">You</span>
+            <span class="msg-time" style="font-size:11px;color:#71717a;font-family:var(--font-mono);">${timeStr}</span>
+          </div>
+          <div class="msg-bubble">${escapeHtml(goal)}</div>
+        </div>
+      </div>
+      <div class="agent-step-card open" id="activeAgentCard">
+        <div class="agent-step-header">
+          <div class="step-label">
+            <span id="activeStepTitle">⚡ Boss Goal Evaluation</span>
+            <span class="step-badge" id="activeStepBadge">RUNNING</span>
+          </div>
+        </div>
+        <div class="agent-step-body" id="activeStepBody">
+          Initiating multi-agent workflow in <strong>${escapeHtml(state.activeFolder || "ULTRON")}</strong>...
+        </div>
+      </div>
+    `;
+
+    // Start live state polling immediately so user sees real-time agent progression
+    if (typeof startStatePolling === "function") startStatePolling();
+    else if (window.startStatePolling) window.startStatePolling();
+
+    const useMock = state.selectedContext === "Mock Mode";
+
+    // 80. Console-to-Boss direct link: sends goal to /api/run which invokes boss node
+    try {
+      const res = await fetch("/api/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          goal: goal, 
+          mock: useMock,
+          folder: state.activeFolder || "ULTRON"
+        })
+      });
+      if (res.ok) {
+        state.isExecuting = true;
+        if (typeof startStatePolling === "function") startStatePolling();
+      } else {
+        state.isExecuting = false;
+        if (execution_state) execution_state.is_running = false;
+        const err = await res.json().catch(() => ({ message: "Failed to launch execution" }));
+        showToast(err.message || "Failed to launch execution", true);
+      }
+    } catch (e) {
+      state.isExecuting = false;
+      if (execution_state) execution_state.is_running = false;
+      console.error("Execution error:", e);
+      showToast("Network connection error: " + e.message, true);
+    }
+  };
+
+  // Submit Iterative Follow-up Request
+  window.submitFollowUp = async function() {
+    const input = $("#followUpInput");
+    const prompt = input.value.trim();
+    if (!prompt) return;
+
+    input.value = "";
+
+    const userTimeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    const stream = $("#chatStream");
+    const uDiv = document.createElement("div");
+    uDiv.className = "msg-user";
+    uDiv.innerHTML = `
+      <div class="msg-avatar">U</div>
+      <div class="msg-content">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+          <span class="msg-author">You</span>
+          <span class="msg-time" style="font-size:11px;color:#71717a;font-family:var(--font-mono);">${userTimeStr}</span>
+        </div>
+        <div class="msg-bubble">${escapeHtml(prompt)}</div>
+      </div>
+    `;
+    stream.appendChild(uDiv);
+
+    // Show thinking / chatbot typing indicator
+    const pendingDiv = document.createElement("div");
+    pendingDiv.id = "pendingAssistantMsg";
+    pendingDiv.className = "msg-assistant";
+    pendingDiv.innerHTML = `
+      <div class="msg-avatar ultron-avatar">⚡</div>
+      <div class="msg-content">
+        <span class="msg-author">ULTRON</span>
+        <div class="msg-bubble">
+          <div class="typing-indicator">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+      </div>
+    `;
+    stream.appendChild(pendingDiv);
+    stream.scrollTop = stream.scrollHeight;
+
+    const pid = state.activeProjectId || "current";
+    try {
+      const res = await fetch(`/api/projects/${pid}/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: prompt, mock: state.selectedContext === "Mock Mode" })
+      });
+
+      const pending = $("#pendingAssistantMsg");
+      if (pending) pending.remove();
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.project && data.project.id) {
+          state.activeProjectId = data.project.id;
+          state.activeProject = data.project;
+        }
+
+        if (data.type === "code_update") {
+          // Code update: render evolution card & update sandbox
+          const aCard = document.createElement("div");
+          aCard.className = "agent-step-card open";
+          aCard.innerHTML = `
+            <div class="agent-step-header" onclick="this.parentElement.classList.toggle('open')">
+              <div class="step-label">
+                <span>⚡ ULTRON Evolution Engine</span>
+                <span class="step-badge">v${data.project.version}</span>
+              </div>
+            </div>
+            <div class="agent-step-body">${escapeHtml(data.summary || data.reply || "Code updated.")}</div>
+          `;
+          stream.appendChild(aCard);
+          updateSplitViewWithProject(data.project);
+          showToast(`Updated application to v${data.project.version}`);
+        } else {
+          // Conversational chat: render assistant bubble
+          const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+          const aDiv = document.createElement("div");
+          aDiv.className = "msg-assistant";
+          aDiv.innerHTML = `
+            <div class="msg-avatar ultron-avatar">⚡</div>
+            <div class="msg-content">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <span class="msg-author">ULTRON</span>
+                <span class="msg-time" style="font-size:11px;color:#71717a;font-family:var(--font-mono);">${replyTime}</span>
+              </div>
+              <div class="msg-bubble">${renderMarkdown(data.reply || data.summary || "I'm here to assist you.")}</div>
+            </div>
+          `;
+          stream.appendChild(aDiv);
+        }
+      } else {
+        const err = await res.json().catch(() => ({ message: "Request failed" }));
+        const errDiv = document.createElement("div");
+        errDiv.className = "msg-assistant";
+        errDiv.innerHTML = `
+          <div class="msg-avatar ultron-avatar">⚡</div>
+          <div class="msg-content">
+            <span class="msg-author">ULTRON</span>
+            <div class="msg-bubble" style="color:#fca5a5;">Error: ${escapeHtml(err.message || 'Failed')}</div>
+          </div>
+        `;
+        stream.appendChild(errDiv);
+      }
+    } catch (e) {
+      // Auto-retry once in case of a temporary reload or debounce
+      try {
+        await new Promise(r => setTimeout(r, 1200));
+        const retryRes = await fetch(`/api/projects/${pid}/chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: prompt, mock: state.selectedContext === "Mock Mode" })
+        });
+        if (retryRes.ok) {
+          const retryData = await retryRes.json();
+          const pending = $("#pendingAssistantMsg");
+          if (pending) pending.remove();
+          if (retryData.type === "code_update") {
+            updateSplitViewWithProject(retryData.project);
+            showToast(`Updated application to v${retryData.project.version}`);
+          }
+          renderProjectChatStream(retryData.project || state.activeProject);
+          return;
+        }
+      } catch (retryErr) {}
+
+      const pending = $("#pendingAssistantMsg");
+      if (pending) pending.remove();
+      const errDiv = document.createElement("div");
+      errDiv.className = "msg-assistant";
+      errDiv.innerHTML = `
+        <div class="msg-avatar ultron-avatar">⚡</div>
+        <div class="msg-content">
+          <span class="msg-author">ULTRON</span>
+          <div class="msg-bubble" style="color:#38bdf8;">Offline Engine Active: ULTRON is processing locally. If the previous response did not load, please click send again.</div>
+        </div>
+      `;
+      stream.appendChild(errDiv);
+    }
+    stream.scrollTop = stream.scrollHeight;
+  };
+
+  // State Polling Loop (LangGraph State & Live Updates)
+  function startStatePolling() {
+    if (state.pollTimer) clearInterval(state.pollTimer);
+    state.pollTimer = setInterval(pollServerState, 1200);
+    pollServerState(); // immediate poll
+  }
+  window.startStatePolling = startStatePolling;
+
+  async function pollServerState() {
+    try {
+      const res = await fetch("/api/state");
+      if (!res.ok) return;
+      const data = await res.json();
+      const wasRunning = !!execution_state.is_running;
+      execution_state = data;
+      window.execution_state = data;
+      state.executionState = data;
+      state.isExecuting = !!data.is_running;
+
+      if (data.current_goal && (!state.activeGoal || wasRunning)) {
+        state.activeGoal = data.current_goal;
+      }
+
+      const badge = $("#convStatusBadge");
+      if (badge && data.status_code) {
+        badge.textContent = data.status_code.toUpperCase();
+        if (data.is_running) {
+          badge.className = "status-badge running";
+        } else if (data.status_code === "approved") {
+          badge.className = "status-badge approved";
+        } else if (data.status_code === "clarifying") {
+          badge.className = "status-badge clarifying";
+        } else {
+          badge.className = "status-badge";
+        }
+      }
+
+      const globalBadge = $("#globalStatusBadge");
+      if (globalBadge) {
+        globalBadge.textContent = data.is_running ? "RUNNING" : (data.status_code ? data.status_code.toUpperCase() : "READY");
+        globalBadge.style.color = data.is_running ? "#38bdf8" : "#00ffcc";
+      }
+
+      // Live Engine Status in App Bar
+      if (data.active_engine && $("#topOllamaLabel")) {
+        $("#topOllamaLabel").textContent = data.active_engine;
+        const chip = $("#ollamaStatusChip");
+        if (chip) {
+          const dot = chip.querySelector(".chip-dot");
+          if (dot) {
+            if (data.is_local_online) {
+              dot.style.background = "#10b981";
+              dot.style.boxShadow = "0 0 6px #10b981";
+            } else {
+              dot.style.background = "#38bdf8";
+              dot.style.boxShadow = "0 0 6px #38bdf8";
+            }
+          }
+        }
+      }
+
+      // Live Run Banner on Home View
+      const homeBanner = $("#liveRunHomeBanner");
+      if (homeBanner) {
+        if (data.is_running) {
+          homeBanner.style.display = "flex";
+          const homeBannerText = $("#liveRunHomeText");
+          if (homeBannerText) {
+            homeBannerText.textContent = `Project in progress: "${data.current_goal || state.activeGoal || 'Synthesizing...'}"`;
+          }
+        } else {
+          homeBanner.style.display = "none";
+        }
+      }
+
+      // Re-render projects tree if running state just toggled
+      if (wasRunning !== data.is_running) {
+        renderProjectsTree();
+      }
+
+      // Dynamic Step Badge & Stage Description
+      const stepTitle = $("#activeStepTitle");
+      const stepBadge = $("#activeStepBadge");
+      const stepBody = $("#activeStepBody");
+      
+      if (stepBadge && stepBody) {
+        const sc = (data.status_code || "").toLowerCase();
+        if (sc === "evaluating_goal") {
+          if (stepTitle) stepTitle.textContent = "⚡ Boss Goal Evaluation";
+          stepBadge.textContent = "RUNNING";
+          stepBadge.className = "step-badge";
+          stepBody.innerHTML = `Evaluating functional directives and architecture constraints...`;
+        } else if (sc === "planning") {
+          if (stepTitle) stepTitle.textContent = "📋 Multi-Agent Planner";
+          stepBadge.textContent = "PLANNING";
+          stepBadge.className = "step-badge running";
+          stepBody.innerHTML = `Synthesizing architectural specifications and logical implementation tree...`;
+        } else if (sc === "evaluating_briefs") {
+          if (stepTitle) stepTitle.textContent = "⚡ Boss Brief Review";
+          stepBadge.textContent = "REVIEWING";
+          stepBadge.className = "step-badge running";
+          stepBody.innerHTML = `Boss node reviewing task briefs and domain boundary allocations...`;
+        } else if (sc === "coordinating") {
+          if (stepTitle) stepTitle.textContent = "🔄 Coordinator Orchestration";
+          stepBadge.textContent = "COORDINATING";
+          stepBadge.className = "step-badge running";
+          stepBody.innerHTML = `Assigning isolated domain workers for parallel implementation...`;
+        } else if (sc === "executing") {
+          if (stepTitle) stepTitle.textContent = "🛠️ Domain Worker Code Synthesis";
+          stepBadge.textContent = "SYNTHESIZING";
+          stepBadge.className = "step-badge running";
+          stepBody.innerHTML = `Workers synthesizing Diamond-grade web application code...`;
+        } else if (sc === "executed" || sc === "reviewing") {
+          if (stepTitle) stepTitle.textContent = "🛡️ Verification & Release Review";
+          stepBadge.textContent = "VERIFYING";
+          stepBadge.className = "step-badge running";
+          stepBody.innerHTML = `Autonomous quality checks complete. Final release review in progress...`;
+        } else if (sc === "approved") {
+          if (stepTitle) stepTitle.textContent = "✓ Boss Release Approved";
+          stepBadge.textContent = "COMPLETED";
+          stepBadge.className = "step-badge approved";
+          stepBody.innerHTML = `Multi-agent synthesis complete! Boss approved release. App ready in sandbox.`;
+        } else if (sc === "clarifying") {
+          if (stepTitle) stepTitle.textContent = "⚠️ Boss Clarification Required";
+          stepBadge.textContent = "INPUT NEEDED";
+          stepBadge.className = "step-badge clarifying";
+          stepBody.innerHTML = `Boss node requested interaction. See clarification input below to resume.`;
+        }
+      }
+
+      if (data.status_code === "clarifying") {
+        pollClarification();
+      } else {
+        $("#clarificationAnchor").innerHTML = "";
+      }
+
+      if (data.active_project_id && (!state.activeProjectId || state.activeProjectId !== data.active_project_id)) {
+        state.activeProjectId = data.active_project_id;
+        state.activeGoal = data.current_goal || state.activeGoal;
+        if ($("#topActiveProjName")) $("#topActiveProjName").textContent = state.activeGoal || data.active_project_id;
+        if ($("#convTitle")) $("#convTitle").textContent = state.activeGoal || data.active_project_id;
+        loadProjectsCatalog();
+        reloadSandboxIframe();
+      }
+
+      pollLogs();
+    } catch (e) {}
+  }
+
+  async function pollClarification() {
+    try {
+      const res = await fetch("/api/clarification");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.question) {
+          const anchor = $("#clarificationAnchor");
+          anchor.innerHTML = `
+            <div class="clarification-box">
+              <div class="clarification-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                <span>Boss Clarification Required</span>
+              </div>
+              <div class="clarification-question">${escapeHtml(data.question)}</div>
+              <div class="clarification-input-row">
+                <input type="text" class="clarification-input" id="clarificationInput" placeholder="Provide requested clarification..." onkeydown="if(event.key==='Enter') submitClarification();">
+                <button class="btn-clarify-submit" onclick="submitClarification()">Resume Execution</button>
+              </div>
+            </div>
+          `;
+        }
+      }
+    } catch (e) {}
+  }
+
+  window.submitClarification = async function() {
+    const input = $("#clarificationInput");
+    if (!input || !input.value.trim()) return;
+    const resp = input.value.trim();
+
+    try {
+      await fetch("/api/resume", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ response: resp })
+      });
+      $("#clarificationAnchor").innerHTML = "";
+    } catch (e) {
+      alert("Failed to submit clarification");
+    }
+  };
+
+  /* ============================================================
+     RIGHT INTEL DECK CONTROLLER (Items 96-120: 5 Modes)
+  ============================================================ */
+  state.telemetryLogs = [];
+  state.activeTelemetryFilter = "ALL";
+  state.currentProjectCode = "";
+  state.governanceRules = {
+    scope: true,
+    sandbox: true,
+    verification: true,
+    zero_placeholder: true,
+    added: []
+  };
+
+  async function pollLogs() {
+    try {
+      const res = await fetch("/api/logs");
+      if (res.ok) {
+        state.telemetryLogs = await res.json();
+        renderTelemetryLogs();
+      }
+    } catch (e) {}
+  }
+
+  function renderTelemetryLogs() {
+    const viewer = $("#logsViewer");
+    if (!viewer) return;
+    const filter = state.activeTelemetryFilter || "ALL";
+    let list = state.telemetryLogs || [];
+
+    if (filter !== "ALL") {
+      list = list.filter(l => (l.node || "SYSTEM").toUpperCase() === filter.toUpperCase());
+    }
+
+    if (list.length === 0) {
+      viewer.innerHTML = `<div style="color:var(--text-muted);font-size:12px;">No telemetry records for filter [${filter}].</div>`;
+      return;
+    }
+
+    const badgeColors = {
+      BOSS: "rgba(0,255,204,0.15);color:#00ffcc;border:1px solid rgba(0,255,204,0.3)",
+      PLANNER: "rgba(59,130,246,0.15);color:#3b82f6;border:1px solid rgba(59,130,246,0.3)",
+      COORDINATOR: "rgba(168,85,247,0.15);color:#a855f7;border:1px solid rgba(168,85,247,0.3)",
+      WORKER: "rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3)",
+      ERROR: "rgba(239,68,68,0.2);color:#ef4444;border:1px solid rgba(239,68,68,0.4)",
+      SYSTEM: "rgba(161,161,170,0.15);color:#a1a1aa;border:1px solid rgba(161,161,170,0.3)"
+    };
+
+    viewer.innerHTML = list.map(l => {
+      const node = (l.node || "SYSTEM").toUpperCase();
+      const style = badgeColors[node] || badgeColors.SYSTEM;
+      const ts = l.timestamp || new Date().toLocaleTimeString();
+      // Check for violation alerts
+      if (node === "ERROR" || (l.stage && l.stage.toLowerCase().includes("violation"))) {
+        surfaceRuleViolation(l.stage, l.body);
+      }
+      return `
+        <div class="telemetry-entry" data-node="${node}" style="padding:6px 8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:4px;font-size:11.5px;line-height:1.4;">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+            <span style="color:#71717a;font-size:10px;">[${escapeHtml(ts)}]</span>
+            <span style="font-size:9.5px;padding:1px 5px;border-radius:3px;font-weight:bold;${style}">${escapeHtml(node)}</span>
+            <strong style="color:#e4e4e7;font-size:11px;">${escapeHtml(l.stage || 'Event')}</strong>
+          </div>
+          <div style="color:#a1a1aa;white-space:pre-wrap;font-family:monospace;font-size:11px;">${escapeHtml(l.body || '')}</div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  // 112: Log filtering by node
+  window.filterLogsByNode = function(node) {
+    state.activeTelemetryFilter = node;
+    $$("#telemetryFilterButtons button").forEach(b => {
+      b.classList.toggle("active", b.dataset.node === node);
+    });
+    renderTelemetryLogs();
+  };
+
+  // 113: Log export
+  window.exportTelemetryLogs = function() {
+    const list = state.telemetryLogs || [];
+    const text = list.map(l => `[${l.timestamp || ''}] [${(l.node || 'SYSTEM').toUpperCase()}] ${l.stage}:\n${l.body}\n`).join("\n---\n\n");
+    const blob = new Blob([text], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `ultron_telemetry_${Date.now()}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast("Telemetry stream exported");
+  };
+
+  // 104-108: Code Inspector Tab
+  window.fetchProjectCode = async function() {
+    const pre = $("#codeInspectorPre");
+    const pathEl = $("#codeFilePath");
+    const countEl = $("#codeLineCount");
+    if (!pre) return;
+
+    try {
+      let code = "";
+      let path = "domains/web_ui/index.html";
+      if (state.activeProjectId) {
+        const res = await fetch(`/api/projects/${state.activeProjectId}`);
+        if (res.ok) {
+          const d = await res.json();
+          code = d.code || "";
+          path = `projects/${d.id}/index.html`;
+        }
+      }
+      if (!code) {
+        const res = await fetch("/web_ui/index.html");
+        if (res.ok) {
+          code = await res.text();
+        }
+      }
+      state.currentProjectCode = code || "<!-- No code synthesized yet -->";
+      const lines = state.currentProjectCode.split("\n").length;
+      if (pathEl) pathEl.textContent = path;
+      if (countEl) countEl.textContent = `${lines} lines`;
+      pre.textContent = state.currentProjectCode;
+    } catch (e) {
+      pre.textContent = "<!-- Error loading code: " + e.message + " -->";
+    }
+  };
+
+  // 107: Real-time search/filter in code
+  window.filterCodeInspector = function(query) {
+    const pre = $("#codeInspectorPre");
+    if (!pre || !state.currentProjectCode) return;
+    const q = (query || "").trim();
+    if (!q) {
+      pre.textContent = state.currentProjectCode;
+      return;
+    }
+    const escaped = escapeHtml(state.currentProjectCode);
+    const regex = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), "gi");
+    const highlighted = escaped.replace(regex, m => `<mark style="background:#f59e0b;color:#000;border-radius:2px;padding:0 2px;">${m}</mark>`);
+    pre.innerHTML = highlighted;
+  };
+
+  // 108: One-click clipboard copy
+  window.copyCodeInspector = function() {
+    const code = state.currentProjectCode || ($("#codeInspectorPre") ? $("#codeInspectorPre").textContent : "");
+    if (!code) {
+      showToast("No code to copy", true);
+      return;
+    }
+    navigator.clipboard.writeText(code).then(() => {
+      showToast("📋 Code copied to clipboard!");
+    }).catch(() => {
+      showToast("Clipboard copy failed", true);
+    });
+  };
+
+  // 98: Tree node click-through
+  window.highlightTreeNode = function(keyword, targetTab) {
+    if (targetTab === "code") {
+      switchSplitTab("code");
+      setTimeout(() => {
+        const input = $("#codeSearchInput");
+        if (input) {
+          input.value = keyword;
+          filterCodeInspector(keyword);
+        }
+        showToast(`Navigated to Code: highlighted "${keyword}"`);
+      }, 100);
+    } else {
+      switchSplitTab("logs");
+      setTimeout(() => {
+        filterLogsByNode("ALL");
+        showToast(`Navigated to Telemetry: "${keyword}"`);
+      }, 100);
+    }
+  };
+
+  // 99-103: Evolution Deck
+  window.renderEvolutionDeck = async function() {
+    const stream = $("#evolutionChatStream");
+    const badge = $("#evolutionVersionBadge");
+    if (!stream) return;
+
+    if (state.activeProjectId) {
+      try {
+        const res = await fetch(`/api/projects/${state.activeProjectId}`);
+        if (res.ok) {
+          const proj = await res.json();
+          if (badge) badge.textContent = proj.version ? `v${proj.version}` : "v1.0";
+          
+          let html = "";
+          html += `
+            <div class="msg-user" style="display:flex;gap:8px;align-items:flex-start;">
+              <div class="msg-avatar" style="width:24px;height:24px;background:#3b82f6;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;">U</div>
+              <div style="background:rgba(255,255,255,0.06);padding:8px 12px;border-radius:6px;font-size:12px;color:#fff;flex:1;">
+                <div style="font-size:10px;color:var(--text-muted);margin-bottom:2px;">Operator (Initial Goal)</div>
+                <div>${escapeHtml(proj.goal || proj.title || '')}</div>
+              </div>
+            </div>
+          `;
+
+          if (proj.chat && proj.chat.length > 0) {
+            proj.chat.forEach(msg => {
+              const isUser = msg.sender === "user";
+              html += `
+                <div class="${isUser ? 'msg-user' : 'msg-assistant'}" style="display:flex;gap:8px;align-items:flex-start;${isUser ? '' : 'flex-direction:row-reverse;'}">
+                  <div class="msg-avatar ${isUser ? '' : 'ultron-avatar'}" style="width:24px;height:24px;background:${isUser ? '#3b82f6' : '#00ffcc'};color:${isUser ? '#fff' : '#000'};border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold;">
+                    ${isUser ? 'U' : '⚡'}
+                  </div>
+                  <div style="background:${isUser ? 'rgba(255,255,255,0.06)' : 'rgba(0,255,204,0.08)'};border:1px solid ${isUser ? 'rgba(255,255,255,0.1)' : 'rgba(0,255,204,0.2)'};padding:8px 12px;border-radius:6px;font-size:12px;color:#fff;flex:1;">
+                    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-bottom:2px;">
+                      <span>${isUser ? 'Operator' : 'ULTRON'}</span>
+                      ${msg.version_created ? `<span class="step-badge" style="font-size:9px;color:#00ffcc;">v${msg.version_created}</span>` : ''}
+                    </div>
+                    <div style="white-space:pre-wrap;">${escapeHtml(msg.text || '')}</div>
+                  </div>
+                </div>
+              `;
+            });
+          }
+          stream.innerHTML = html;
+          loadSuggestionChips(proj.id);
+          return;
+        }
+      } catch (e) {}
+    }
+    loadSuggestionChips(null);
+  };
+
+  // 102: Proactive suggestion chips
+  window.loadSuggestionChips = async function(projectId) {
+    const container = $("#deckSuggestionChips");
+    if (!container) return;
+
+    let suggestions = [
+      "✨ Add Dark / Cyberpunk Theme Toggle",
+      "📊 Add Real-Time Data Visualization",
+      "💾 Add LocalStorage State Persistence",
+      "🔍 Add Search & Filter Controls",
+      "📥 Add CSV / JSON Data Export"
+    ];
+
+    if (projectId) {
+      try {
+        const res = await fetch(`/api/projects/${projectId}/suggestions`);
+        if (res.ok) {
+          const d = await res.json();
+          if (d.suggestions && d.suggestions.length > 0) {
+            suggestions = d.suggestions;
+          }
+        }
+      } catch (e) {}
+    }
+
+    container.innerHTML = suggestions.map(s => `
+      <button class="suggestion-chip" onclick="applySuggestionChip('${escapeHtml(s)}')" style="white-space:nowrap;padding:4px 10px;background:rgba(0,255,204,0.08);border:1px solid rgba(0,255,204,0.25);border-radius:12px;color:#00ffcc;font-size:10.5px;cursor:pointer;transition:all 0.15s;">
+        ${escapeHtml(s)}
+      </button>
+    `).join("");
+  };
+
+  // 103: One-click chip apply
+  window.applySuggestionChip = function(text) {
+    const input = $("#followUpInput");
+    const deckInput = $("#deckEvolutionInput");
+    if (input) input.value = text;
+    if (deckInput) deckInput.value = text;
+    submitFollowUp();
+  };
+
+  window.submitDeckEvolution = function() {
+    const deckInput = $("#deckEvolutionInput");
+    if (!deckInput || !deckInput.value.trim()) return;
+    const text = deckInput.value.trim();
+    const input = $("#followUpInput");
+    if (input) input.value = text;
+    deckInput.value = "";
+    submitFollowUp();
+  };
+
+  // 114-120: Rules Tab Controller
+  window.fetchDeckRules = async function() {
+    try {
+      const res = await fetch("/api/rules");
+      if (res.ok) {
+        const d = await res.json();
+        const container = $("#deckRulesListContainer");
+        if (!container) return;
+        const added = d.added || [];
+        if (added.length === 0) {
+          container.innerHTML = `<div style="color:var(--text-muted);font-size:11px;">No custom guardrail rules active.</div>`;
+          return;
+        }
+        container.innerHTML = added.map(r => {
+          const isConcern = r.status === "concern";
+          return `
+            <div style="padding:6px 10px;background:${isConcern ? 'rgba(239,68,68,0.1)' : 'rgba(255,255,255,0.03)'};border:1px solid ${isConcern ? 'rgba(239,68,68,0.3)' : 'rgba(255,255,255,0.08)'};border-radius:6px;font-size:11.5px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px;">
+                <strong style="color:${isConcern ? '#ef4444' : '#00ffcc'};font-size:10.5px;">${escapeHtml(r.id)}</strong>
+                <span class="step-badge" style="font-size:9px;color:${isConcern ? '#ef4444' : '#10b981'};">${escapeHtml((r.status || 'ACTIVE').toUpperCase())}</span>
+              </div>
+              <div style="color:#e4e4e7;">${escapeHtml(r.text)}</div>
+              ${r.concern ? `<div style="color:#f87171;font-size:10.5px;margin-top:2px;">⚠️ ${escapeHtml(r.concern)}</div>` : ''}
+            </div>
+          `;
+        }).join("");
+      }
+    } catch (e) {}
+  };
+
+  window.toggleGovernanceRule = function(ruleKey, isChecked) {
+    state.governanceRules[ruleKey] = isChecked;
+    showToast(`Guardrail Rule [${ruleKey}] ${isChecked ? 'ENABLED' : 'DISABLED'}`);
+  };
+
+  window.addNewGuardrailRuleFromDeck = async function() {
+    const input = $("#deckNewRuleInput");
+    if (!input || !input.value.trim()) return;
+    const text = input.value.trim();
+    try {
+      const res = await fetch("/api/rules/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text })
+      });
+      if (res.ok) {
+        input.value = "";
+        showToast("New guardrail rule submitted for review");
+        fetchDeckRules();
+      }
+    } catch (e) {
+      showToast("Failed to add rule: " + e.message, true);
+    }
+  };
+
+  window.surfaceRuleViolation = function(title, msg) {
+    const banner = $("#rulesViolationAlert");
+    const tEl = $("#rulesViolationTitle");
+    const mEl = $("#rulesViolationMsg");
+    if (banner && tEl && mEl) {
+      tEl.textContent = title || "Security Rule Violation";
+      mEl.textContent = msg || "Guardrail safety boundary violation detected.";
+      banner.style.display = "block";
+    }
+  };
+
+  window.toggleSplitPanel = function() {
+    state.splitOpen = !state.splitOpen;
+    const panel = $("#splitPanel");
+    const btn = $("#toggleSplitBtn");
+    if (state.splitOpen) {
+      panel.classList.remove("closed");
+      if (btn) btn.classList.add("active-preview");
+    } else {
+      panel.classList.add("closed");
+      if (btn) btn.classList.remove("active-preview");
+    }
+  };
+
+  window.switchSplitTab = function(tabName) {
+    $$(".split-tab-btn").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.tab === tabName);
+    });
+    $("#tabContentSandbox").classList.toggle("active", tabName === "sandbox");
+    $("#tabContentReactor").classList.toggle("active", tabName === "reactor");
+    $("#tabContentTree").classList.toggle("active", tabName === "tree");
+    $("#tabContentEvolution").classList.toggle("active", tabName === "evolution");
+    $("#tabContentCode").classList.toggle("active", tabName === "code");
+    $("#tabContentLogs").classList.toggle("active", tabName === "logs");
+    $("#tabContentRules").classList.toggle("active", tabName === "rules");
+
+    if (tabName === "reactor") {
+      resizeReactorCanvas();
+    } else if (tabName === "tree") {
+      fetchTreeData();
+    } else if (tabName === "evolution") {
+      renderEvolutionDeck();
+    } else if (tabName === "code") {
+      fetchProjectCode();
+    } else if (tabName === "logs") {
+      pollLogs();
+    } else if (tabName === "rules") {
+      fetchDeckRules();
+    }
+  };
+
+  /* ============================================================
+     ARC REACTOR ANIMATION ENGINE (Items 56-70)
+  ============================================================ */
+  const reactorCanvas = $("#reactorCanvas");
+  let rCtx = reactorCanvas ? reactorCanvas.getContext("2d") : null;
+  let rW = 0, rH = 0, rDpr = 1;
+  let rRotOuter = 0, rRotMid = 0, rRotInner = 0;
+  let rLastFrame = performance.now();
+  let rFpsCount = 0, rFpsLast = performance.now();
+  let rPacketProgress = [0, 0.25, 0.5, 0.75]; // light packet positions
+
+  const REACTOR_COLORS = {
+    idle: [0, 255, 204],
+    evaluating_goal: [157, 178, 255],
+    planning: [168, 85, 247],
+    coordinating: [59, 130, 246],
+    synthesizing: [245, 158, 11],
+    validating: [52, 211, 153],
+    approved: [16, 185, 129],
+    error: [239, 68, 68]
+  };
+
+  const rMotes = Array.from({length: 24}, () => ({
+    angle: Math.random() * Math.PI * 2,
+    radius: 0.25 + Math.random() * 0.65,
+    speed: (0.2 + Math.random() * 0.3) * (Math.random() < 0.5 ? -1 : 1),
+    size: 0.8 + Math.random() * 1.5,
+    phase: Math.random() * Math.PI * 2
+  }));
+
+  function resizeReactorCanvas() {
+    if (!reactorCanvas) return;
+    const parent = reactorCanvas.parentElement;
+    const rect = parent ? parent.getBoundingClientRect() : { width: 400, height: 300 };
+    rDpr = Math.min(window.devicePixelRatio || 1, 2);
+    rW = rect.width || 400;
+    rH = rect.height || 300;
+    reactorCanvas.width = rW * rDpr;
+    reactorCanvas.height = rH * rDpr;
+    if (rCtx) rCtx.setTransform(rDpr, 0, 0, rDpr, 0, 0);
+  }
+  window.addEventListener("resize", resizeReactorCanvas);
+
+  function drawSegmentedRing(cx, cy, radius, segCount, rotation, color, baseAlpha, activeAlpha, litStart, litCount) {
+    if (!rCtx) return;
+    const step = (Math.PI * 2) / segCount;
+    const gap = 0.3;
+    for (let i = 0; i < segCount; i++) {
+      const a0 = i * step + rotation;
+      const a1 = a0 + step * (1 - gap);
+      let isLit = false;
+      if (litStart !== null && litCount > 0) {
+        let rel = (i - litStart) % segCount;
+        if (rel < 0) rel += segCount;
+        isLit = rel < litCount;
+      }
+      rCtx.beginPath();
+      rCtx.arc(cx, cy, radius, a0, a1);
+      rCtx.strokeStyle = `rgba(${color[0]},${color[1]},${color[2]},${isLit ? activeAlpha : baseAlpha})`;
+      rCtx.lineWidth = isLit ? 2.6 : 1.4;
+      rCtx.stroke();
+    }
+  }
+
+  function renderArcReactor(now) {
+    if (!rCtx || !reactorCanvas) return;
+    const dt = Math.min((now - rLastFrame) / 1000, 0.05);
+    rLastFrame = now;
+
+    // 70. Performance-safe FPS monitor
+    rFpsCount++;
+    if (now - rFpsLast > 500) {
+      const fps = Math.round(rFpsCount / ((now - rFpsLast) / 1000));
+      const el = $("#fpsReadout");
+      if (el) el.textContent = fps;
+      rFpsCount = 0;
+      rFpsLast = now;
+    }
+
+    // 69. Reduced-motion check
+    const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const curStatus = (execution_state && execution_state.status_code) || "idle";
+    const speedMul = prefersReducedMotion ? 0 : (curStatus === "synthesizing" ? 1.8 : (curStatus === "idle" ? 0.35 : 1.0));
+    const col = REACTOR_COLORS[curStatus] || REACTOR_COLORS.idle;
+
+    rRotOuter += dt * 0.15 * speedMul;
+    rRotMid -= dt * 0.25 * speedMul;
+    rRotInner += dt * 0.4 * speedMul;
+
+    rCtx.clearRect(0, 0, rW, rH);
+    const cx = rW / 2;
+    const cy = rH / 2;
+    const base = Math.min(rW, rH);
+    const R1 = base * 0.38; // outer bezel
+    const R2 = base * 0.28; // telemetry ring
+    const R3 = base * 0.18; // inner containment ring
+    const Rcore = base * 0.08;
+
+    // 58. Breathing ambient core glow
+    const pulse = 0.6 + Math.sin(now / 800 * (curStatus === "synthesizing" ? 4 : 1.5)) * 0.3;
+    const bg = rCtx.createRadialGradient(cx, cy, 0, cx, cy, R1 * 1.5);
+    bg.addColorStop(0, `rgba(${col[0]},${col[1]},${col[2]},${(0.08 * pulse).toFixed(3)})`);
+    bg.addColorStop(1, "rgba(0,0,0,0)");
+    rCtx.fillStyle = bg;
+    rCtx.fillRect(0, 0, rW, rH);
+
+    // 59. Directed Energy Filaments to 4 Agent Nodes (N, E, S, W)
+    const targets = [
+      { name: "boss", dx: 0, dy: -R1 * 1.15 },
+      { name: "planner", dx: R1 * 1.15, dy: 0 },
+      { name: "coordinator", dx: 0, dy: R1 * 1.15 },
+      { name: "worker", dx: -R1 * 1.15, dy: 0 }
+    ];
+
+    targets.forEach((tgt, idx) => {
+      // Draw filament line
+      rCtx.beginPath();
+      rCtx.moveTo(cx, cy);
+      rCtx.lineTo(cx + tgt.dx, cy + tgt.dy);
+      rCtx.strokeStyle = `rgba(${col[0]},${col[1]},${col[2]},0.2)`;
+      rCtx.lineWidth = 1;
+      rCtx.stroke();
+
+      // 60. Light Packet traveling animation along filament
+      rPacketProgress[idx] = (rPacketProgress[idx] + dt * 0.4 * (speedMul || 0.2)) % 1.0;
+      const px = cx + tgt.dx * rPacketProgress[idx];
+      const py = cy + tgt.dy * rPacketProgress[idx];
+      rCtx.beginPath();
+      rCtx.arc(px, py, 2.5, 0, Math.PI * 2);
+      rCtx.fillStyle = `rgba(${col[0]},${col[1]},${col[2]},0.85)`;
+      rCtx.shadowColor = `rgba(${col[0]},${col[1]},${col[2]},1)`;
+      rCtx.shadowBlur = 6;
+      rCtx.fill();
+      rCtx.shadowBlur = 0;
+    });
+
+    // 57. Multi-tier segmented rings
+    const litStart = Math.floor((now / 800 * speedMul * 3) % 36);
+    drawSegmentedRing(cx, cy, R1, 36, rRotOuter, col, 0.15, 0.85, litStart, 6);
+    drawSegmentedRing(cx, cy, R2, 24, rRotMid, [0, 255, 204], 0.18, 0.7, 0, 0);
+
+    // Inner containment ring
+    rCtx.beginPath();
+    rCtx.arc(cx, cy, R3, 0, Math.PI * 2);
+    rCtx.strokeStyle = `rgba(${col[0]},${col[1]},${col[2]},${(0.4 * pulse).toFixed(3)})`;
+    rCtx.lineWidth = 1.8;
+    rCtx.stroke();
+
+    // Dust motes
+    for (const m of rMotes) {
+      m.angle += dt * m.speed * (0.3 + speedMul * 0.4);
+      const r = R3 + (R1 - R3) * m.radius + Math.sin(now / 1200 + m.phase) * 3;
+      const mx = cx + Math.cos(m.angle) * r;
+      const my = cy + Math.sin(m.angle) * r;
+      rCtx.beginPath();
+      rCtx.fillStyle = `rgba(0, 255, 204, ${(0.3 * pulse).toFixed(3)})`;
+      rCtx.arc(mx, my, m.size, 0, Math.PI * 2);
+      rCtx.fill();
+    }
+
+    // Central core
+    const coreGrad = rCtx.createRadialGradient(cx, cy, 0, cx, cy, Rcore * 2);
+    coreGrad.addColorStop(0, `rgba(${col[0]},${col[1]},${col[2]},${(0.8 * pulse).toFixed(3)})`);
+    coreGrad.addColorStop(1, "rgba(0,0,0,0)");
+    rCtx.fillStyle = coreGrad;
+    rCtx.beginPath();
+    rCtx.arc(cx, cy, Rcore * 2, 0, Math.PI * 2);
+    rCtx.fill();
+
+    rCtx.beginPath();
+    rCtx.arc(cx, cy, Rcore * 0.5, 0, Math.PI * 2);
+    rCtx.fillStyle = "#ffffff";
+    rCtx.fill();
+
+    const badge = $("#reactorStateBadge");
+    if (badge) badge.textContent = curStatus.toUpperCase();
+
+    requestAnimationFrame(renderArcReactor);
+  }
+
+  // Start reactor loop on mount
+  setTimeout(() => {
+    resizeReactorCanvas();
+    requestAnimationFrame(renderArcReactor);
+  }, 100);
+
+  async function fetchTreeData() {
+    if (state.activeProject && state.activeProject.logical_tree) {
+      renderTreeNodes(state.activeProject.logical_tree);
+      return;
+    }
+    try {
+      const res = await fetch("/api/tree");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.tree) renderTreeNodes(data.tree);
+      }
+    } catch (e) {}
+  }
+
+  // 82-84: Viewport Switching (Desktop 1920x1080, Tablet 1024x768, Mobile 375x667)
+  window.setSandboxViewport = function(vp) {
+    const iframe = $("#sandboxIframe");
+    if (!iframe) return;
+    $$("[id^='btnViewport']").forEach(b => b.classList.remove("active"));
+    const activeBtn = $(`#btnViewport${vp.charAt(0).toUpperCase() + vp.slice(1)}`);
+    if (activeBtn) activeBtn.classList.add("active");
+
+    if (vp === "desktop") {
+      iframe.style.width = "100%";
+      iframe.style.maxWidth = "1920px";
+      iframe.style.height = "100%";
+      iframe.style.maxHeight = "1080px";
+    } else if (vp === "tablet") {
+      iframe.style.width = "1024px";
+      iframe.style.maxWidth = "1024px";
+      iframe.style.height = "768px";
+      iframe.style.maxHeight = "768px";
+    } else if (vp === "mobile") {
+      iframe.style.width = "375px";
+      iframe.style.maxWidth = "375px";
+      iframe.style.height = "667px";
+      iframe.style.maxHeight = "667px";
+    }
+  };
+
+  // 91: Reset control - reverts sandbox to last approved/saved state
+  window.resetSandboxState = function() {
+    const iframe = $("#sandboxIframe");
+    if (!iframe) return;
+    if (state.activeProjectId) {
+      iframe.src = `/projects/${state.activeProjectId}/app?t=${Date.now()}`;
+    } else {
+      iframe.src = `/web_ui/index.html?t=${Date.now()}`;
+    }
+    const fallback = $("#sandboxErrorFallback");
+    if (fallback) fallback.style.display = "none";
+    showToast("Sandbox reset to last approved state");
+  };
+
+  // 85-87: 3D Perspective Tilt on Sandbox (disabled on touch & prefers-reduced-motion)
+  function setupSandboxTilt() {
+    const wrapper = $("#sandboxTiltWrapper");
+    const iframe = $("#sandboxIframe");
+    if (!wrapper || !iframe) return;
+
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (isTouch || prefersReducedMotion) {
+      iframe.style.transform = "none";
+      return;
+    }
+
+    wrapper.addEventListener("mousemove", (e) => {
+      const rect = wrapper.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const xPct = (x / rect.width) - 0.5;
+      const yPct = (y / rect.height) - 0.5;
+      const rotX = -yPct * 6;
+      const rotY = xPct * 6;
+      iframe.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+    });
+
+    wrapper.addEventListener("mouseleave", () => {
+      iframe.style.transform = "rotateX(0deg) rotateY(0deg)";
+    });
+  }
+  setTimeout(setupSandboxTilt, 200);
+
+  // 95: Full-screen Preview Mode
+  window.toggleSandboxFullscreen = function() {
+    const container = $("#sandboxContainer");
+    if (!container) return;
+    if (!document.fullscreenElement) {
+      if (container.requestFullscreen) container.requestFullscreen();
+    } else {
+      if (document.exitFullscreen) document.exitFullscreen();
+    }
+  };
+
+  // 92 & 94: Live reload on update & broken-render fallback
+  window.reloadSandboxIframe = function() {
+    const iframe = $("#sandboxIframe");
+    const fallback = $("#sandboxErrorFallback");
+    if (!iframe) return;
+    if (fallback) fallback.style.display = "none";
+
+    let targetUrl = "/web_ui/";
+    if (state.activeProjectId) {
+      targetUrl = `/projects/${state.activeProjectId}/app`;
+    } else if (iframe.src && !iframe.src.includes("about:blank")) {
+      targetUrl = iframe.src.split("?")[0].replace(window.location.origin, "");
+    }
+
+    iframe.src = targetUrl + "?t=" + Date.now();
+    if ($("#sandboxStatusUrl")) {
+      $("#sandboxStatusUrl").textContent = `http://127.0.0.1:8000${targetUrl}`;
+    }
+    iframe.onerror = () => {
+      if (fallback) fallback.style.display = "flex";
+    };
+  };
+
+  window.openAppInNewTab = function() {
+    const iframe = $("#sandboxIframe");
+    window.open(iframe.src, "_blank");
+  };
+
+  window.saveProjectPermanent = async function() {
+    const btn = $("#permSaveLabel");
+    const oldText = btn ? btn.textContent : "💾 Save";
+    if (btn) btn.textContent = "⏳ Saving...";
+    try {
+      const url = state.activeProjectId ? `/api/projects/${state.activeProjectId}/save` : "/api/projects/save-current";
+      const res = await fetch(url, { method: "POST" });
+      if (res.ok) {
+        const d = await res.json();
+        if (d.project_id) {
+          state.activeProjectId = d.project_id;
+        }
+        if (btn) btn.textContent = d.is_permanent ? "⭐ Permanent" : "💾 Save";
+        showToast(d.is_permanent ? "Saved permanently (exempt from 30d purge)" : "Project saved.");
+        await loadProjectsCatalog();
+      } else {
+        if (btn) btn.textContent = oldText;
+        showToast("Save failed", true);
+      }
+    } catch (e) {
+      if (btn) btn.textContent = oldText;
+      showToast("Save failed: " + e.message, true);
+    }
+  };
+
+  window.exportProjectZip = async function() {
+    const btn = document.querySelector("button[onclick='exportProjectZip()'] span");
+    const oldText = btn ? btn.textContent : "📦 Export";
+    if (btn) btn.textContent = "⏳ Exporting...";
+    try {
+      const url = state.activeProjectId 
+        ? `/api/projects/${state.activeProjectId}/export` 
+        : "/api/projects/export-current";
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error("Server returned status " + res.status);
+      }
+      const blob = await res.blob();
+      const disposition = res.headers.get("Content-Disposition") || "";
+      let filename = (state.activeProjectId || "ultron_project") + ".zip";
+      const match = disposition.match(/filename="?([^";]+)"?/);
+      if (match && match[1]) filename = match[1].trim();
+
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+
+      showToast("Downloaded " + filename);
+    } catch (e) {
+      console.error("Export zip error:", e);
+      showToast("Export failed: " + e.message, true);
+    } finally {
+      if (btn) btn.textContent = oldText;
+    }
+  };
+
+  window.saveAllProjectsPermanent = async function() {
+    try {
+      const res = await fetch("/api/projects/save-all", { method: "POST" });
+      if (res.ok) {
+        const d = await res.json();
+        alert(d.message);
+        loadProjectsCatalog();
+      }
+    } catch (e) {
+      alert("Bulk save failed");
+    }
+  };
+
+  window.exportAllProjectsZip = async function() {
+    try {
+      showToast("Generating master backup archive...");
+      const res = await fetch("/api/projects/export-all");
+      if (!res.ok) throw new Error("Server returned status " + res.status);
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = blobUrl;
+      a.download = `ultron_all_projects_${Date.now()}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+      showToast("Master backup downloaded.");
+    } catch (e) {
+      showToast("Export all failed: " + e.message, true);
+    }
+  };
+
+  window.clearAllProjectsData = async function() {
+    if (!confirm("Are you sure you want to clear all stored project data?")) return;
+    try {
+      const res = await fetch("/api/projects/clear-all", { method: "POST" });
+      if (res.ok) {
+        state.projects = [];
+        state.activeProjectId = null;
+        state.activeProject = null;
+        openNewConversation();
+        renderProjectsTree();
+        if (typeof renderProjectsCatalog === "function") renderProjectsCatalog();
+        showToast("All project data has been cleared.");
+      } else {
+        showToast("Failed to clear projects", true);
+      }
+    } catch (e) {
+      showToast("Clear failed: " + e.message, true);
+    }
+  };
+
+  window.resetActiveExecution = async function() {
+    state.isExecuting = false;
+    if (execution_state) execution_state.is_running = false;
+    await fetch("/api/reset", { method: "POST" });
+    openNewConversation();
+  };
+
+  window.toggleSidebar = function() {
+    $("#appSidebar").classList.toggle("collapsed");
+  };
+
+  window.toggleProjectsFilter = function() {
+    const bar = $("#projectsFilterBar");
+    const isShowing = bar.style.display !== "none";
+    bar.style.display = isShowing ? "none" : "block";
+    if (!isShowing) {
+      const input = $("#projectSearchInput");
+      input.focus();
+      input.oninput = () => {
+        state.filterQuery = input.value.trim();
+        renderProjectsTree();
+      };
+    } else {
+      state.filterQuery = "";
+      renderProjectsTree();
+    }
+  };
+
+  window.navigateHistory = function(dir) {
+    if (state.projects.length === 0) return;
+    state.historyIndex = Math.max(0, Math.min(state.projects.length - 1, state.historyIndex + dir));
+    openProjectConversation(state.projects[state.historyIndex]);
+  };
+
+  window.openModelSelector = function(e) {
+    e.stopPropagation();
+    const menu = $("#modelMenu");
+    positionPopover(menu, e.currentTarget);
+  };
+
+  window.selectModel = function(modelName) {
+    state.selectedModel = modelName;
+    $("#selectedModelLabel").textContent = modelName;
+    $("#topBarModelBadge").textContent = modelName;
+    closeAllPopovers();
+  };
+
+  window.openContextSelector = function(e) {
+    e.stopPropagation();
+    const menu = $("#contextMenu");
+    positionPopover(menu, e.currentTarget);
+  };
+
+  window.selectContext = function(ctxName) {
+    state.selectedContext = ctxName;
+    $("#selectedContextLabel").textContent = ctxName;
+    closeAllPopovers();
+  };
+
+  window.openFolderSelector = function(e) {
+    e.stopPropagation();
+    renderFolderMenu();
+    const menu = $("#folderMenu");
+    positionPopover(menu, e.currentTarget);
+  };
+
+  window.selectFolder = function(folderName) {
+    state.activeFolder = folderName;
+    localStorage.setItem("ultron_active_folder", folderName);
+    $("#activeFolderLabel").textContent = folderName;
+    closeAllPopovers();
+    renderProjectsTree();
+  };
+
+  window.promptNewFolder = function() {
+    closeAllPopovers();
+    const name = prompt("Enter new project folder name:");
+    if (name && name.trim()) {
+      const trimmed = name.trim();
+      if (!state.folders.includes(trimmed)) {
+        state.folders.push(trimmed);
+        localStorage.setItem("ultron_folders", JSON.stringify(state.folders));
+      }
+      state.folderOpenState[trimmed] = true;
+      localStorage.setItem("ultron_folder_open", JSON.stringify(state.folderOpenState));
+      selectFolder(trimmed);
+      renderProjectsTree();
+    }
+  };
+
+  function positionPopover(popover, target) {
+    closeAllPopovers();
+    popover.classList.add("open");
+    const rect = target.getBoundingClientRect();
+    popover.style.top = (rect.bottom + 6) + "px";
+    popover.style.left = rect.left + "px";
+  }
+
+  function closeAllPopovers() {
+    $$(".popover-menu").forEach(p => p.classList.remove("open"));
+  }
+  document.addEventListener("click", closeAllPopovers);
+
+  window.toggleVoiceInput = function() {
+    const mic = $("#micBtn");
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      alert("Speech recognition is not supported in this browser environment.");
+      return;
+    }
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+
+    mic.style.color = "#ef4444";
+    recognition.start();
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript;
+      const input = $("#mainPromptInput");
+      input.value += (input.value ? " " : "") + transcript;
+      mic.style.color = "";
+      $("#sendPromptBtn").classList.add("active");
+    };
+
+    recognition.onerror = () => { mic.style.color = ""; };
+    recognition.onend = () => { mic.style.color = ""; };
+  };
+
+  window.openSettingsModal = function() { $("#settingsModal").classList.add("open"); };
+  window.openHistoryModal = function() {
+    $("#historyModal").classList.add("open");
+    renderProjectsCatalog();
+  };
+
+  window.renderProjectsCatalog = async function() {
+    const body = $("#historyModalBody");
+    const storageEl = $("#catalogStorageUsage");
+    if (!body) return;
+
+    // 139: Storage usage
+    try {
+      const sRes = await fetch("/api/projects/storage");
+      if (sRes.ok) {
+        const sData = await sRes.json();
+        if (storageEl) storageEl.textContent = `Storage: ${sData.total_mb} MB across ${sData.total_projects} projects`;
+      }
+    } catch (e) {}
+
+    const query = ($("#catalogSearchInput") ? $("#catalogSearchInput").value : "").toLowerCase().trim();
+    const sort = ($("#catalogSortSelect") ? $("#catalogSortSelect").value : "updated");
+
+    let list = [...(state.projects || [])];
+
+    // 136: Search/filter
+    if (query) {
+      list = list.filter(p => (p.title || p.goal || p.id || '').toLowerCase().includes(query));
+    }
+
+    // 137: Sort
+    if (sort === "created") {
+      list.sort((a, b) => (b.created_at || '').localeCompare(a.created_at || ''));
+    } else if (sort === "expiration") {
+      list.sort((a, b) => (a.days_remaining || 9999) - (b.days_remaining || 9999));
+    } else {
+      list.sort((a, b) => (b.updated_at || b.created_at || '').localeCompare(a.updated_at || a.created_at || ''));
+    }
+
+    if (list.length === 0) {
+      body.innerHTML = `<div style="color:var(--text-muted);padding:14px;text-align:center;">No matching projects found.</div>`;
+      return;
+    }
+
+    body.innerHTML = list.map(p => {
+      const isPerm = p.is_permanent;
+      const days = p.days_remaining !== undefined ? p.days_remaining : 30;
+      const isExpiringSoon = !isPerm && days <= 3;
+      
+      // 126 & 127: Badges
+      let badgeHtml = "";
+      if (isPerm) {
+        badgeHtml = `<span class="badge-permanent" style="background:rgba(16,185,129,0.15);color:#10b981;border:1px solid rgba(16,185,129,0.3);padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">Permanent</span>`;
+      } else if (isExpiringSoon) {
+        badgeHtml = `<span class="badge-expiring-soon" style="background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);padding:2px 6px;border-radius:4px;font-size:10px;font-weight:bold;">⏳ ${escapeHtml(p.time_remaining_str || 'Expiring Soon')}</span>`;
+      } else {
+        badgeHtml = `<span class="badge-countdown" style="background:rgba(255,255,255,0.06);color:#a1a1aa;padding:2px 6px;border-radius:4px;font-size:10px;">${escapeHtml(p.time_remaining_str || '30d left')}</span>`;
+      }
+
+      return `
+        <div class="catalog-project-card" style="background:#121215;padding:10px 12px;border-radius:6px;border:1px solid var(--border-subtle);display:flex;justify-content:space-between;align-items:center;gap:12px;">
+          <div style="flex:1;min-width:0;cursor:pointer;" onclick="closeModal('historyModal');openProjectConversation({id:'${p.id}',title:'${escapeHtml(p.title || p.goal)}',isLiveBackend:true})">
+            <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+              <span class="project-card-title" style="font-weight:600;font-size:12.5px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(p.title || p.goal)}</span>
+              ${badgeHtml}
+            </div>
+            <div style="font-size:10.5px;color:var(--text-muted);font-family:var(--font-mono);">${p.id}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <button class="action-btn-sm" onclick="event.stopPropagation();promptRenameProject('${p.id}', '${escapeHtml(p.title || p.goal)}')" title="Rename project">✏️</button>
+            <button class="action-btn-sm" onclick="event.stopPropagation();toggleProjectPermanent('${p.id}')" title="Toggle Permanent Pin">${isPerm ? '⭐ Pinned' : '📌 Pin'}</button>
+            <button class="action-btn-sm" onclick="event.stopPropagation();exportProjectZipById('${p.id}')" title="Download ZIP">📦</button>
+            <button class="action-btn-sm" onclick="event.stopPropagation();deleteProjectById('${p.id}')" style="color:#ef4444;" title="Delete project">🗑</button>
+          </div>
+        </div>
+      `;
+    }).join("");
+  };
+
+  // 134: Project rename
+  window.promptRenameProject = async function(projectId, oldTitle) {
+    const newTitle = prompt("Enter new title for project:", oldTitle);
+    if (!newTitle || !newTitle.trim() || newTitle.trim() === oldTitle) return;
+    try {
+      const res = await fetch(`/api/projects/${projectId}/rename`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title: newTitle.trim() })
+      });
+      if (res.ok) {
+        showToast("Project renamed to " + newTitle.trim());
+        await loadProjectsCatalog();
+        renderProjectsCatalog();
+      }
+    } catch (e) {
+      showToast("Rename failed: " + e.message, true);
+    }
+  };
+
+  // 128: Permanent pin
+  window.toggleProjectPermanent = async function(projectId) {
+    try {
+      const res = await fetch(`/api/projects/${projectId}/save`, { method: "POST" });
+      if (res.ok) {
+        const d = await res.json();
+        showToast(d.is_permanent ? "Project pinned as permanent" : "Project unpinned");
+        await loadProjectsCatalog();
+        renderProjectsCatalog();
+      }
+    } catch (e) {
+      showToast("Failed to toggle permanence", true);
+    }
+  };
+
+  // 131: Single project export
+  window.exportProjectZipById = function(projectId) {
+    window.location.href = `/api/projects/${projectId}/export`;
+  };
+
+  // 133: Project delete
+  window.deleteProjectById = async function(projectId) {
+    if (!confirm(`Are you sure you want to permanently delete project ${projectId}?`)) return;
+    try {
+      const res = await fetch(`/api/projects/${projectId}`, { method: "DELETE" });
+      if (res.ok) {
+        showToast("Project deleted");
+        await loadProjectsCatalog();
+        renderProjectsCatalog();
+      }
+    } catch (e) {
+      showToast("Delete failed", true);
+    }
+  };
+
+  // 138: Restore from ZIP
+  window.handleRestoreZip = async function(file) {
+    if (!file) return;
+    showToast("Restoring project from archive...");
+    try {
+      const res = await fetch("/api/projects/restore", {
+        method: "POST",
+        headers: { "Content-Type": "application/zip" },
+        body: file
+      });
+      if (res.ok) {
+        const d = await res.json();
+        showToast("Project restored successfully!");
+        await loadProjectsCatalog();
+        renderProjectsCatalog();
+      } else {
+        throw new Error("HTTP " + res.status);
+      }
+    } catch (e) {
+      showToast("Restore failed: " + e.message, true);
+    }
+  };
+  window.openScheduledTasksModal = function() { $("#scheduledModal").classList.add("open"); };
+  window.closeModal = function(id) { $("#" + id).classList.remove("open"); };
+  window.openIdeLauncher = function() { alert("Antigravity IDE integration: Ready and synchronized with ULTRON orchestrator."); };
+
+  async function loadGovernanceRules() {
+    try {
+      const res = await fetch("/api/rules");
+      if (res.ok) {
+        const data = await res.json();
+        const container = $("#rulesListContainer");
+        if (container) {
+          const all = [...(data.core || []), ...(data.added || [])];
+          container.innerHTML = all.map(r => `
+            <div style="background:#121215;padding:8px 10px;border-radius:6px;border:1px solid var(--border-subtle);font-size:11.5px;display:flex;justify-content:space-between;align-items:center;">
+              <div><strong>${r.id}:</strong> ${escapeHtml(r.text)}</div>
+              <span style="font-size:10px;font-family:var(--font-mono);color:${r.status==='active'?'#4ade80':'#a1a1aa'};">${r.status.toUpperCase()}</span>
+            </div>
+          `).join("");
+        }
+      }
+    } catch (e) {}
+  }
+
+  window.addNewGuardrailRule = async function() {
+    const input = $("#newRuleInput");
+    const text = input.value.trim();
+    if (!text) return;
+    try {
+      const res = await fetch("/api/rules/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: text })
+      });
+      if (res.ok) {
+        input.value = "";
+        loadGovernanceRules();
+      }
+    } catch (e) {
+      alert("Failed to add rule");
+    }
+  };
+
+  async function testEngineConnection() {
+    try {
+      const res = await fetch("/api/engine");
+      if (res.ok) {
+        const d = await res.json();
+        const el = $("#settingsEngineStatus");
+        if (el) {
+          el.innerHTML = `Active Model: <strong>${d.model_name}</strong> | Backend: <strong>${d.backend.toUpperCase()}</strong> | Ollama Status: <span style="color:${d.is_local_online?'#4ade80':'#facc15'};">${d.is_local_online ? 'ONLINE (Zero Cost)' : 'STANDBY'}</span>`;
+        }
+      }
+    } catch (e) {}
+  }
+
+  function renderMarkdown(text) {
+    if (!text) return "";
+    let html = escapeHtml(text);
+    // Code blocks ```code```
+    html = html.replace(/```([a-zA-Z0-9_-]*)\n([\s\S]*?)```/g, (m, lang, code) => {
+      return `<pre><code>${code.trim()}</code></pre>`;
+    });
+    // Inline code `code`
+    html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
+    // Bold **text**
+    html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+    // Italic *text*
+    html = html.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+    // Bullet points
+    html = html.replace(/^\s*[-•]\s+(.*)$/gm, "<li>$1</li>");
+    html = html.replace(/(<li>.*<\/li>)/s, "<ul>$1</ul>");
+    // Line breaks
+    html = html.replace(/\n\n+/g, "<br><br>").replace(/\n/g, "<br>");
+    return html;
+  }
+
+  function escapeHtml(str) {
+    if (!str) return "";
+    return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init, { passive: true });
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>

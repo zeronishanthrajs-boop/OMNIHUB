@@ -1,0 +1,8 @@
+{
+  "name": "ultron-dashboard",
+  "version": "1.0.0",
+  "description": "ULTRON multi-agent orchestrator dashboard",
+  "scripts": {
+    "dev": "python -m uvicorn dashboard:app --host 127.0.0.1 --port 8000 --reload"
+  }
+}

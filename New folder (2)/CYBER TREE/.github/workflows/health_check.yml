@@ -1,0 +1,76 @@
+name: Autonomous Maintenance and Health Check
+
+on:
+  schedule:
+    - cron: '0 6 * * 4' # Thursday 06:00 UTC (Source Auto-Discovery)
+    - cron: '0 8 * * *' # Daily 08:00 UTC (Dead Source Detection)
+    - cron: '0 4 * * 0' # Sunday 04:00 UTC (Knowledge Graph Healing)
+  workflow_dispatch:
+    inputs:
+      job:
+        description: 'Which job to run (all, discoverer, dead_detector, healer)'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - discoverer
+          - dead_detector
+          - healer
+
+jobs:
+  health_check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run health check job
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            JOB="${{ github.event.inputs.job }}"
+          else
+            CRON="${{ github.event.schedule }}"
+            if [ "$CRON" = "0 6 * * 4" ]; then
+              JOB="discoverer"
+            elif [ "$CRON" = "0 4 * * 0" ]; then
+              JOB="healer"
+            else
+              JOB="dead_detector"
+            fi
+          fi
+
+          echo "Triggered by event: ${{ github.event_name }}"
+          echo "Determined job to execute: $JOB"
+
+          if [ "$JOB" = "discoverer" ] || [ "$JOB" = "all" ]; then
+            echo "::group::Running Source Auto-Discoverer"
+            python scripts/source_discoverer.py
+            echo "::endgroup::"
+          fi
+
+          if [ "$JOB" = "dead_detector" ] || [ "$JOB" = "all" ]; then
+            echo "::group::Running Dead Source Detector"
+            python scripts/dead_source_detector.py
+            echo "::endgroup::"
+          fi
+
+          if [ "$JOB" = "healer" ] || [ "$JOB" = "all" ]; then
+            echo "::group::Running Knowledge Graph Healer"
+            python scripts/knowledge_healer.py
+            echo "::endgroup::"
+          fi

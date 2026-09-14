@@ -1,0 +1,45 @@
+name: Train Classifier (ML Classification)
+
+on:
+  schedule:
+    - cron: '0 4 1 * *'   # Monthly on the 1st of the month at 04:00 UTC
+  workflow_dispatch:      # Allow manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install scikit-learn
+          pip install -r requirements.txt
+
+      - name: Export Labeled Training Data
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: python scripts/export_training_data.py
+
+      - name: Train Classifier
+        run: python scripts/train_classifier.py
+
+      - name: Commit and Push Model
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add models/classifier.pkl models/classifier.json models/training_report.txt
+          # Commit only if there are changes
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update trained classifier model" && git push)

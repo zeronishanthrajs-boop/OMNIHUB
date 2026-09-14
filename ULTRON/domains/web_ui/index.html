@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image to DOCX Studio // 1-Click Document Engine</title>
+<style>
+
+:root {
+  --bg-primary: #050814;
+  --bg-surface: rgba(15, 23, 42, 0.65);
+  --bg-surface-hover: rgba(30, 41, 59, 0.75);
+  --border-glass: rgba(255, 255, 255, 0.12);
+  --border-glow: rgba(0, 240, 255, 0.35);
+  --accent-cyan: #00f0ff;
+  --accent-violet: #8a2be2;
+  --accent-emerald: #00ff88;
+  --accent-amber: #ffaa00;
+  --accent-rose: #ff3366;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-primary);
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(0, 240, 255, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(138, 43, 226, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.5) 0%, transparent 100%);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  min-height: 100vh;
+  padding: 24px;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.ambient-glow {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.35;
+}
+.glow-1 { top: -100px; left: -100px; width: 400px; height: 400px; background: var(--accent-cyan); }
+.glow-2 { bottom: -100px; right: -100px; width: 450px; height: 450px; background: var(--accent-violet); }
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.glass-panel {
+  background: var(--bg-surface);
+  backdrop-filter: blur(20px) saturate(190%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  border: 1px solid var(--border-glass);
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel:hover {
+  border-color: var(--border-glow);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.55), 0 0 24px rgba(0, 240, 255, 0.12);
+}
+
+.glass-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  margin-bottom: 24px;
+}
+
+.brand-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #ffffff 0%, var(--accent-cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: rgba(0, 240, 255, 0.12);
+  border: 1px solid var(--accent-cyan);
+  color: var(--accent-cyan);
+  text-transform: uppercase;
+}
+
+.glass-input, .glass-select {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  padding: 12px 16px;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  backdrop-filter: blur(10px);
+  outline: none;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.glass-input:focus, .glass-select:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.3);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.glass-btn {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.15) 0%, rgba(138, 43, 226, 0.2) 100%);
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  border-radius: 12px;
+  padding: 12px 22px;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 16px rgba(0, 240, 255, 0.15);
+}
+
+.glass-btn:hover {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.3) 0%, rgba(138, 43, 226, 0.35) 100%);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 6px 25px rgba(0, 240, 255, 0.35);
+  transform: translateY(-2px);
+}
+
+.glass-btn:active {
+  transform: translateY(0);
+}
+
+.glass-btn-secondary {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-glass);
+  color: var(--text-secondary);
+}
+
+.glass-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  border-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  padding: 20px;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.stat-val {
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+
+
+.converter-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 960px) {
+  .converter-grid { grid-template-columns: 1fr; }
+}
+
+.upload-zone {
+  border: 2px dashed rgba(0, 240, 255, 0.4);
+  border-radius: 14px;
+  padding: 32px 20px;
+  text-align: center;
+  background: rgba(0, 240, 255, 0.03);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.upload-zone:hover, .upload-zone.dragover {
+  border-color: var(--accent-cyan);
+  background: rgba(0, 240, 255, 0.08);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.upload-icon {
+  font-size: 2.4rem;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.upload-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.upload-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.queue-container {
+  max-height: 280px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 4px;
+}
+
+.queue-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 8px 12px;
+  transition: all 0.2s;
+}
+
+.queue-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(0, 240, 255, 0.3);
+}
+
+.queue-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #000;
+}
+
+.queue-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.queue-name {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.queue-meta {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.queue-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-icon-sm {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.btn-icon-sm:hover {
+  color: #ff3366;
+  border-color: #ff3366;
+  background: rgba(255, 51, 102, 0.1);
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  letter-spacing: 0.05em;
+}
+
+.form-control {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-control:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.25);
+}
+
+.btn-convert-action {
+  width: 100%;
+  background: linear-gradient(135deg, #00f0ff 0%, #00a8ff 100%);
+  color: #050814;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 20px rgba(0, 240, 255, 0.35);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 18px;
+}
+
+.btn-convert-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 240, 255, 0.55);
+}
+
+.btn-convert-action:active {
+  transform: translateY(0);
+}
+
+.preview-container {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 24px;
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.preview-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.preview-canvas-sheet {
+  background: #ffffff;
+  color: #1e293b;
+  border-radius: 8px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  flex: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  width: 100%;
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+}
+
+.doc-sheet-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 24px;
+  color: #0f172a;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 12px;
+}
+
+.doc-sheet-grid {
+  display: grid;
+  gap: 20px;
+  flex: 1;
+}
+
+.doc-sheet-img-wrap {
+  text-align: center;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.doc-sheet-img {
+  max-width: 100%;
+  max-height: 240px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.doc-sheet-caption {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 6px;
+  font-family: var(--font-mono);
+}
+
+.empty-preview-notice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #94a3b8;
+  gap: 12px;
+  padding: 60px 0;
+}
+</style>
+<style id="ultron-healed-styles">
+
+/* === ULTRON Autonomous Astra-Grade Polish & Transitions === */
+* { box-sizing: border-box; }
+a, button, input, select, textarea, .card, .btn, .nav-link {
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+button:hover, .btn:hover {
+  transform: translateY(-1.5px);
+  filter: brightness(1.08);
+}
+button:active, .btn:active {
+  transform: translateY(0.5px);
+}
+#ultron-toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+.ultron-toast {
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  color: #f8fafc;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 240, 255, 0.2);
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
+}
+.ultron-toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+@media (max-width: 768px) {
+  #ultron-toast-container {
+    bottom: 16px;
+    right: 16px;
+    left: 16px;
+  }
+  .ultron-toast {
+    text-align: center;
+  }
+}
+
+</style>
+</head>
+<body>
+<div class="ambient-glow glow-1"></div>
+<div class="ambient-glow glow-2"></div>
+
+<div class="app-container">
+  <header class="glass-panel glass-header">
+    <div class="brand-title">
+      <span>⚡</span>
+      <span>DOCX Studio // 1-Click Engine</span>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <span class="brand-badge" id="imageCountBadge">0 Images Loaded</span>
+      <button class="btn-icon-sm" onclick="clearAllImages()" title="Clear All Images">✕</button>
+    </div>
+  </header>
+
+  <div class="converter-grid">
+    <!-- Left Configuration & Queue -->
+    <div class="glass-panel" style="padding: 24px;">
+      <!-- Hidden File Input -->
+      <input type="file" id="fileUploadInput" multiple accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+
+      <!-- Drag & Drop Zone -->
+      <div class="upload-zone" id="dropZone" onclick="document.getElementById('fileUploadInput').click()">
+        <span class="upload-icon">📁</span>
+        <div class="upload-title">Drop images here or click to browse</div>
+        <div class="upload-subtitle">Supports PNG, JPG, JPEG, WebP, GIF, SVG</div>
+      </div>
+
+      <!-- Queue list -->
+      <div class="form-label" style="display: flex; justify-content: space-between;">
+        <span>Selected Images</span>
+        <span id="queueSizeSummary" style="font-family: var(--font-mono); color: var(--accent-cyan);">0 files</span>
+      </div>
+      <div class="queue-container" id="imagesQueueList">
+        <div style="color: var(--text-secondary); font-size: 0.8rem; text-align: center; padding: 24px 0;">
+          No images uploaded yet
+        </div>
+      </div>
+
+      <!-- Settings -->
+      <div class="form-group">
+        <label class="form-label">Document Title</label>
+        <input type="text" class="form-control" id="docTitleInput" value="Converted Image Document" oninput="updatePreviewSheet()">
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="form-group">
+          <label class="form-label">Images Per Page</label>
+          <select class="form-control" id="layoutSpacingSelect" onchange="updatePreviewSheet()">
+            <option value="1">1 Image / Page</option>
+            <option value="2" selected>2 Images / Page</option>
+            <option value="flow">Continuous Flow</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Page Orientation</label>
+          <select class="form-control" id="pageOrientationSelect" onchange="updatePreviewSheet()">
+            <option value="portrait" selected>Portrait (8.5 x 11")</option>
+            <option value="landscape">Landscape (11 x 8.5")</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group" style="display:flex;align-items:center;gap:10px;margin-top:8px;">
+        <input type="checkbox" id="includeCaptionsCheck" checked onchange="updatePreviewSheet()" style="accent-color: var(--accent-cyan); width: 16px; height: 16px; cursor: pointer;">
+        <label for="includeCaptionsCheck" style="font-size: 0.85rem; color: var(--text-primary); cursor: pointer;">Include image filename captions</label>
+      </div>
+
+      <!-- 1-Click Action Button -->
+      <button class="btn-convert-action" id="btn1ClickConvert" onclick="convertAndDownloadDocx()">
+        <span>⚡</span>
+        <span>Convert to DOCX (1-Click)</span>
+      </button>
+    </div>
+
+    <!-- Right Live Virtual Page Preview -->
+    <div class="glass-panel preview-container">
+      <div class="preview-header">
+        <div class="preview-title">
+          <span>📄</span>
+          <span>Live Document Virtual Preview</span>
+        </div>
+        <div style="font-size: 0.8rem; color: var(--text-secondary); font-family: var(--font-mono);" id="previewMetaText">
+          A4 Standard // Ready to Export
+        </div>
+      </div>
+
+      <div class="preview-canvas-sheet" id="previewSheet">
+        <div class="doc-sheet-title" id="sheetDocTitle">Converted Image Document</div>
+        <div class="doc-sheet-grid" id="sheetImagesGrid">
+          <div class="empty-preview-notice">
+            <span style="font-size: 2.2rem; opacity: 0.4;">🖼️</span>
+            <span>Upload or drag images above to see the live document layout preview.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+const SoundEngine = {
+  ctx: null,
+  enabled: true,
+  init() {
+    if (!this.ctx) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (AudioContext) this.ctx = new AudioContext();
+    }
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+  },
+  playTone(freq, type = 'sine', duration = 0.08, gainVal = 0.05) {
+    if (!this.enabled) return;
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+      gain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start();
+      osc.stop(this.ctx.currentTime + duration);
+    } catch (e) {}
+  },
+  click() { this.playTone(800, 'sine', 0.04, 0.04); },
+  success() {
+    this.playTone(523.25, 'sine', 0.1, 0.05);
+    setTimeout(() => this.playTone(659.25, 'sine', 0.15, 0.05), 80);
+  },
+  action() { this.playTone(440, 'triangle', 0.06, 0.05); }
+};
+
+document.addEventListener('click', (e) => {
+  if (e.target.closest('button, .glass-btn, .clickable')) {
+    SoundEngine.click();
+  }
+});
+</script>
+
+
+<script>
+let uploadedImages = [];
+
+const dropZone = document.getElementById('dropZone');
+['dragenter', 'dragover'].forEach(name => {
+  dropZone.addEventListener(name, (e) => {
+    e.preventDefault();
+    dropZone.classList.add('dragover');
+  });
+});
+['dragleave', 'drop'].forEach(name => {
+  dropZone.addEventListener(name, (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+  });
+});
+dropZone.addEventListener('drop', (e) => {
+  if (e.dataTransfer && e.dataTransfer.files) {
+    processFiles(Array.from(e.dataTransfer.files));
+  }
+});
+
+function handleFileSelect(e) {
+  if (e.target.files) {
+    processFiles(Array.from(e.target.files));
+  }
+}
+
+function processFiles(files) {
+  const imageFiles = files.filter(f => f.type.startsWith('image/'));
+  if (!imageFiles.length) {
+    alert('Please select valid image files.');
+    return;
+  }
+  
+  if (window.playClickSound) window.playClickSound();
+
+  let loaded = 0;
+  imageFiles.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      uploadedImages.push({
+        id: 'img_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+        name: file.name,
+        size: (file.size / 1024).toFixed(1) + ' KB',
+        dataUrl: e.target.result
+      });
+      loaded++;
+      if (loaded === imageFiles.length) {
+        renderQueue();
+        updatePreviewSheet();
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function removeImage(id) {
+  uploadedImages = uploadedImages.filter(img => img.id !== id);
+  renderQueue();
+  updatePreviewSheet();
+}
+
+function clearAllImages() {
+  uploadedImages = [];
+  renderQueue();
+  updatePreviewSheet();
+}
+
+function renderQueue() {
+  const list = document.getElementById('imagesQueueList');
+  const countBadge = document.getElementById('imageCountBadge');
+  const sizeSummary = document.getElementById('queueSizeSummary');
+
+  countBadge.textContent = `${uploadedImages.length} Images Loaded`;
+  sizeSummary.textContent = `${uploadedImages.length} files`;
+
+  if (!uploadedImages.length) {
+    list.innerHTML = '<div style="color: var(--text-secondary); font-size: 0.8rem; text-align: center; padding: 24px 0;">No images uploaded yet</div>';
+    return;
+  }
+
+  list.innerHTML = uploadedImages.map((img, idx) => `
+    <div class="queue-item">
+      <img src="${img.dataUrl}" class="queue-thumb" alt="thumb" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400' viewBox='0 0 600 400'><rect width='100%' height='100%' fill='%230f172a'/><circle cx='300' cy='200' r='60' fill='%2300f0ff' opacity='0.2'/><text x='50%' y='52%' font-family='sans-serif' font-size='20' font-weight='bold' fill='%23f8fafc' text-anchor='middle'>Preview Asset</text></svg>'">
+      <div class="queue-info">
+        <div class="queue-name">${idx + 1}. ${escapeHtml(img.name)}</div>
+        <div class="queue-meta">${img.size}</div>
+      </div>
+      <div class="queue-actions">
+        <button class="btn-icon-sm" onclick="removeImage('${img.id}')" title="Remove">✕</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function updatePreviewSheet() {
+  const title = document.getElementById('docTitleInput').value || 'Converted Image Document';
+  document.getElementById('sheetDocTitle').textContent = title;
+
+  const grid = document.getElementById('sheetImagesGrid');
+  const spacing = document.getElementById('layoutSpacingSelect').value;
+  const includeCaptions = document.getElementById('includeCaptionsCheck').checked;
+
+  if (spacing === '2') {
+    grid.style.gridTemplateColumns = '1fr 1fr';
+  } else if (spacing === '1') {
+    grid.style.gridTemplateColumns = '1fr';
+  } else {
+    grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(200px, 1fr))';
+  }
+
+  if (!uploadedImages.length) {
+    grid.innerHTML = `
+      <div class="empty-preview-notice">
+        <span style="font-size: 2.2rem; opacity: 0.4;">🖼️</span>
+        <span>Upload or drag images above to see the live document layout preview.</span>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = uploadedImages.map((img) => `
+    <div class="doc-sheet-img-wrap">
+      <img src="${img.dataUrl}" class="doc-sheet-img" alt="${escapeHtml(img.name)}" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400' viewBox='0 0 600 400'><rect width='100%' height='100%' fill='%230f172a'/><circle cx='300' cy='200' r='60' fill='%2300f0ff' opacity='0.2'/><text x='50%' y='52%' font-family='sans-serif' font-size='20' font-weight='bold' fill='%23f8fafc' text-anchor='middle'>Preview Asset</text></svg>'">
+      ${includeCaptions ? `<div class="doc-sheet-caption">${escapeHtml(img.name)}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function convertAndDownloadDocx() {
+  if (!uploadedImages.length) {
+    alert('Please upload at least 1 image to convert to DOCX.');
+    return;
+  }
+
+  if (window.playSuccessSound) window.playSuccessSound();
+
+  const title = document.getElementById('docTitleInput').value || 'Converted Image Document';
+  const spacing = document.getElementById('layoutSpacingSelect').value;
+  const orientation = document.getElementById('pageOrientationSelect').value;
+  const includeCaptions = document.getElementById('includeCaptionsCheck').checked;
+
+  const isLandscape = orientation === 'landscape';
+  const pageSize = isLandscape ? '11.0in 8.5in' : '8.5in 11.0in';
+
+  let imagesHtml = '';
+  uploadedImages.forEach((img, idx) => {
+    const pageBreak = (spacing === '1' && idx > 0) ? '<br clear=all style="mso-special-character:line-break;page-break-before:always">' : '';
+    const twoPageBreak = (spacing === '2' && idx > 0 && idx % 2 === 0) ? '<br clear=all style="mso-special-character:line-break;page-break-before:always">' : '';
+    const captionHtml = includeCaptions ? `<p class="MsoCaption" style="font-size:10pt;color:#555;margin-top:4pt;text-align:center;">${escapeHtml(img.name)}</p>` : '';
+
+    imagesHtml += `
+      ${pageBreak}
+      ${twoPageBreak}
+      <div style="text-align:center;margin:16pt 0;">
+        <img src="${img.dataUrl}" style="max-width:100%;max-height:${spacing === '2' ? '320px' : '520px'};display:block;margin:0 auto;border:1px solid #ccc;" alt="${escapeHtml(img.name)}" onerror="this.onerror=null;this.src='data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='600' height='400' viewBox='0 0 600 400'><rect width='100%' height='100%' fill='%230f172a'/><circle cx='300' cy='200' r='60' fill='%2300f0ff' opacity='0.2'/><text x='50%' y='52%' font-family='sans-serif' font-size='20' font-weight='bold' fill='%23f8fafc' text-anchor='middle'>Preview Asset</text></svg>'">
+        ${captionHtml}
+      </div>
+    `;
+  });
+
+  const docxTemplate = `
+<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+<head>
+<meta charset='utf-8'>
+<title>${escapeHtml(title)}</title>
+<!--[if gte mso 9]>
+<xml>
+<w:WordDocument>
+<w:View>Print</w:View>
+<w:Zoom>100</w:Zoom>
+<w:DoNotOptimizeForBrowser/>
+</w:WordDocument>
+</xml>
+<![endif]-->
+<style>
+@page Section1 { size:${pageSize}; margin:1.0in 1.0in 1.0in 1.0in; mso-header-margin:.5in; mso-footer-margin:.5in; mso-paper-source:0; }
+div.Section1 { page:Section1; }
+p.MsoNormal { margin:0in; margin-bottom:10pt; font-size:12.0pt; font-family:"Calibri",sans-serif; color:#111; }
+h1.DocTitle { text-align:center; font-size:24.0pt; font-family:"Calibri",sans-serif; color:#0f172a; border-bottom:2px solid #334155; padding-bottom:12pt; margin-bottom:20pt; }
+</style>
+<` + `/head>
+<body lang=EN-US>
+<div class="Section1">
+  <h1 class="DocTitle">${escapeHtml(title)}</h1>
+  ${imagesHtml}
+</div>
+<` + `/body>
+<` + `/html>
+  `;
+
+  const blob = new Blob(['﻿', docxTemplate], { type: 'application/msword' });
+  const downloadUrl = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const cleanFilename = title.toLowerCase().replace(/[^a-z0-9_-]/g, '_') + '.docx';
+  a.href = downloadUrl;
+  a.download = cleanFilename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(downloadUrl);
+
+  const btn = document.getElementById('btn1ClickConvert');
+  const origText = btn.innerHTML;
+  btn.innerHTML = '<span>✓</span> <span>Downloaded ' + cleanFilename + '!</span>';
+  btn.style.background = '#00ff88';
+  setTimeout(() => {
+    btn.innerHTML = origText;
+    btn.style.background = '';
+  }, 2500);
+}
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]);
+}
+</script>
+<script id="ultron-healed-scripts">
+
+// === ULTRON Interactive Micro-Engine & Toast System ===
+window.showToast = window.showToast || function(message, duration) {
+  duration = duration || 3000;
+  var container = document.getElementById('ultron-toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'ultron-toast-container';
+    document.body.appendChild(container);
+  }
+  var toast = document.createElement('div');
+  toast.className = 'ultron-toast';
+  toast.textContent = message;
+  container.appendChild(toast);
+  requestAnimationFrame(function() {
+    toast.classList.add('show');
+  });
+  setTimeout(function() {
+    toast.classList.remove('show');
+    setTimeout(function() {
+      if (toast.parentNode) toast.parentNode.removeChild(toast);
+    }, 300);
+  }, duration);
+};
+
+// Wire up any unhandled buttons or empty links with live feedback
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+    anchor.addEventListener('click', function(e) {
+      var targetId = this.getAttribute('href').substring(1);
+      if (!targetId || targetId === '#') {
+        e.preventDefault();
+        window.showToast('Navigating: ' + (this.textContent.trim() || 'Home'));
+        return;
+      }
+      var targetElem = document.getElementById(targetId);
+      if (targetElem) {
+        e.preventDefault();
+        targetElem.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.showToast('Section: ' + (this.textContent.trim() || targetId));
+      }
+    });
+  });
+});
+
+</script>
+</body>
+</html>

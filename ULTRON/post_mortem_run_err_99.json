@@ -1,0 +1,11 @@
+{
+  "incident_id": "PM-run_err_99",
+  "timestamp": "2026-09-11 02:10:50",
+  "error": "Simulated graph timeout exception",
+  "root_cause_analysis": "Execution halted due to: Simulated graph timeout exception",
+  "recommended_action": "Check Ollama connectivity and verify input prompt constraints.",
+  "state_snapshot": {
+    "status": "error",
+    "last_node": "worker"
+  }
+}

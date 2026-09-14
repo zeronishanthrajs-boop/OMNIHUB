@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OmniHub — 2026 Unified Intelligence Workspace & Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <!-- Three.js for 3D WebGL Threat Globe -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body class="dark-theme">
+  <!-- Ambient background lighting -->
+  <div class="ambient-glow glow-cyan"></div>
+  <div class="ambient-glow glow-violet"></div>
+  <div class="ambient-glow glow-emerald"></div>
+
+  <!-- Main Application Wrapper -->
+  <div id="app-root">
+    
+    <!-- Top Navigation / Mission Control Bar -->
+    <header class="master-header">
+      <div class="header-brand">
+        <div class="brand-badge">
+          <span class="brand-pulse"></span>
+          <span class="brand-icon">⌘</span>
+        </div>
+        <div class="brand-titles">
+          <div class="brand-title-row">
+            <h1>OMNIHUB</h1>
+            <span class="version-tag">2026.1 TECH CORE</span>
+            <span class="mcp-badge" title="Model Context Protocol Bridge Online">⚡ MCP READY</span>
+          </div>
+          <p class="brand-subtitle">Unified Multi-Project Command Center & Intelligence Workspace</p>
+        </div>
+      </div>
+
+      <!-- Live Telemetry & Vitals Stats -->
+      <div class="header-telemetry">
+        <div class="stat-pill" id="stat-active-pill">
+          <span class="pulse-indicator live" id="live-indicator"></span>
+          <span class="stat-label">Active Systems:</span>
+          <strong id="active-count">12 / 12</strong>
+        </div>
+        <div class="stat-pill vitals-pill" id="stat-vitals-pill" title="Server Memory Usage">
+          <span class="stat-label">RAM:</span>
+          <strong id="vitals-ram">--%</strong>
+        </div>
+        <div class="stat-pill timer-pill">
+          <span class="stat-label">Clock:</span>
+          <span id="system-clock" class="font-mono">--:--:--</span>
+        </div>
+      </div>
+
+      <!-- Quick Action Commands & Voice Trigger -->
+      <div class="header-actions">
+        <button class="btn btn-voice" id="btn-voice-command" title="Press Ctrl+Shift+V or Click to Speak">
+          <span class="voice-icon">🎙️</span>
+          <span class="voice-label">Voice AI</span>
+        </button>
+        <button class="btn btn-search" id="btn-open-palette" title="Press Ctrl+K">
+          <span class="search-icon">🔍</span>
+          <span class="search-placeholder">Omnibar...</span>
+          <kbd>Ctrl+K</kbd>
+        </button>
+        <button class="btn btn-ghost" id="btn-refresh" title="Refresh Service Status">
+          <span class="icon">🔄</span>
+        </button>
+        <button class="btn btn-secondary" id="btn-open-all-tabs" title="Open all 12 projects as separate tabs in Google Chrome">
+          <span class="icon">🌐</span> Open All (Chrome)
+        </button>
+        <button class="btn btn-ghost" id="btn-open-all-edge" title="Open all 12 projects as separate tabs in Microsoft Edge" onclick="openAllProjectsInTabs('edge')">
+          <span class="icon">📑</span> Edge
+        </button>
+      </div>
+    </header>
+
+    <!-- Top View Switcher Tabs -->
+    <nav class="view-tabs-bar">
+      <div class="tabs-group">
+        <button class="tab-btn active" data-view="grid">
+          <span class="tab-icon">🎛️</span>
+          <span>Mission Control</span>
+          <span class="tab-count" id="total-count-badge">12</span>
+        </button>
+        <button class="tab-btn" data-view="workspace" id="tab-workspace-btn">
+          <span class="tab-icon">🖥️</span>
+          <span>Embedded Workspace</span>
+          <span class="tab-active-dots" id="workspace-open-count" style="display:none;">0</span>
+        </button>
+        <button class="tab-btn" data-view="workflows">
+          <span class="tab-icon">⚡</span>
+          <span>Cross-Idea Workflows</span>
+        </button>
+        <button class="tab-btn" data-view="innovations">
+          <span class="tab-icon">🚀</span>
+          <span>2026 Tech Equipments</span>
+        </button>
+      </div>
+
+      <div class="workspace-mode-controls" id="workspace-toolbar" style="display: none;">
+        <button class="btn-xs" id="btn-split-toggle">
+          <span class="icon">◫</span> Split-Screen
+        </button>
+        <button class="btn-xs" id="btn-fullscreen-frame">
+          <span class="icon">⛶</span> Fullscreen
+        </button>
+        <button class="btn-xs" id="btn-reload-frame">
+          <span class="icon">↻</span> Reload
+        </button>
+        <button class="btn-xs" id="btn-external-frame">
+          <span class="icon">↗</span> External
+        </button>
+      </div>
+    </nav>
+
+    <!-- MAIN VIEWPORT -->
+    <main class="viewport-container">
+
+      <!-- 1. MISSION CONTROL GRID VIEW -->
+      <section class="view-panel active" id="view-grid">
+        
+        <!-- Filter Pills Bar -->
+        <div class="filter-bar">
+          <div class="filter-pills" id="category-filters">
+            <button class="filter-pill active" data-cat="all">All Systems (12)</button>
+            <button class="filter-pill" data-cat="Autonomous AI & Intelligence">🤖 Autonomous AI (3)</button>
+            <button class="filter-pill" data-cat="Fintech & Markets">📈 Fintech & Markets (2)</button>
+            <button class="filter-pill" data-cat="Cybersecurity & Privacy">🛡️ Cybersecurity & Privacy (3)</button>
+            <button class="filter-pill" data-cat="Creative & Utilities">🎨 Creative & Utilities (4)</button>
+          </div>
+          <div class="filter-search-box">
+            <input type="text" id="grid-search-input" placeholder="Filter by name, equipment, tech or port...">
+          </div>
+        </div>
+
+        <!-- Project Cards Grid -->
+        <div class="projects-grid" id="projects-grid-container">
+          <!-- Dynamically populated by app.js -->
+        </div>
+      </section>
+
+      <!-- 2. EMBEDDED WORKSPACE VIEW (MULTI-APP TABS) -->
+      <section class="view-panel" id="view-workspace">
+        <div class="workspace-empty-state" id="workspace-empty-prompt">
+          <div class="empty-icon">🖥️</div>
+          <h2>No Active App in Workspace</h2>
+          <p>Select any project from Mission Control or choose a quick launcher below to run it directly inside OmniHub.</p>
+          <div class="quick-launch-grid" id="workspace-quick-launch"></div>
+        </div>
+
+        <div class="workspace-active-container" id="workspace-active-ui" style="display: none;">
+          <!-- Multi-App Workspace Tabs -->
+          <div class="workspace-dock-tabs" id="workspace-tabs-list">
+            <!-- Active tabs rendered here -->
+          </div>
+
+          <!-- App Frames Container (Supports Single or Split Mode) -->
+          <div class="workspace-frames-viewport" id="frames-viewport">
+            <div class="frame-wrapper primary-frame" id="primary-frame-wrapper">
+              <iframe id="main-workspace-iframe" src="about:blank" frameborder="0"></iframe>
+            </div>
+            <div class="frame-wrapper secondary-frame" id="secondary-frame-wrapper" style="display: none;">
+              <iframe id="secondary-workspace-iframe" src="about:blank" frameborder="0"></iframe>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. CROSS-IDEA WORKFLOWS VIEW -->
+      <section class="view-panel" id="view-workflows">
+        <div class="workflows-header">
+          <h2>Unified Cross-Idea Suites</h2>
+          <p>Launch synchronized multi-app environments that connect AI, finance, cybersecurity, and creative workflows.</p>
+        </div>
+
+        <div class="workflows-grid">
+          
+          <!-- Workflow 1: AI & Web Generation -->
+          <div class="workflow-card">
+            <div class="workflow-icon">🤖⚡</div>
+            <div class="workflow-content">
+              <h3>Autonomous AI Development Suite</h3>
+              <p class="workflow-desc">Pairs <strong>ULTRON 3.0</strong> (autonomous software synthesis and test healer) with <strong>AI Web Builder</strong> and <strong>JARVIS Elite</strong> developer workstation.</p>
+              <div class="workflow-tags">
+                <span>ULTRON (:8000)</span>
+                <span>JARVIS (:3003)</span>
+                <span>AI Web Builder (:3014)</span>
+              </div>
+            </div>
+            <div class="workflow-action">
+              <button class="btn btn-primary" onclick="launchWorkflow(['ultron', 'jarvis', 'ai-web-builder'])">
+                Launch Suite in Split View
+              </button>
+            </div>
+          </div>
+
+          <!-- Workflow 2: Financial Intelligence -->
+          <div class="workflow-card">
+            <div class="workflow-icon">📊🎲</div>
+            <div class="workflow-content">
+              <h3>Fintech & Prediction Intelligence</h3>
+              <p class="workflow-desc">Simultaneously monitor fundamental corporate health and reverse DCF valuations in <strong>Stock Pulse</strong> alongside crowd probabilities in <strong>Prediction Areena</strong>.</p>
+              <div class="workflow-tags">
+                <span>Stock Pulse (:3012)</span>
+                <span>Prediction Areena (:3011)</span>
+              </div>
+            </div>
+            <div class="workflow-action">
+              <button class="btn btn-primary" onclick="launchWorkflow(['stock-pulse', 'prediction-arena'])">
+                Launch Suite in Split View
+              </button>
+            </div>
+          </div>
+
+          <!-- Workflow 3: Cybersecurity Suite -->
+          <div class="workflow-card">
+            <div class="workflow-icon">🛡️🌲</div>
+            <div class="workflow-content">
+              <h3>Zero-Trust Cyber Defense & Privacy</h3>
+              <p class="workflow-desc">Orchestrate live network threat visualization in <strong>CYBER TREE</strong>, automated target vulnerability scanning in <strong>VENOM</strong>, and anonymous encrypted transmission in <strong>Whisper Pages</strong>.</p>
+              <div class="workflow-tags">
+                <span>CYBER TREE (:3000)</span>
+                <span>VENOM (:3007)</span>
+                <span>Whisper Pages (:3008)</span>
+              </div>
+            </div>
+            <div class="workflow-action">
+              <button class="btn btn-primary" onclick="launchWorkflow(['cyber-tree', 'venom'])">
+                Launch Suite in Split View
+              </button>
+            </div>
+          </div>
+
+          <!-- Workflow 4: Creative & Interactions -->
+          <div class="workflow-card">
+            <div class="workflow-icon">♟️✨</div>
+            <div class="workflow-content">
+              <h3>Creative Experience & Mechanics Suite</h3>
+              <p class="workflow-desc">Explore cutting-edge interaction design: <strong>Cinematic Chess</strong> with Stockfish AI, smooth GSAP dynamics in <strong>DECLUZ</strong>, dynamic form capture in <strong>Jo Form</strong>, and physics-driven morphing in <strong>MorphCart</strong>.</p>
+              <div class="workflow-tags">
+                <span>Chess (:3013)</span>
+                <span>Decluz (:3001)</span>
+                <span>MorphCart (:3002)</span>
+                <span>Jo Form (:3009)</span>
+              </div>
+            </div>
+            <div class="workflow-action">
+              <button class="btn btn-primary" onclick="launchWorkflow(['chess', 'decluz'])">
+                Launch Suite in Split View
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 4. 2026 TECH INNOVATIONS SHOWCASE & INTERACTIVE LAB -->
+      <section class="view-panel" id="view-innovations">
+        <div class="workflows-header">
+          <h2>2026 Modern Tech Equipment Matrix</h2>
+          <p>Technological upgrades and interactive equipment modules injected across all 12 interconnected systems:</p>
+        </div>
+
+        <!-- Innovations Table -->
+        <div class="innovations-table-container">
+          <table class="innovations-table">
+            <thead>
+              <tr>
+                <th>Application</th>
+                <th>Domain</th>
+                <th>Port</th>
+                <th>Modern Tech Equipment Added</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="innovations-table-body">
+              <!-- Dynamically populated by app.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Interactive Equipment Lab -->
+        <div class="equipment-lab-header">
+          <h3>⚡ Live Equipment Lab & Real-Time Demonstrators</h3>
+          <p>Interact with the live 2026 equipment modules directly inside this workspace:</p>
+        </div>
+
+        <div class="equipment-lab-grid">
+          
+          <!-- Equipment 1: 3D WebGL Threat Topology Globe (Cyber Tree) -->
+          <div class="lab-card">
+            <div class="lab-card-top">
+              <span class="lab-icon">🌐</span>
+              <div>
+                <h4>3D WebGL Threat Topology (CYBER TREE)</h4>
+                <p>Real-time particle globe with live attack vectors and telemetry nodes</p>
+              </div>
+            </div>
+            <div class="globe-viewport" id="globe-container"></div>
+            <div class="lab-card-footer">
+              <span>Renderer: <strong>Three.js WebGL</strong></span>
+              <span class="pulse-indicator live"></span> Active Orbit
+            </div>
+          </div>
+
+          <!-- Equipment 2: Reverse DCF & Valuation Simulator (Stock Pulse) -->
+          <div class="lab-card">
+            <div class="lab-card-top">
+              <span class="lab-icon">📈</span>
+              <div>
+                <h4>Interactive Reverse DCF Simulator (Stock Pulse)</h4>
+                <p>Numerical binary search solver calculating market-implied 10Y FCF growth</p>
+              </div>
+            </div>
+            <div class="sim-lab-body">
+              <div class="sim-slider-row">
+                <label>WACC (Discount Rate): <strong id="lab-wacc-val">11.5%</strong></label>
+                <input type="range" id="lab-wacc" min="9.0" max="15.0" step="0.1" value="11.5">
+              </div>
+              <div class="sim-slider-row">
+                <label>Terminal Growth: <strong id="lab-terminal-val">4.5%</strong></label>
+                <input type="range" id="lab-terminal" min="3.0" max="6.5" step="0.1" value="4.5">
+              </div>
+              <div class="sim-output-box">
+                <span>Implied 10Y Growth:</span>
+                <strong id="lab-implied-growth">10.8%</strong>
+                <span class="kpi-tag tag-green">FAIR MOAT</span>
+              </div>
+            </div>
+            <div class="lab-card-footer">
+              <span>Engine: <strong>Reverse DCF Solver</strong></span>
+              <span>Latency: <strong>&lt;1ms</strong></span>
+            </div>
+          </div>
+
+          <!-- Equipment 3: Model Context Protocol (MCP) Live Console -->
+          <div class="lab-card">
+            <div class="lab-card-top">
+              <span class="lab-icon">⚡</span>
+              <div>
+                <h4>Model Context Protocol (MCP) Live Console</h4>
+                <p>Dispatch standardized MCP tool calls across connected services</p>
+              </div>
+            </div>
+            <div class="mcp-lab-body">
+              <select id="mcp-tool-select" class="mcp-select">
+                <option value="stock_pulse_analyze">stock_pulse_analyze (Stock Pulse)</option>
+                <option value="venom_scan_target">venom_scan_target (VENOM Security)</option>
+                <option value="whisper_encrypt_secret">whisper_encrypt_secret (Whisper Pages)</option>
+                <option value="chess_evaluate_fen">chess_evaluate_fen (Cinematic Chess)</option>
+                <option value="ultron_synthesize_task">ultron_synthesize_task (ULTRON 3.0)</option>
+              </select>
+              <button class="btn btn-primary btn-xs" id="btn-invoke-mcp">Invoke MCP Tool</button>
+              <pre class="mcp-result-box" id="mcp-output">Click "Invoke MCP Tool" to test cross-service protocol execution...</pre>
+            </div>
+            <div class="lab-card-footer">
+              <span>Standard: <strong>Anthropic MCP v1.0</strong></span>
+              <span>Connected: <strong>5 Tools</strong></span>
+            </div>
+          </div>
+
+          <!-- Equipment 4: Stockfish NNUE Neural Advantage Bar (Cinematic Chess) -->
+          <div class="lab-card">
+            <div class="lab-card-top">
+              <span class="lab-icon">♟️</span>
+              <div>
+                <h4>Stockfish NNUE Neural Evaluation Bar</h4>
+                <p>Simulated in-browser deep neural network evaluation and blunder monitor</p>
+              </div>
+            </div>
+            <div class="eval-lab-body">
+              <div class="eval-bar-wrapper">
+                <div class="eval-bar-fill" id="eval-fill" style="height: 65%;"></div>
+              </div>
+              <div class="eval-metrics">
+                <div class="eval-score" id="eval-score">+1.8</div>
+                <div class="eval-label">White has positional initiative</div>
+                <div class="eval-depth">Depth: <strong>24 plies</strong> (NNUE Active)</div>
+                <button class="btn btn-xs" id="btn-random-eval" style="margin-top:10px;">🎲 Randomize Position</button>
+              </div>
+            </div>
+            <div class="lab-card-footer">
+              <span>Engine: <strong>Stockfish 17 NNUE</strong></span>
+              <span>Acceleration: <strong>WebAssembly SIMD</strong></span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Global Omnibar & Command Palette Modal (Ctrl+K) -->
+    <div class="palette-backdrop" id="palette-modal" style="display: none;">
+      <div class="palette-box">
+        <div class="palette-input-row">
+          <span class="palette-icon">⌘</span>
+          <input type="text" id="palette-input" placeholder="Type a project, equipment, action, or press mic to speak..." autocomplete="off">
+          <kbd id="palette-close-kbd">ESC</kbd>
+        </div>
+        <div class="palette-results" id="palette-results-list">
+          <!-- Populated dynamically -->
+        </div>
+        <div class="palette-footer">
+          <span>Navigate with <kbd>↑</kbd> <kbd>↓</kbd></span>
+          <span>Select with <kbd>Enter</kbd></span>
+          <span>Voice: <kbd>Ctrl+Shift+V</kbd></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Voice HUD Overlay (When active) -->
+    <div class="voice-hud-overlay" id="voice-hud" style="display: none;">
+      <div class="voice-hud-card">
+        <div class="voice-wave-sphere">
+          <div class="sphere-circle"></div>
+          <div class="sphere-circle delay"></div>
+          <span class="voice-sphere-icon">🎙️</span>
+        </div>
+        <h3>OmniHub Voice Neural Interface</h3>
+        <p id="voice-transcript">Listening... Speak a command (e.g. "Open Chess", "Analyze TCS", "Scan Venom")</p>
+        <button class="btn btn-danger-ghost btn-xs" id="btn-cancel-voice">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast-container"></div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

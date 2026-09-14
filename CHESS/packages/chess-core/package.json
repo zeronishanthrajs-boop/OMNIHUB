@@ -1,0 +1,14 @@
+{
+  "name": "@cinematic-chess/chess-core",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@cinematic-chess/shared-types": "*"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "omnihub-command-center",
+  "version": "1.0.0",
+  "description": "Unified Master Command Center and Workspace connecting all creative, AI, fintech, and security projects",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "command-center",
+    "workspace",
+    "dashboard",
+    "ecosystem",
+    "orchestrator"
+  ],
+  "author": "Antigravity",
+  "license": "MIT"
+}

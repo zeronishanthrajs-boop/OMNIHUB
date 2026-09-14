@@ -1,0 +1,22 @@
+{
+  "name": "cinematic-chess",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "test": "npm run test --workspaces",
+    "test:core": "npm run test -w packages/chess-core",
+    "build": "npm run build --workspaces",
+    "dev": "npm run dev -w apps/client"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
+  },
+  "dependencies": {
+    "stockfish.js": "^10.0.2"
+  }
+}

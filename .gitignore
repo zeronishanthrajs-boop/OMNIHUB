@@ -1,0 +1,98 @@
+# ==============================================================================
+# OMNIHUB ECOSYSTEM MASTER .GITIGNORE (LEAK PREVENTION)
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. CRITICAL: SENSITIVE CREDENTIALS & ENVIRONMENT SECRETS
+# ------------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+!.env.template
+*.env
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+cookies.txt
+*.pem
+*.key
+*.cert
+
+# ------------------------------------------------------------------------------
+# 2. LOCAL DATABASES & PERSISTENCE
+# ------------------------------------------------------------------------------
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+data_cache/
+cyber_tree_local.db
+prediction_arena.db
+prediction_arena.db-shm
+prediction_arena.db-wal
+whisper_pages.db
+
+# ------------------------------------------------------------------------------
+# 3. DEPENDENCIES & PACKAGE MANAGERS
+# ------------------------------------------------------------------------------
+node_modules/
+**/node_modules/
+.pnpm-store/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ------------------------------------------------------------------------------
+# 4. BUILD ARTIFACTS & CACHES
+# ------------------------------------------------------------------------------
+.next/
+**/.next/
+dist/
+**/dist/
+build/
+**/build/
+out/
+**/out/
+.turbo/
+**/.turbo/
+.cache/
+tsconfig.tsbuildinfo
+*.tsbuildinfo
+
+# ------------------------------------------------------------------------------
+# 5. LOGS & DIAGNOSTICS
+# ------------------------------------------------------------------------------
+logs/
+**/logs/
+*.log
+*.runlogs/
+telemetry_events.jsonl*
+security_audit.jsonl
+*.csv
+
+# ------------------------------------------------------------------------------
+# 6. PYTHON VIRTUAL ENVIRONMENTS & CACHES
+# ------------------------------------------------------------------------------
+venv/
+**/venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+**/.pytest_cache/
+
+# ------------------------------------------------------------------------------
+# 7. OS & IDE ARTIFACTS
+# ------------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+*.lnk
+.vscode/
+.idea/
+.vercel/
+**/.vercel/

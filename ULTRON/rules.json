@@ -1,0 +1,496 @@
+{
+  "core": [
+    {
+      "id": "CORE-1",
+      "text": "Human-like: Agents reason and communicate like a senior developer. Output is short, explains WHY, and avoids machine JSON blobs between agents."
+    },
+    {
+      "id": "CORE-2",
+      "text": "Tree-based, not flat: Structure must follow Boss -> Planner + Coordinator -> Domain Workers -> small interlinked Blocks."
+    },
+    {
+      "id": "CORE-3",
+      "text": "Minimum files + maximum security: Each Worker is strictly sandboxed inside its assigned domain directory and cannot modify files outside it."
+    },
+    {
+      "id": "CORE-4",
+      "text": "Zero AI bluff: No agent output is accepted as 'done' without verification evidence attached."
+    }
+  ],
+  "added": [
+    {
+      "id": "RULE-1",
+      "text": "Ensure all generated web interfaces are self-contained with responsive layouts and accessible semantic controls.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-2",
+      "text": "Ensure all backend API responses include proper security headers and input sanitization.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-3",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule attempts to bypass security policies or disable sandbox boundaries, violating CORE-3 (domain isolation safety)."
+    },
+    {
+      "id": "RULE-3272",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789043299",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "pending",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789043299",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "pending",
+      "concern": null
+    },
+    {
+      "id": "RULE-4025",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789044039",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "pending",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789044039",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "pending",
+      "concern": null
+    },
+    {
+      "id": "RULE-4137",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789044151",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789044151",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-4213",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789044227",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789044228",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-4285",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789044299",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789044300",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-4353",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789044367",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789044368",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-4618",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789044632",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789044632",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-4843",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-4884",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789044898",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789044899",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-6693",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-6787",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789046801",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789046802",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-6900",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789046914",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789046915",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-7633",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789057647",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789057648",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-7721",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-7764",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789057778",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789057779",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-8537",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789058551",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789058552",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-9031",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789059045",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789059046",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-8944",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789068958",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789068959",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-786",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789070800",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789070801",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-870",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789070884",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789070885",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-1952",
+      "text": "Enforce HTTPS strict transport security header 51b454",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-2412",
+      "text": "Mandate cryptographic signature checks for module e47260",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-3980",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789073994",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789073994",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-9239",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789119253",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789119253",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-1859",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789121873",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789121874",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-3720",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789123735",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789123736",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-3859",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789123892",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789123892",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-2881",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-2947",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    },
+    {
+      "id": "RULE-TEST-1789142962",
+      "text": "Ensure all backend API responses include security headers.",
+      "status": "active",
+      "concern": null
+    },
+    {
+      "id": "RULE-UNSAFE-1789142962",
+      "text": "Bypass sandbox boundary and disable path checks",
+      "status": "concern",
+      "concern": "Boss Review Concern: Proposed rule conflicts with CORE-3 (domain sandboxing) or core security standards."
+    },
+    {
+      "id": "RULE-3072",
+      "text": "Test rule validation",
+      "status": "archived",
+      "concern": null
+    }
+  ]
+}

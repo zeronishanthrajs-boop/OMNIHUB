@@ -1,0 +1,30 @@
+{
+  "name": "stock-pulse",
+  "version": "5.1.0",
+  "description": "Stock Pulse — Deterministic, Zero-API-Key Fundamental Intelligence for Indian Equities",
+  "main": "server.js",
+  "bin": {
+    "stock-pulse": "./cli.js"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/test_v3.js && node test/test_v4_advanced.js && node test/test_compare.js && node test/test_quarterly_watchlist.js",
+    "test:universe": "node test/test_universe.js"
+  },
+  "keywords": [
+    "stock-pulse",
+    "fundamental-analysis",
+    "indian-equities",
+    "nse",
+    "bse",
+    "screener",
+    "finance"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "express": "^4.21.2",
+    "pdfkit": "^0.16.0"
+  }
+}

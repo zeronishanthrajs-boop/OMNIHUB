@@ -1,0 +1,62 @@
+name: Learning Engine & Model Updater (Phase 7)
+
+on:
+  schedule:
+    - cron: '0 5 * * 5'    # Every Friday 05:00 UTC — learning_engine.py
+    - cron: '30 5 1 * *'   # Every 1st of month 05:30 UTC — model_updater.py
+  workflow_dispatch:        # Manual trigger runs both jobs
+
+permissions:
+  contents: write           # Required for model_updater to commit classifier.pkl
+
+jobs:
+  learning_engine:
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '0 5 * * 5'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Learning Engine
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: python scripts/learning_engine.py
+
+  model_updater:
+    if: github.event_name == 'workflow_dispatch' || github.event.schedule == '30 5 1 * *'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Model Updater
+        env:
+          SUPABASE_URL:  ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY:  ${{ secrets.SUPABASE_KEY }}
+          GITHUB_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO:   ${{ github.repository }}
+          GITHUB_BRANCH: ${{ github.ref_name }}
+        run: python scripts/model_updater.py

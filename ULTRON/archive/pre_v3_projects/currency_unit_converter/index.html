@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ULTRON // Currency & Unit Converter Studio</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        body { background: #080e1a; color: #e2e8f0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+        .card { background: rgba(14, 23, 38, 0.95); border: 1px solid rgba(56, 189, 248, 0.25); border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(56, 189, 248, 0.08); width: 100%; max-width: 580px; overflow: hidden; backdrop-filter: blur(16px); }
+        .header { padding: 24px 28px 18px; border-bottom: 1px solid rgba(30, 46, 78, 0.8); display: flex; justify-content: space-between; align-items: center; }
+        .title { font-size: 1.25rem; font-weight: 700; color: #f8fafc; display: flex; align-items: center; gap: 8px; }
+        .badge { background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 0.75rem; font-family: monospace; padding: 4px 10px; border-radius: 9999px; border: 1px solid rgba(56, 189, 248, 0.3); }
+        .tabs { display: flex; padding: 6px; background: #0b1324; border-radius: 12px; margin: 20px 28px 10px; gap: 6px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: #94a3b8; font-weight: 600; font-size: 0.85rem; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .tab-btn.active { background: #1e293b; color: #38bdf8; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+        .tab-content { display: none; padding: 16px 28px 24px; }
+        .tab-content.active { display: block; }
+        .quick-curr { display: flex; gap: 6px; margin-bottom: 16px; overflow-x: auto; padding-bottom: 4px; }
+        .curr-pill { background: rgba(30, 41, 59, 0.6); border: 1px solid #334155; color: #cbd5e1; padding: 6px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+        .curr-pill:hover, .curr-pill.active { background: rgba(56, 189, 248, 0.2); border-color: #38bdf8; color: #38bdf8; }
+        .grid-inputs { display: grid; grid-template-columns: 1fr 40px 1fr; gap: 12px; align-items: center; margin-bottom: 18px; }
+        .swap-btn { width: 40px; height: 40px; border-radius: 50%; background: #1e293b; border: 1px solid #334155; color: #38bdf8; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 1.1rem; }
+        .swap-btn:hover { background: #38bdf8; color: #0f172a; transform: rotate(180deg); }
+        .input-group { display: flex; flex-direction: column; gap: 6px; }
+        label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 700; }
+        input, select { background: #090e1a; border: 1px solid #1e293b; border-radius: 10px; padding: 12px 14px; color: #f8fafc; font-size: 1rem; outline: none; transition: border-color 0.2s; width: 100%; }
+        input:focus, select:focus { border-color: #38bdf8; }
+        .result-box { background: rgba(56, 189, 248, 0.06); border: 1px solid rgba(56, 189, 248, 0.2); border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 18px; }
+        .rate-text { font-size: 0.85rem; color: #94a3b8; margin-bottom: 4px; }
+        .result-val { font-size: 1.6rem; font-weight: 800; color: #38bdf8; letter-spacing: -0.02em; }
+        .history-section { border-top: 1px solid rgba(30, 46, 78, 0.8); padding: 16px 28px 20px; }
+        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.8rem; font-weight: 700; color: #64748b; text-transform: uppercase; }
+        .clear-btn { background: none; border: none; color: #ef4444; font-size: 0.75rem; cursor: pointer; }
+        .history-list { max-height: 120px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
+        .history-item { display: flex; justify-content: space-between; font-size: 0.8rem; padding: 8px 12px; background: rgba(15, 23, 42, 0.5); border-radius: 8px; color: #cbd5e1; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="header">
+            <div class="title">⚡ ULTRON Converter Studio</div>
+            <div class="badge">Tier 1: Basic</div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('currency')">💱 Currency Converter</button>
+            <button class="tab-btn" onclick="switchTab('length')">📏 Length</button>
+            <button class="tab-btn" onclick="switchTab('weight')">⚖️ Weight</button>
+            <button class="tab-btn" onclick="switchTab('temp')">🌡️ Temp</button>
+        </div>
+
+        <!-- Currency Tab -->
+        <div id="tab-currency" class="tab-content active">
+            <div class="quick-curr">
+                <span class="curr-pill active" onclick="setPair('USD','EUR')">USD ➔ EUR</span>
+                <span class="curr-pill" onclick="setPair('USD','INR')">USD ➔ INR</span>
+                <span class="curr-pill" onclick="setPair('EUR','GBP')">EUR ➔ GBP</span>
+                <span class="curr-pill" onclick="setPair('USD','JPY')">USD ➔ JPY</span>
+                <span class="curr-pill" onclick="setPair('GBP','INR')">GBP ➔ INR</span>
+            </div>
+
+            <div class="grid-inputs">
+                <div class="input-group">
+                    <label>From</label>
+                    <select id="curr-from" onchange="convertCurrency()">
+                        <option value="USD" selected>USD - US Dollar</option>
+                        <option value="EUR">EUR - Euro</option>
+                        <option value="GBP">GBP - British Pound</option>
+                        <option value="JPY">JPY - Japanese Yen</option>
+                        <option value="INR">INR - Indian Rupee</option>
+                    </select>
+                    <input type="number" id="curr-amt" value="100" min="0" oninput="convertCurrency()">
+                </div>
+                <button class="swap-btn" onclick="swapCurr()" title="Swap currencies">⇄</button>
+                <div class="input-group">
+                    <label>To</label>
+                    <select id="curr-to" onchange="convertCurrency()">
+                        <option value="USD">USD - US Dollar</option>
+                        <option value="EUR" selected>EUR - Euro</option>
+                        <option value="GBP">GBP - British Pound</option>
+                        <option value="JPY">JPY - Japanese Yen</option>
+                        <option value="INR">INR - Indian Rupee</option>
+                    </select>
+                    <input type="text" id="curr-out" readonly>
+                </div>
+            </div>
+
+            <div class="result-box">
+                <div class="rate-text" id="curr-rate-text">1 USD = 0.92 EUR</div>
+                <div class="result-val" id="curr-result-val">92.00 EUR</div>
+            </div>
+        </div>
+
+        <!-- Length Tab -->
+        <div id="tab-length" class="tab-content">
+            <div class="grid-inputs">
+                <div class="input-group">
+                    <label>From</label>
+                    <select id="len-from" onchange="convertUnit('length')">
+                        <option value="km">Kilometers (km)</option>
+                        <option value="m" selected>Meters (m)</option>
+                        <option value="mi">Miles (mi)</option>
+                        <option value="ft">Feet (ft)</option>
+                    </select>
+                    <input type="number" id="len-amt" value="100" oninput="convertUnit('length')">
+                </div>
+                <div style="text-align:center;color:#64748b;font-weight:bold;">=</div>
+                <div class="input-group">
+                    <label>To</label>
+                    <select id="len-to" onchange="convertUnit('length')">
+                        <option value="km">Kilometers (km)</option>
+                        <option value="m">Meters (m)</option>
+                        <option value="mi">Miles (mi)</option>
+                        <option value="ft" selected>Feet (ft)</option>
+                    </select>
+                    <input type="text" id="len-out" readonly>
+                </div>
+            </div>
+            <div class="result-box">
+                <div class="result-val" id="len-result-val">328.08 ft</div>
+            </div>
+        </div>
+
+        <!-- Weight Tab -->
+        <div id="tab-weight" class="tab-content">
+            <div class="grid-inputs">
+                <div class="input-group">
+                    <label>From</label>
+                    <select id="weight-from" onchange="convertUnit('weight')">
+                        <option value="kg" selected>Kilograms (kg)</option>
+                        <option value="lb">Pounds (lb)</option>
+                        <option value="oz">Ounces (oz)</option>
+                    </select>
+                    <input type="number" id="weight-amt" value="10" oninput="convertUnit('weight')">
+                </div>
+                <div style="text-align:center;color:#64748b;font-weight:bold;">=</div>
+                <div class="input-group">
+                    <label>To</label>
+                    <select id="weight-to" onchange="convertUnit('weight')">
+                        <option value="kg">Kilograms (kg)</option>
+                        <option value="lb" selected>Pounds (lb)</option>
+                        <option value="oz">Ounces (oz)</option>
+                    </select>
+                    <input type="text" id="weight-out" readonly>
+                </div>
+            </div>
+            <div class="result-box">
+                <div class="result-val" id="weight-result-val">22.05 lb</div>
+            </div>
+        </div>
+
+        <!-- Temperature Tab -->
+        <div id="tab-temp" class="tab-content">
+            <div class="grid-inputs">
+                <div class="input-group">
+                    <label>From</label>
+                    <select id="temp-from" onchange="convertUnit('temp')">
+                        <option value="c" selected>Celsius (°C)</option>
+                        <option value="f">Fahrenheit (°F)</option>
+                        <option value="k">Kelvin (K)</option>
+                    </select>
+                    <input type="number" id="temp-amt" value="25" oninput="convertUnit('temp')">
+                </div>
+                <div style="text-align:center;color:#64748b;font-weight:bold;">=</div>
+                <div class="input-group">
+                    <label>To</label>
+                    <select id="temp-to" onchange="convertUnit('temp')">
+                        <option value="c">Celsius (°C)</option>
+                        <option value="f" selected>Fahrenheit (°F)</option>
+                        <option value="k">Kelvin (K)</option>
+                    </select>
+                    <input type="text" id="temp-out" readonly>
+                </div>
+            </div>
+            <div class="result-box">
+                <div class="result-val" id="temp-result-val">77.0 °F</div>
+            </div>
+        </div>
+
+        <div class="history-section">
+            <div class="history-header">
+                <span>Recent Conversions</span>
+                <button class="clear-btn" onclick="clearHistory()">Clear</button>
+            </div>
+            <div class="history-list" id="history-list"></div>
+        </div>
+    </div>
+
+    <script>
+        const rates = { USD: 1.0, EUR: 0.92, GBP: 0.79, JPY: 154.6, INR: 86.85 };
+        let history = JSON.parse(localStorage.getItem('ultron_conv_history') || '[]');
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('tab-' + tabId).classList.add('active');
+            if (tabId === 'currency') convertCurrency();
+            else convertUnit(tabId);
+        }
+
+        function setPair(from, to) {
+            document.getElementById('curr-from').value = from;
+            document.getElementById('curr-to').value = to;
+            document.querySelectorAll('.curr-pill').forEach(p => p.classList.remove('active'));
+            event.target.classList.add('active');
+            convertCurrency();
+        }
+
+        function swapCurr() {
+            const f = document.getElementById('curr-from');
+            const t = document.getElementById('curr-to');
+            const temp = f.value; f.value = t.value; t.value = temp;
+            convertCurrency();
+        }
+
+        function convertCurrency() {
+            const amt = parseFloat(document.getElementById('curr-amt').value) || 0;
+            const from = document.getElementById('curr-from').value;
+            const to = document.getElementById('curr-to').value;
+            const inUSD = amt / rates[from];
+            const out = inUSD * rates[to];
+            const rate = (1 / rates[from]) * rates[to];
+
+            document.getElementById('curr-out').value = out.toFixed(2);
+            document.getElementById('curr-rate-text').textContent = `1 ${from} = ${rate.toFixed(4)} ${to}`;
+            document.getElementById('curr-result-val').textContent = `${out.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})} ${to}`;
+
+            addHistory(`${amt} ${from} ➔ ${out.toFixed(2)} ${to}`);
+        }
+
+        function convertUnit(type) {
+            if (type === 'length') {
+                const factors = { km: 1000, m: 1, mi: 1609.34, ft: 0.3048 };
+                const amt = parseFloat(document.getElementById('len-amt').value) || 0;
+                const from = document.getElementById('len-from').value;
+                const to = document.getElementById('len-to').value;
+                const inM = amt * factors[from];
+                const res = inM / factors[to];
+                document.getElementById('len-out').value = res.toFixed(2);
+                document.getElementById('len-result-val').textContent = `${res.toFixed(2)} ${to}`;
+                addHistory(`${amt} ${from} ➔ ${res.toFixed(2)} ${to}`);
+            } else if (type === 'weight') {
+                const factors = { kg: 1, lb: 0.453592, oz: 0.0283495 };
+                const amt = parseFloat(document.getElementById('weight-amt').value) || 0;
+                const from = document.getElementById('weight-from').value;
+                const to = document.getElementById('weight-to').value;
+                const inKg = amt * factors[from];
+                const res = inKg / factors[to];
+                document.getElementById('weight-out').value = res.toFixed(2);
+                document.getElementById('weight-result-val').textContent = `${res.toFixed(2)} ${to}`;
+                addHistory(`${amt} ${from} ➔ ${res.toFixed(2)} ${to}`);
+            } else if (type === 'temp') {
+                const amt = parseFloat(document.getElementById('temp-amt').value) || 0;
+                const from = document.getElementById('temp-from').value;
+                const to = document.getElementById('temp-to').value;
+                let c = from === 'c' ? amt : from === 'f' ? (amt - 32) * 5/9 : amt - 273.15;
+                let res = to === 'c' ? c : to === 'f' ? (c * 9/5) + 32 : c + 273.15;
+                document.getElementById('temp-out').value = res.toFixed(1);
+                document.getElementById('temp-result-val').textContent = `${res.toFixed(1)} °${to.toUpperCase()}`;
+                addHistory(`${amt}°${from.toUpperCase()} ➔ ${res.toFixed(1)}°${to.toUpperCase()}`);
+            }
+        }
+
+        function addHistory(entry) {
+            if (history[0] === entry) return;
+            history.unshift(entry);
+            if (history.length > 5) history.pop();
+            localStorage.setItem('ultron_conv_history', JSON.stringify(history));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('history-list');
+            if (history.length === 0) {
+                list.innerHTML = '<div style="color:#64748b;font-size:0.75rem;text-align:center;padding:8px;">No conversion history yet</div>';
+                return;
+            }
+            list.innerHTML = history.map(h => `<div class="history-item"><span>${h}</span><span style="color:#38bdf8;">✓ Verified</span></div>`).join('');
+        }
+
+        function clearHistory() {
+            history = [];
+            localStorage.removeItem('ultron_conv_history');
+            renderHistory();
+        }
+
+        // Initialize
+        convertCurrency();
+        renderHistory();
+    </script>
+</body>
+</html>

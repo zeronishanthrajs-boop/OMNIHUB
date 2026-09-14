@@ -1,0 +1,30 @@
+# CYBER TREE Global GitIgnore
+
+# Credentials & Database
+.env
+.env.local
+.env.*
+cyber_tree_local.db
+data_cache/
+
+# Python Virtual Environment
+venv/
+__pycache__/
+*.pyc
+
+# Next.js Build Outputs & Modules
+cyber-tree/.next/
+cyber-tree/node_modules/
+cyber-tree/out/
+.next/
+node_modules/
+
+# OS/Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+.vercel
+public/status.json
+.env*.local

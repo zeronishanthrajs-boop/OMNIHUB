@@ -1,0 +1,10 @@
+# OmniHub .gitignore
+.env
+.env.*
+!.env.example
+node_modules/
+logs/
+*.log
+.vercel/
+.DS_Store
+Thumbs.db

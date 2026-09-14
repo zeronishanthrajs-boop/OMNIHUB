@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Stock Pulse · Tata Consultancy Services Ltd (TCS)</title>
+<style>
+  @page { size: A4; margin: 14mm 12mm 16mm 12mm; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: #1a1f2b;
+    font-size: 9pt;
+    line-height: 1.35;
+    background: #ffffff;
+    margin: 0;
+    padding: 0;
+  }
+  .header {
+    background: linear-gradient(135deg, #0f1e3d 0%, #1b3a68 100%);
+    color: #fff;
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+  }
+  .header .eyebrow { font-size: 7.8pt; letter-spacing: 1.5px; color: #9db4d8; text-transform: uppercase; font-weight: 600; }
+  .header h1 { font-size: 16pt; margin: 2px 0 2px 0; color: #ffffff; }
+  .header .sub { font-size: 8.5pt; color: #c7d5ec; }
+  .badge-row { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .badge { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 4px; padding: 4px 9px; font-size: 8pt; }
+  .badge b { color: #ffce54; }
+
+  .corrections-box {
+    background: #fff7e6;
+    border: 1.5px solid #e6a817;
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    font-size: 8.3pt;
+  }
+  .corrections-box .title { font-weight: 700; color: #8a5a00; font-size: 9pt; margin-bottom: 4px; }
+  .corrections-box ul { margin: 4px 0 0 16px; padding: 0; }
+  .corrections-box li { margin-bottom: 2px; }
+
+  .section { margin-bottom: 11px; page-break-inside: avoid; }
+  .section-title {
+    font-size: 10pt; font-weight: 700; color: #0f1e3d;
+    border-bottom: 2px solid #0f1e3d; padding-bottom: 3px; margin-bottom: 7px;
+    display: flex; justify-content: space-between; align-items: baseline;
+  }
+  .section-title .tag { font-size: 7.8pt; font-weight: 700; padding: 2px 8px; border-radius: 3px; }
+  .tag-weak { background: #fdeaea; color: #c0392b; }
+  .tag-fair { background: #eaf7ee; color: #1e8449; }
+  .tag-watch { background: #fef6e0; color: #b7791f; }
+  .tag-mixed { background: #eef1fb; color: #3949ab; }
+  .tag-narrow { background: #fef6e0; color: #b7791f; }
+  .tag-moderate { background: #eef1fb; color: #3949ab; }
+  .tag-strong { background: #eaf7ee; color: #1e8449; }
+
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; }
+  .stat-grid.cols3 { grid-template-columns: repeat(3, 1fr); }
+  .stat-grid.cols2 { grid-template-columns: repeat(2, 1fr); }
+  .stat {
+    background: #f4f6fa; border: 1px solid #e2e6ee; border-radius: 4px;
+    padding: 6px 9px;
+  }
+  .stat .label { font-size: 6.8pt; color: #6b7488; text-transform: uppercase; letter-spacing: 0.4px; font-weight: 600; }
+  .stat .value { font-size: 11pt; font-weight: 700; color: #0f1e3d; margin-top: 1px; }
+  .stat .note { font-size: 7.2pt; color: #6b7488; margin-top: 2px; }
+  .stat .note.healthy { color: #1e8449; font-weight: 600; }
+  .stat .note.weak { color: #c0392b; font-weight: 600; }
+  .stat .note.watch { color: #b7791f; font-weight: 600; }
+
+  p.body-text { font-size: 8.5pt; color: #2c3345; margin: 4px 0; }
+  .note-box { background: #f4f6fa; border-left: 3px solid #1b3a68; padding: 6px 10px; font-size: 8pt; color: #3a4257; margin-top: 5px; border-radius: 3px; }
+  .fix-note { background: #eaf7ee; border-left: 3px solid #1e8449; padding: 6px 10px; font-size: 8pt; color: #1e5631; margin-top: 5px; border-radius: 3px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 8pt; margin-top: 4px; }
+  th { background: #0f1e3d; color: #fff; text-align: left; padding: 5px 7px; font-size: 7.4pt; text-transform: uppercase; letter-spacing: 0.3px; }
+  td { padding: 5px 7px; border-bottom: 1px solid #e2e6ee; }
+  tr:nth-child(even) td { background: #f8f9fc; }
+  td.num { text-align: right; }
+  .fixed-val { color: #1e8449; font-weight: 700; }
+
+  .moat-table td.score { font-weight: 700; text-align: center; }
+  .checklist-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 5px; margin-top: 5px; }
+  .check-item { background: #f8f9fc; border: 1px solid #e2e6ee; border-radius: 3px; padding: 4px 7px; font-size: 7.6pt; display: flex; justify-content: space-between; align-items: center; }
+  .check-item.pass { border-left: 3px solid #1e8449; }
+  .check-item.fail { border-left: 3px solid #c0392b; }
+  .check-status { font-weight: 700; font-size: 7pt; padding: 1px 4px; border-radius: 2px; }
+  .check-status.pass { background: #eaf7ee; color: #1e8449; }
+  .check-status.fail { background: #fdeaea; color: #c0392b; }
+
+  .footer-note { font-size: 7.2pt; color: #8b93a3; margin-top: 10px; border-top: 1px solid #e2e6ee; padding-top: 6px; text-align: center; }
+  .pagebreak { page-break-before: always; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="eyebrow">Stock Pulse · Institutional Research Report · v3.1</div>
+  <h1>Tata Consultancy Services Ltd <span style="font-weight:400; font-size:11pt; color:#c7d5ec;">(TCS · NSE/BSE)</span></h1>
+  <div class="sub">Sector: Information Technology &nbsp;|&nbsp; Horizon: 10Y &nbsp;|&nbsp; Data Confidence: 14/14 (HIGH)</div>
+  <div class="badge-row">
+    <div class="badge">Pulse Score <b>6/10 (MODERATE)</b></div>
+    <div class="badge">Data Confidence <b>14/14 (HIGH)</b></div>
+    <div class="badge">Moat <b>9/14 (WIDE)</b></div>
+    <div class="badge">Management Trust <b>6/8 (MODERATE)</b></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">01 &nbsp;Overview &amp; Market Standing</div>
+  <div class="stat-grid">
+    <div class="stat"><div class="label">Current Market Price</div><div class="value">Rs. 2,348</div></div>
+    <div class="stat"><div class="label">52-Week High / Low</div><div class="value" style="font-size:9.5pt;">Rs. 3,350 / Rs. 1,976.8</div></div>
+    <div class="stat"><div class="label">Market Capitalisation</div><div class="value" style="font-size:9.5pt;">Rs. 8,50,604 Cr</div></div>
+    <div class="stat"><div class="label">Primary Sector</div><div class="value" style="font-size:9.5pt;">Information Technology</div></div>
+  </div>
+  <p class="body-text">CMP (Rs. 2,348) is +18.8% above 52W Low (Rs. 1,976.8) and -29.9% below 52W High (Rs. 3,350) — trading in mid-range (27th percentile of 1-year band).</p>
+</div>
+
+<div class="section">
+  <div class="section-title">02 &nbsp;Business &amp; Operational Overview</div>
+  <p class="body-text">Tata Consultancy Services is the flagship company and a part of Tata group. It is an IT services, consulting and business solutions organization that has been partnering with many of the world's largest businesses in their transformation journeys for over 50 years. TCS offers a consulting-led, cognitive powered, integrated portfolio of business, technology and engineering services and solutions.</p>
+</div>
+
+<div class="section">
+  <div class="section-title">03 &nbsp;Valuation Multiples &amp; Benchmark Banding <span class="tag tag-cheap">CHEAP</span></div>
+  <div class="stat-grid">
+    <div class="stat"><div class="label">Stock P/E Ratio</div><div class="value">17.1</div><div class="note">Fair Band: 20.4 – 27.6</div></div>
+    <div class="stat"><div class="label">Price to Book (P/B)</div><div class="value">7.93</div><div class="note">BV: Rs. 296</div></div>
+    <div class="stat"><div class="label">Dividend Yield</div><div class="value">2.73%</div><div class="note">Face Value: Rs. 1</div></div>
+    <div class="stat"><div class="label">Sector Benchmark P/E</div><div class="value">24</div><div class="note">-28.7% vs Sector</div></div>
+  </div>
+  <div class="note-box"><b>Valuation Note:</b> Trading within [20.4 - 27.6] derived from sector median (24). CMP ÷ trailing diluted EPS = Rs. 2,348 ÷ Rs. 137.64 = <span class="fixed-val">17.1</span>.</div>
+</div>
+
+<div class="section">
+  <div class="section-title">04 &nbsp;Growth &amp; Operating Trajectory <span class="tag tag-slowing">SLOWING</span></div>
+  <div class="stat-grid">
+    <div class="stat"><div class="label">Revenue 3Y / 5Y CAGR</div><div class="value" style="font-size:10pt;">4.62% / 7.54%</div><div class="note">TTM Sales: Rs. 2,75,859 Cr</div></div>
+    <div class="stat"><div class="label">Profit 3Y / 5Y CAGR</div><div class="value" style="font-size:10pt;">2.78% / 5.42%</div><div class="note">TTM PAT: Rs. 50,055 Cr</div></div>
+    <div class="stat"><div class="label">EBITDA Margin Profile</div><div class="value" style="font-size:10pt;">TTM 27%</div><div class="note">Latest Qtr (Jun 2026): 26%</div></div>
+    <div class="stat"><div class="label">Net Margin Profile</div><div class="value" style="font-size:10pt;">TTM 18.15%</div><div class="note">Pre-Tax Bridge</div></div>
+  </div>
+  <div class="stat-grid cols2" style="margin-top:6px;">
+    <div class="stat"><div class="label">Trailing Diluted EPS</div><div class="value">Rs. 137.64</div><div class="note">3Y EPS CAGR: 2.75%</div></div>
+    <div class="stat"><div class="label">Operating Cash Flow</div><div class="value" style="font-size:10pt; color:#1e8449;">GROWING</div><div class="note">Cash Flow Quality</div></div>
+  </div>
+  <div class="note-box"><b>Margin Bridge:</b> TTM EBITDA margin (27%) reflects operating cash profitability before D&amp;A; Net margin (18.15%) accounts for D&amp;A, interest, and taxes. </div>
+</div>
+
+<div class="section">
+  <div class="section-title">05 &nbsp;Financial Health &amp; Solvency (Aggregated) <span class="tag tag-watch">WATCH</span></div>
+  <div class="stat-grid">
+    <div class="stat"><div class="label">Debt to Equity (D/E)</div><div class="value">0.11</div><div class="note healthy">HEALTHY (&le;0.5)</div></div>
+    <div class="stat"><div class="label">Interest Coverage</div><div class="value">142.57x</div><div class="note healthy">HEALTHY (&ge;5.0x)</div></div>
+    <div class="stat"><div class="label">Current Ratio</div><div class="value">1.81</div><div class="note weak">WATCH (&ge;1.0)</div></div>
+    <div class="stat"><div class="label">Free Cash Flow Trend</div><div class="value" style="color:#1e8449;">GROWING</div><div class="note healthy">HEALTHY</div></div>
+  </div>
+  <div class="note-box"><b>Solvency Context:</b> Benchmark thresholds — D/E &le;0.5 Healthy, Interest Coverage &ge;5x Healthy, Current Ratio &ge;1.0 Healthy. Liquid current assets comfortably cover short-term 12-month liabilities (Current Ratio &ge;1.0).</div>
+</div>
+
+<div class="section">
+  <div class="section-title">06 &nbsp;Return Quality &amp; Capital Allocation <span class="tag tag-healthy">HEALTHY</span></div>
+  <div class="stat-grid cols2">
+    <div class="stat"><div class="label">Return on Equity (ROE)</div><div class="value">51.8%</div><div class="note healthy">HEALTHY (&ge;15% cutoff)</div></div>
+    <div class="stat"><div class="label">Return on Capital Employed (ROCE)</div><div class="value">63%</div><div class="note healthy">HEALTHY (&ge;15% cutoff)</div></div>
+  </div>
+</div>
+
+<div class="pagebreak"></div>
+
+<div class="section">
+  <div class="section-title">07 &nbsp;Competitive Moat Analysis <span class="tag tag-wide">9/14 WIDE</span></div>
+  <table class="moat-table">
+    <tr><th>Moat Factor</th><th style="text-align:center;">Score</th><th>Evidence</th></tr>
+    
+      <tr>
+        <td><b>Brand Power</b></td>
+        <td class="score" style="color:#1e8449;">2/2</td>
+        <td>Global IT delivery brand recognition and enterprise client recall. High operating margin (>25%) reflects pricing power.</td>
+      </tr>
+    
+      <tr>
+        <td><b>Switching Costs</b></td>
+        <td class="score" style="color:#1e8449;">2/2</td>
+        <td>Deep enterprise core system integration creates mission-critical migration risk.</td>
+      </tr>
+    
+      <tr>
+        <td><b>Network Effects</b></td>
+        <td class="score" style="color:#c0392b;">0/2</td>
+        <td>Limited consumer network effects; standard vendor partner ecosystem.</td>
+      </tr>
+    
+      <tr>
+        <td><b>Cost Advantage</b></td>
+        <td class="score" style="color:#1e8449;">2/2</td>
+        <td>Global offshore delivery pyramid structure and billing utilization. Resilient operating margins prove cost efficiency.</td>
+      </tr>
+    
+      <tr>
+        <td><b>Regulatory License</b></td>
+        <td class="score" style="color:#c0392b;">0/2</td>
+        <td>Open services market without statutory monopolies.</td>
+      </tr>
+    
+      <tr>
+        <td><b>Patents/IP</b></td>
+        <td class="score" style="color:#b7791f;">1/2</td>
+        <td>Proprietary software suites, accelerators, and AI delivery platforms.</td>
+      </tr>
+    
+      <tr>
+        <td><b>Scale Advantage</b></td>
+        <td class="score" style="color:#1e8449;">2/2</td>
+        <td>Mega-cap balance sheet (Rs. 8,50,604 Cr) drives structural procurement scale.</td>
+      </tr>
+    
+  </table>
+</div>
+
+<div class="section">
+  <div class="section-title">08 &nbsp;Peer Comparison &amp; Recent Events</div>
+  <table>
+    <tr><th>Peer Company</th><th class="num">P/E</th><th class="num">ROCE</th><th class="num">Market Cap</th><th class="num">3Y Sales</th><th>Relationship</th></tr>
+    
+  </table>
+  <div style="font-size:7.4pt; color:#6b7488; margin-top:4px;"><b>Peer Selection Rationale:</b> Discovered from exchange sector classification. Sector Benchmark P/E reflects peer basket median.</div>
+  <p class="body-text" style="margin-top:6px;"><b>Recent Corporate News Headlines (most recent first):</b></p>
+  <ul style="font-size:8pt; margin:2px 0 0 16px; color:#2c3345;">
+    
+      <li><b>[1 Sept 2026]</b> TCS stock slips as Indian IT giant faces analyst scrutiny and AI deal questions - AD HOC NEWS</li>
+    
+      <li><b>[1 Sept 2026]</b> Tata Consultancy Services Stock And Other Indian Dividend Anchors Built For Steady Income - finance.yahoo.com</li>
+    
+      <li><b>[25 Aug 2026]</b> TCS stock falls after MHP acquisition: Brokerages bearish; Citi, HSBC flag integration risks, falling... - Moneycontrol.com</li>
+    
+  </ul>
+</div>
+
+<div class="section">
+  <div class="section-title">09 &nbsp;Ownership Structure &amp; Management Trust <span class="tag tag-moderate">6/8 MODERATE</span></div>
+  <div class="stat-grid">
+    <div class="stat"><div class="label">Promoter Holding</div><div class="value">71.77%</div><div class="note">Trend: FALLING</div></div>
+    <div class="stat"><div class="label">Institutional FII / DII</div><div class="value" style="font-size:10pt;">9.07% / 13.41%</div><div class="note">High Institutional</div></div>
+    <div class="stat"><div class="label">Promoter Pledging</div><div class="value">0%</div><div class="note healthy">CLEAN</div></div>
+    <div class="stat"><div class="label">Quarterly Track Record</div><div class="value" style="font-size:10pt;">1 Qtrs Contraction</div><div class="note watch">WATCH</div></div>
+  </div>
+  <div class="note-box">
+    <b>Strengths:</b> +2 Regulatory compliance | +1 Quarterly delivery consistency | +1 Pledging <5% | +1 Cycle resilience | +1 Audit disclosure & accounting transparency<br>
+    <b>Unmet Criteria (+0):</b> Promoter trend stable/rising | High institutional FII equity sponsorship
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">10 &nbsp;The Pulse Score &amp; What-If Matrix <span class="tag tag-moderate">6/10 MODERATE PULSE</span></div>
+  <p class="body-text"><b>PASS:</b> Zero existential balance sheet or governance red flags (operational watch items tracked in Sections 05 &amp; 09).</p>
+
+  <p class="body-text"><b>Baseline Financials (TTM):</b> Revenue Rs. 2,75,859 Cr | Net Profit (PAT) Rs. 50,055 Cr | EPS Rs. 137.64 | Margin 18.15% | Dividend Yield 2.73%</p>
+
+  <table>
+    <tr><th>Scenario (Mathematical Model)</th><th class="num">Rev CAGR</th><th class="num">Projected Revenue (10Y)</th><th class="num">Projected PAT (10Y)</th></tr>
+    <tr>
+      <td><b>Bear Case</b> (&minus;5.0% vs Base | 16.1% Margin)</td>
+      <td class="num">1.1%</td>
+      <td class="num">Rs. 3,07,750 Cr</td>
+      <td class="num"><span class="fixed-val">Rs. 49,548 Cr</span></td>
+    </tr>
+    <tr>
+      <td><b>Base Case</b> (Historical Avg | 18.1% Margin)</td>
+      <td class="num">6.1%</td>
+      <td class="num">Rs. 4,98,702 Cr</td>
+      <td class="num"><span class="fixed-val">Rs. 90,265 Cr</span></td>
+    </tr>
+    <tr>
+      <td><b>Bull Case</b> (+3.5% vs Base | 19.6% Margin)</td>
+      <td class="num">9.6%</td>
+      <td class="num">Rs. 6,89,910 Cr</td>
+      <td class="num"><span class="fixed-val">Rs. 1,35,222 Cr</span></td>
+    </tr>
+  </table>
+
+  <p class="body-text" style="margin-top:8px;"><b>Total Return Model</b> (Rs. 1,00,000 investment):</p>
+  <table>
+    <tr><th>Metric</th><th class="num">Value</th></tr>
+    <tr><td>Base Case Fundamental PAT CAGR (10Y)</td><td class="num fixed-val">6.07%</td></tr>
+    <tr><td>+ Dividend Yield</td><td class="num">2.73%</td></tr>
+    <tr><td><b>Total Return Rate (Annualized)</b></td><td class="num fixed-val"><b>8.8% CAGR</b></td></tr>
+    <tr><td><b>10Y Projected Capital of Rs. 1,00,000</b></td><td class="num fixed-val"><b>~Rs. 2,32,428</b></td></tr>
+    <tr><td>Mean-reversion adjusted CAGR (P/E 17.1&rarr;24)</td><td class="num">12.55%</td></tr>
+    <tr><td>10Y Projected Capital (Mean-reversion adjusted)</td><td class="num">~Rs. 3,26,178</td></tr>
+  </table>
+
+  <p class="body-text" style="margin-top:8px;"><b>Pulse Score 10-Rule Audit Scorecard:</b></p>
+  <div class="checklist-grid">
+    
+      <div class="check-item pass">
+        <div><b>01.</b> Valuation within fair/attractive range</div>
+        <span class="check-status pass">PASS</span>
+      </div>
+    
+      <div class="check-item fail">
+        <div><b>02.</b> Revenue 3Y growth trajectory robust (>=10% 3Y CAGR or steady)</div>
+        <span class="check-status fail">FAIL</span>
+      </div>
+    
+      <div class="check-item fail">
+        <div><b>03.</b> Operating profit expansion solid (>8% CAGR & no consecutive drops)</div>
+        <span class="check-status fail">FAIL</span>
+      </div>
+    
+      <div class="check-item fail">
+        <div><b>04.</b> Solvency & liquidity balance sheet sound (zero watch/weak metrics)</div>
+        <span class="check-status fail">FAIL</span>
+      </div>
+    
+      <div class="check-item pass">
+        <div><b>05.</b> Return on Equity (ROE) exceeds 15%</div>
+        <span class="check-status pass">PASS</span>
+      </div>
+    
+      <div class="check-item pass">
+        <div><b>06.</b> Return on Capital Employed (ROCE) exceeds 15%</div>
+        <span class="check-status pass">PASS</span>
+      </div>
+    
+      <div class="check-item fail">
+        <div><b>07.</b> Promoter shareholding stable/accumulating (or institutional backing >=40%)</div>
+        <span class="check-status fail">FAIL</span>
+      </div>
+    
+      <div class="check-item pass">
+        <div><b>08.</b> Promoter shares unencumbered (pledge <=10%)</div>
+        <span class="check-status pass">PASS</span>
+      </div>
+    
+      <div class="check-item pass">
+        <div><b>09.</b> Defensible competitive moat (score >=5/14)</div>
+        <span class="check-status pass">PASS</span>
+      </div>
+    
+      <div class="check-item pass">
+        <div><b>10.</b> Management trust & capital allocation score >=4/8</div>
+        <span class="check-status pass">PASS</span>
+      </div>
+    
+  </div>
+</div>
+
+<div class="footer-note">
+  Regulatory Disclaimer: Stock Pulse is an automated fundamental computational tool and does not issue buy, sell, or hold recommendations, nor price targets. Figures parsed directly from public filings (Screener.in, NSE, BSE) at generation time. Not investment advice.<br>
+  Stock Pulse v3.1 · Institutional Research Report · Generated 02 Sept 2026
+</div>
+
+</body>
+</html>

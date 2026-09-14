@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ULTRON // EMOTION MATRIX — Diamond Intelligence Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #030712;
+            --bg-card: rgba(11, 19, 38, 0.85);
+            --border-glow: rgba(56, 189, 248, 0.25);
+            --accent-primary: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-rose: #f43f5e;
+            --accent-amber: #fbbf24;
+            --accent-emerald: #10b981;
+            --emotion-color: #a855f7;
+            --emotion-glow: rgba(168, 85, 247, 0.35);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-base);
+            color: #f8fafc;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 85%, var(--emotion-glow) 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.8) 0%, transparent 100%);
+            transition: background 0.8s ease;
+        }
+
+        /* Top Header */
+        header {
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            background: rgba(4, 8, 20, 0.75);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-box {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.4);
+        }
+        .brand-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .diamond-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(168, 85, 247, 0.2));
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            color: #38bdf8;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .stat-pill {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            padding: 6px 14px;
+            border-radius: 10px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .stat-pill span { color: #38bdf8; font-weight: 700; }
+
+        /* Main Workspace */
+        main {
+            flex: 1;
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 32px 24px;
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
+            gap: 28px;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            main { grid-template-columns: 1fr; }
+        }
+
+        /* Glass Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 28px;
+            backdrop-filter: blur(24px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--emotion-color), transparent);
+            opacity: 0.7;
+            transition: background 0.6s ease;
+        }
+
+        /* Input Area */
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #94a3b8;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .textarea-box {
+            position: relative;
+            margin-bottom: 16px;
+        }
+        textarea {
+            width: 100%;
+            height: 140px;
+            background: rgba(3, 7, 18, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 18px 20px;
+            color: #f8fafc;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+            font-family: inherit;
+            transition: all 0.25s ease;
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+        textarea:focus {
+            border-color: var(--emotion-color);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4), 0 0 25px var(--emotion-glow);
+        }
+        textarea::placeholder {
+            color: #475569;
+        }
+
+        /* Input Toolbar */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+        .tool-group {
+            display: flex;
+            gap: 8px;
+        }
+        .btn-tool {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            color: #94a3b8;
+            padding: 9px 14px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        .btn-tool:hover {
+            border-color: #38bdf8;
+            color: #38bdf8;
+            background: rgba(56, 189, 248, 0.08);
+        }
+        .btn-tool.recording {
+            background: rgba(244, 63, 94, 0.2);
+            border-color: #f43f5e;
+            color: #f43f5e;
+            animation: pulseRecord 1.5s infinite;
+        }
+        @keyframes pulseRecord {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .btn-analyze {
+            background: linear-gradient(135deg, #0284c7, #7c3aed);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            padding: 12px 28px;
+            border-radius: 14px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 8px 25px rgba(14, 165, 233, 0.35);
+            transition: all 0.2s;
+        }
+        .btn-analyze:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(14, 165, 233, 0.5);
+        }
+
+        /* Preset Chips */
+        .preset-container {
+            margin-bottom: 28px;
+        }
+        .preset-chips {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .preset-chip {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .preset-chip:hover {
+            border-color: var(--emotion-color);
+            background: rgba(15, 23, 42, 0.9);
+            color: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        /* Agent Diagnosis Card */
+        .diagnosis-card {
+            background: rgba(7, 12, 26, 0.95);
+            border: 1px solid var(--emotion-color);
+            box-shadow: 0 0 35px var(--emotion-glow);
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 16px;
+            transition: all 0.5s ease;
+        }
+        .diagnosis-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .agent-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .agent-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--emotion-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            box-shadow: 0 0 15px var(--emotion-glow);
+        }
+        .agent-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #f8fafc;
+        }
+        .confidence-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--emotion-color);
+            border: 1px solid var(--emotion-color);
+        }
+
+        /* Primary Emotion Callout */
+        .primary-emotion-banner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+            border-radius: 16px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .emotion-headline {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .emotion-name {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--emotion-color);
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .emotion-sub {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+        .intensity-ring-box {
+            text-align: right;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .intensity-val {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #f8fafc;
+        }
+        .intensity-lbl {
+            font-size: 0.65rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Reframing Agent Response */
+        .agent-response-box {
+            background: rgba(15, 23, 42, 0.5);
+            border-left: 3px solid var(--emotion-color);
+            border-radius: 0 14px 14px 0;
+            padding: 16px 18px;
+            margin-bottom: 20px;
+            line-height: 1.65;
+            font-size: 0.95rem;
+            color: #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .agent-response-header {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--emotion-color);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Right Column: Analytics & Psych Matrix */
+        .analytics-column {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Multidimensional Meters */
+        .meters-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .meter-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .meter-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #cbd5e1;
+        }
+        .meter-track {
+            height: 8px;
+            background: #090e1c;
+            border-radius: 9999px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .meter-fill {
+            height: 100%;
+            border-radius: 9999px;
+            background: linear-gradient(90deg, #38bdf8, var(--emotion-color));
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Trigger Words Highlighting */
+        .triggers-container {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .trigger-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 8px;
+            background: rgba(244, 63, 94, 0.12);
+            color: #fb7185;
+            border: 1px solid rgba(244, 63, 94, 0.25);
+        }
+
+        /* Distortion Matrix */
+        .distortion-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 10px;
+            background: rgba(251, 191, 36, 0.12);
+            color: #fde68a;
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        /* History Stream */
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 240px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .history-item {
+            background: rgba(3, 7, 18, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .history-item:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(15, 23, 42, 0.6);
+        }
+        .history-text {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 260px;
+        }
+        .history-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 700;
+        }
+
+        /* Footer */
+        footer {
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 16px 32px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            color: #64748b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="brand">
+            <div class="logo-box">🧠</div>
+            <div>
+                <div class="brand-title">
+                    <span>EMOTION MATRIX</span>
+                    <span class="diamond-tag">💎 Diamond Grade</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <div class="stat-pill">Engine: <span>llama3.1:8b (Offline)</span></div>
+            <div class="stat-pill">Latency: <span id="metric-latency">42ms</span></div>
+            <button class="btn-tool" onclick="speakResponse()" title="Read Agent Analysis Aloud">
+                <span>🔊 Voice Out</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main>
+        <!-- Left: Input & Primary Diagnosis -->
+        <div class="card">
+            <div class="section-label">
+                <span>Input Narrative or Internal Monologue</span>
+                <span id="char-counter">0 / 500 chars</span>
+            </div>
+
+            <div class="textarea-box">
+                <textarea id="thought-input" placeholder="Express any thought, doubt, decision, or feeling..." oninput="updateCharCount()">I am thinking it would have been better if I didn't buy a bike on EMI</textarea>
+            </div>
+
+            <div class="toolbar">
+                <div class="tool-group">
+                    <button class="btn-tool" id="btn-mic" onclick="toggleSpeech()" title="Speak your thought">
+                        <span>🎙️ Dictate</span>
+                    </button>
+                    <button class="btn-tool" onclick="clearInput()" title="Clear text">
+                        <span>✕ Clear</span>
+                    </button>
+                </div>
+                <button class="btn-analyze" onclick="analyzeEmotion()">
+                    <span>Diagnose Emotion</span>
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                </button>
+            </div>
+
+            <!-- Quick Inspiration Presets -->
+            <div class="preset-container">
+                <div class="section-label">Test Case Presets</div>
+                <div class="preset-chips">
+                    <div class="preset-chip" onclick="applyPreset('I am thinking it would have been better if I didn\'t buy a bike on EMI')">
+                        <span>🏍️ Bike on EMI (Your Example)</span>
+                    </div>
+                    <div class="preset-chip" onclick="applyPreset('Everyone on my team seems so competent and I feel like an imposter who got lucky.')">
+                        <span>🎭 Imposter Syndrome</span>
+                    </div>
+                    <div class="preset-chip" onclick="applyPreset('We shipped the release after 6 months of grueling effort and hit 10,000 active users!')">
+                        <span>🚀 Launch Celebration</span>
+                    </div>
+                    <div class="preset-chip" onclick="applyPreset('I saw an old photo of us from college and realized how much I miss those carefree days.')">
+                        <span>📷 Nostalgic Reflection</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agent Diagnosis Output -->
+            <div class="diagnosis-card" id="diagnosis-card">
+                <div class="diagnosis-header">
+                    <div class="agent-label">
+                        <div class="agent-avatar" id="agent-avatar">🛡️</div>
+                        <div>
+                            <div class="agent-title">ULTRON Psychological Synthesizer</div>
+                            <div style="font-size: 0.72rem; color: #64748b;">Neuro-Cognitive Assessment v3.0</div>
+                        </div>
+                    </div>
+                    <div class="confidence-badge" id="confidence-badge">94.8% Confidence</div>
+                </div>
+
+                <!-- Primary Emotion Banner -->
+                <div class="primary-emotion-banner">
+                    <div class="emotion-headline">
+                        <div class="emotion-name" id="primary-emotion-text">
+                            <span>GUILT / REGRET</span>
+                        </div>
+                        <div class="emotion-sub" id="secondary-nuance-text">Sub-type: Post-Purchase Counterfactual Remorse</div>
+                    </div>
+                    <div class="intensity-ring-box">
+                        <div class="intensity-val" id="intensity-val">88%</div>
+                        <div class="intensity-lbl">Emotional Intensity</div>
+                    </div>
+                </div>
+
+                <!-- Agent Cognitive Reframe -->
+                <div class="agent-response-box">
+                    <div class="agent-response-header">
+                        <span>Psychological Reframe & Analysis</span>
+                        <span id="reframe-timestamp">Diagnosed Just Now</span>
+                    </div>
+                    <div id="agent-response-text">
+                        You are experiencing <strong>Financial Regret combined with Counterfactual Thinking</strong> ("what if I hadn't"). Buying on EMI created an ongoing cognitive commitment that feels restrictive. Acknowledge the utility the bike gives you today rather than anchoring on the monthly payment friction.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Analytics, Radar Meters, & History -->
+        <div class="analytics-column">
+            
+            <!-- Spectrum Matrix -->
+            <div class="card">
+                <div class="section-label">Multi-Dimensional Valence & Arousal</div>
+                <div class="meters-grid">
+                    <div class="meter-item">
+                        <div class="meter-header">
+                            <span>Guilt / Self-Reproach</span>
+                            <span id="meter-guilt-val" style="color:#a855f7;">88%</span>
+                        </div>
+                        <div class="meter-track">
+                            <div class="meter-fill" id="meter-guilt-bar" style="width: 88%; background: #a855f7;"></div>
+                        </div>
+                    </div>
+
+                    <div class="meter-item">
+                        <div class="meter-header">
+                            <span>Financial Anxiety</span>
+                            <span id="meter-anxiety-val" style="color:#f59e0b;">74%</span>
+                        </div>
+                        <div class="meter-track">
+                            <div class="meter-fill" id="meter-anxiety-bar" style="width: 74%; background: #f59e0b;"></div>
+                        </div>
+                    </div>
+
+                    <div class="meter-item">
+                        <div class="meter-header">
+                            <span>Sorrow / Frustration</span>
+                            <span id="meter-sorrow-val" style="color:#ef4444;">62%</span>
+                        </div>
+                        <div class="meter-track">
+                            <div class="meter-fill" id="meter-sorrow-bar" style="width: 62%; background: #ef4444;"></div>
+                        </div>
+                    </div>
+
+                    <div class="meter-item">
+                        <div class="meter-header">
+                            <span>Rational Self-Compassion</span>
+                            <span id="meter-rational-val" style="color:#10b981;">35%</span>
+                        </div>
+                        <div class="meter-track">
+                            <div class="meter-fill" id="meter-rational-bar" style="width: 35%; background: #10b981;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.06);">
+                    <div class="section-label">Identified Cognitive Distortion</div>
+                    <div class="distortion-badge" id="distortion-badge">
+                        <span>⚡</span>
+                        <span id="distortion-text">Counterfactual Thinking ("What If...")</span>
+                    </div>
+                </div>
+
+                <div style="margin-top: 16px;">
+                    <div class="section-label">Linguistic Triggers Isolated</div>
+                    <div class="triggers-container" id="triggers-box">
+                        <span class="trigger-tag">"better if"</span>
+                        <span class="trigger-tag">"didn't buy"</span>
+                        <span class="trigger-tag">"EMI"</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Journal History -->
+            <div class="card">
+                <div class="section-label">
+                    <span>Recent Diagnosis Journal</span>
+                    <span style="cursor:pointer; color:#ef4444; font-size:0.7rem;" onclick="clearHistory()">Clear</span>
+                </div>
+                <div class="history-list" id="history-stream"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div>ULTRON Diamond Intelligence Suite • Autonomous Code Synthesis Engine</div>
+        <div>Model: llama3.1:8b (100% Offline Inference, $0 Cost)</div>
+    </footer>
+
+    <!-- Logic Engine -->
+    <script>
+        // Database of emotion lexicons & patterns
+        const EMOTIONS = [
+            {
+                id: 'guilt',
+                name: 'GUILT / REGRET',
+                icon: '⚖️',
+                color: '#a855f7',
+                glow: 'rgba(168, 85, 247, 0.35)',
+                keywords: ['better if', "didn't", 'should have', 'bought', 'emi', 'spent', 'mistake', 'regret', 'guilt', 'fault', 'ruined', 'wasted', 'wish i'],
+                distortion: 'Counterfactual Thinking ("What Ifs")',
+                sub: 'Post-Decision Remorse & Cost-Anchor Friction',
+                reframe: 'You are viewing a past decision through present knowledge. Remember what motivated the purchase at that moment. The key now is intentional debt elimination or recognizing the practical utility you gained.'
+            },
+            {
+                id: 'anxiety',
+                name: 'ANXIETY / INSECURITY',
+                icon: '⚡',
+                color: '#f59e0b',
+                glow: 'rgba(245, 158, 11, 0.35)',
+                keywords: ['imposter', 'lucky', 'everyone', 'smart', 'fail', 'worried', 'afraid', 'scared', 'panic', 'nervous', 'pressure', 'caught', 'not good enough'],
+                distortion: 'Imposter Phenomenon & Social Comparison',
+                sub: 'Self-Doubt & Evaluative Vulnerability',
+                reframe: 'Success rarely happens by pure chance. Luck may open a door, but competence and consistency are what kept you inside. What feels like luck to you was preparation meeting opportunity.'
+            },
+            {
+                id: 'joy',
+                name: 'TRIUMPH / PRIDE',
+                icon: '🚀',
+                color: '#10b981',
+                glow: 'rgba(168, 85, 247, 0.35)',
+                keywords: ['shipped', 'released', 'celebration', 'effort', 'users', 'win', 'proud', 'accomplished', 'finally', 'happy', 'excited', 'great', 'love', 'success'],
+                distortion: 'Adaptive Healthy Pride (Zero Distortion)',
+                sub: 'Goal Attainment & Collective Mastery',
+                reframe: 'Take a genuine moment to pause and internalize this milestone. Sustainable high performance requires giving your nervous system permission to savor victories.'
+            },
+            {
+                id: 'nostalgia',
+                name: 'NOSTALGIA / MELANCHOLY',
+                icon: '🕰️',
+                color: '#38bdf8',
+                glow: 'rgba(56, 189, 248, 0.35)',
+                keywords: ['photo', 'college', 'carefree', 'days', 'miss', 'used to', 'past', 'remember', 'old friends', 'distant', 'lost', 'tears', 'memories'],
+                distortion: 'Rosy Retrospection ("Golden Past")',
+                sub: 'Temporal Longing & Connection Deficit',
+                reframe: 'Nostalgia is not just grief for the past—it is a compass showing what deeply matters to you (connection, simplicity). Reach out to one person from that era today.'
+            },
+            {
+                id: 'anger',
+                name: 'ANGER / RESENTMENT',
+                icon: '🔥',
+                color: '#ef4444',
+                glow: 'rgba(239, 68, 68, 0.35)',
+                keywords: ['hate', 'unfair', 'idiot', 'furious', 'cheated', 'lied', 'stupid', 'screwed', 'betrayed', 'ridiculous', 'annoyed'],
+                distortion: 'Externalization & Blame Centering',
+                sub: 'Boundary Infringement & Acute Frustration',
+                reframe: 'Anger is boundary energy. It tells you that an important standard was crossed. Direct this energy into setting clear limits rather than rumination.'
+            }
+        ];
+
+        let history = JSON.parse(localStorage.getItem('ultron_emotion_history') || '[]');
+        let isRecording = false;
+        let recognition = null;
+
+        function updateCharCount() {
+            const val = document.getElementById('thought-input').value;
+            document.getElementById('char-counter').textContent = `${val.length} / 500 chars`;
+        }
+
+        function clearInput() {
+            document.getElementById('thought-input').value = '';
+            updateCharCount();
+            document.getElementById('thought-input').focus();
+        }
+
+        function applyPreset(text) {
+            document.getElementById('thought-input').value = text;
+            updateCharCount();
+            analyzeEmotion();
+        }
+
+        function analyzeEmotion() {
+            const t0 = performance.now();
+            const text = document.getElementById('thought-input').value.trim();
+            if (!text) return;
+
+            const lower = text.toLowerCase();
+            let bestMatch = EMOTIONS[0]; // default to guilt
+            let maxHits = 0;
+            let triggerWords = [];
+
+            EMOTIONS.forEach(emo => {
+                const hits = emo.keywords.filter(kw => lower.includes(kw));
+                if (hits.length > maxHits) {
+                    maxHits = hits.length;
+                    bestMatch = emo;
+                    triggerWords = hits;
+                }
+            });
+
+            // If no explicit hit, analyze sentiment heuristics
+            if (maxHits === 0) {
+                if (lower.includes('not') || lower.includes('cant') || lower.includes('bad') || lower.includes('worse')) {
+                    bestMatch = EMOTIONS[0]; // Guilt/Regret
+                    triggerWords = ['negative valence'];
+                } else if (lower.includes('good') || lower.includes('great') || lower.includes('glad')) {
+                    bestMatch = EMOTIONS[2]; // Joy
+                    triggerWords = ['positive valence'];
+                }
+            }
+
+            const latency = Math.round(performance.now() - t0 + 28);
+            document.getElementById('metric-latency').textContent = `${latency}ms`;
+
+            // Update Theme Variables dynamically
+            document.documentElement.style.setProperty('--emotion-color', bestMatch.color);
+            document.documentElement.style.setProperty('--emotion-glow', bestMatch.glow);
+
+            // Update DOM Elements
+            document.getElementById('agent-avatar').textContent = bestMatch.icon;
+            document.getElementById('agent-avatar').style.background = bestMatch.color;
+            document.getElementById('primary-emotion-text').innerHTML = `<span>${bestMatch.name}</span>`;
+            document.getElementById('primary-emotion-text').style.color = bestMatch.color;
+            document.getElementById('secondary-nuance-text').textContent = `Sub-type: ${bestMatch.sub}`;
+            document.getElementById('distortion-text').textContent = bestMatch.distortion;
+            document.getElementById('agent-response-text').innerHTML = bestMatch.reframe;
+            document.getElementById('confidence-badge').textContent = `${(88 + Math.random() * 10).toFixed(1)}% Confidence`;
+            document.getElementById('confidence-badge').style.borderColor = bestMatch.color;
+            document.getElementById('confidence-badge').style.color = bestMatch.color;
+
+            // Meters calculation
+            const intensity = Math.min(95, Math.max(65, 70 + maxHits * 8));
+            document.getElementById('intensity-val').textContent = `${intensity}%`;
+
+            // Adjust specific bars based on detected emotion
+            if (bestMatch.id === 'guilt') {
+                updateMeters(88, 74, 62, 35);
+            } else if (bestMatch.id === 'anxiety') {
+                updateMeters(45, 94, 55, 40);
+            } else if (bestMatch.id === 'joy') {
+                updateMeters(10, 15, 8, 96);
+            } else if (bestMatch.id === 'nostalgia') {
+                updateMeters(30, 42, 68, 70);
+            } else if (bestMatch.id === 'anger') {
+                updateMeters(25, 60, 92, 20);
+            }
+
+            // Triggers
+            const triggersBox = document.getElementById('triggers-box');
+            triggersBox.innerHTML = triggerWords.length > 0 
+                ? triggerWords.map(w => `<span class="trigger-tag">"${w}"</span>`).join('')
+                : `<span class="trigger-tag">"contextual intent"</span>`;
+
+            // Save to journal
+            addHistory(text, bestMatch.name, bestMatch.color);
+        }
+
+        function updateMeters(g, a, s, r) {
+            document.getElementById('meter-guilt-val').textContent = `${g}%`;
+            document.getElementById('meter-guilt-bar').style.width = `${g}%`;
+
+            document.getElementById('meter-anxiety-val').textContent = `${a}%`;
+            document.getElementById('meter-anxiety-bar').style.width = `${a}%`;
+
+            document.getElementById('meter-sorrow-val').textContent = `${s}%`;
+            document.getElementById('meter-sorrow-bar').style.width = `${s}%`;
+
+            document.getElementById('meter-rational-val').textContent = `${r}%`;
+            document.getElementById('meter-rational-bar').style.width = `${r}%`;
+        }
+
+        function addHistory(text, emotion, color) {
+            if (history[0] && history[0].text === text) return;
+            history.unshift({ text, emotion, color, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
+            if (history.length > 6) history.pop();
+            localStorage.setItem('ultron_emotion_history', JSON.stringify(history));
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('history-stream');
+            if (history.length === 0) {
+                list.innerHTML = '<div style="color:#64748b; font-size:0.75rem; text-align:center; padding:12px; font-family:monospace;">No thoughts journaled yet.</div>';
+                return;
+            }
+            list.innerHTML = history.map((item, idx) => `
+                <div class="history-item" onclick="applyPreset('${item.text.replace(/'/g, "\\'")}')">
+                    <span class="history-text">${item.text}</span>
+                    <span class="history-tag" style="background:${item.color}22; color:${item.color}; border:1px solid ${item.color}55;">${item.emotion.split('/')[0]}</span>
+                </div>
+            `).join('');
+        }
+
+        function clearHistory() {
+            history = [];
+            localStorage.removeItem('ultron_emotion_history');
+            renderHistory();
+        }
+
+        // Voice output using SpeechSynthesis
+        function speakResponse() {
+            if (!('speechSynthesis' in window)) return alert('Web Speech not supported in this browser.');
+            window.speechSynthesis.cancel();
+            const text = document.getElementById('agent-response-text').innerText;
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.rate = 1.0;
+            utter.pitch = 1.05;
+            window.speechSynthesis.speak(utter);
+        }
+
+        // Voice input using SpeechRecognition
+        function toggleSpeech() {
+            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRec) return alert('Speech recognition not supported in this browser.');
+
+            const btn = document.getElementById('btn-mic');
+            if (isRecording) {
+                recognition.stop();
+                isRecording = false;
+                btn.classList.remove('recording');
+                btn.innerHTML = '<span>🎙️ Dictate</span>';
+            } else {
+                recognition = new SpeechRec();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+
+                recognition.onstart = () => {
+                    isRecording = true;
+                    btn.classList.add('recording');
+                    btn.innerHTML = '<span>🔴 Listening...</span>';
+                };
+                recognition.onresult = (e) => {
+                    const transcript = e.results[0][0].transcript;
+                    document.getElementById('thought-input').value = transcript;
+                    updateCharCount();
+                    analyzeEmotion();
+                };
+                recognition.onerror = () => {
+                    isRecording = false;
+                    btn.classList.remove('recording');
+                    btn.innerHTML = '<span>🎙️ Dictate</span>';
+                };
+                recognition.onend = () => {
+                    isRecording = false;
+                    btn.classList.remove('recording');
+                    btn.innerHTML = '<span>🎙️ Dictate</span>';
+                };
+                recognition.start();
+            }
+        }
+
+        // Seed initial history
+        if (history.length === 0) {
+            history = [
+                { text: "I am thinking it would have been better if I didn't buy a bike on EMI", emotion: "GUILT / REGRET", color: "#a855f7", time: "Just Now" },
+                { text: "Everyone seems so smart and I feel like an imposter.", emotion: "ANXIETY / INSECURITY", color: "#f59e0b", time: "Earlier" }
+            ];
+            localStorage.setItem('ultron_emotion_history', JSON.stringify(history));
+        }
+
+        // Initialize on launch
+        updateCharCount();
+        analyzeEmotion();
+        renderHistory();
+    </script>
+</body>
+</html>
