@@ -584,11 +584,15 @@ const server = http.createServer(async (req, res) => {
   });
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`\n======================================================`);
-  console.log(`🚀 OMNIHUB COMMAND CENTER ONLINE (MCP ENABLED)`);
-  console.log(`📡 Master Interface: http://localhost:${PORT}`);
-  console.log(`🛡️ 12 Dedicated Ports Configured (Zero Port Collisions)`);
-  console.log(`⚡ Model Context Protocol (MCP) Bridge: http://localhost:${PORT}/api/mcp/tools`);
-  console.log(`======================================================\n`);
-});
+if (process.env.VERCEL !== '1') {
+  server.listen(PORT, '0.0.0.0', () => {
+    console.log(`\n======================================================`);
+    console.log(`🚀 OMNIHUB COMMAND CENTER ONLINE (MCP ENABLED)`);
+    console.log(`📡 Master Interface: http://localhost:${PORT}`);
+    console.log(`🛡️ 12 Dedicated Ports Configured (Zero Port Collisions)`);
+    console.log(`⚡ Model Context Protocol (MCP) Bridge: http://localhost:${PORT}/api/mcp/tools`);
+    console.log(`======================================================\n`);
+  });
+}
+
+module.exports = server;
