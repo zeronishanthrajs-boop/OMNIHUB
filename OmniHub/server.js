@@ -592,7 +592,7 @@ async function requestHandler(req, res) {
 
 const server = http.createServer(requestHandler);
 
-if (process.env.VERCEL !== '1') {
+if (process.env.VERCEL !== '1' && require.main === module) {
   server.listen(PORT, '0.0.0.0', () => {
     console.log(`\n======================================================`);
     console.log(`🚀 OMNIHUB COMMAND CENTER ONLINE (MCP ENABLED)`);
