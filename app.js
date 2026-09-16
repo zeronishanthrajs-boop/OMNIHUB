@@ -3,9 +3,169 @@
  * 2026 Tech Equipment Modernization, Voice AI & MCP Bridge
  */
 
+// 12 Independent Projects Default State for Instant Zero-Delay Hydration
+const DEFAULT_PROJECTS = [
+  {
+    id: 'ultron',
+    name: 'ULTRON 3.0',
+    tagline: 'Autonomous AI Software Synthesis & Self-Healing Operating System',
+    category: 'Autonomous AI & Intelligence',
+    icon: '⚡',
+    port: 8000,
+    url: 'http://localhost:8000',
+    tags: ['Python', 'FastAPI', 'Playwright', 'Multi-Agent', 'Synthesis'],
+    techEquipment: 'MCP Server Endpoint + AST Auto-Patching Engine',
+    description: 'Transform high-level human objectives into fully functional, production-ready software applications.',
+    status: 'offline'
+  },
+  {
+    id: 'jarvis',
+    name: 'JARVIS Elite',
+    tagline: 'Multi-Tier AI Engineering Workstation & Tool Suite',
+    category: 'Autonomous AI & Intelligence',
+    icon: '🤖',
+    port: 3003,
+    url: 'http://localhost:3003',
+    tags: ['Vite', 'React 19', 'Express', 'FastAPI', 'Vitest'],
+    techEquipment: 'In-Browser WebLLM / Local Neural SLM + Voice HUD',
+    description: 'Advanced AI assistant with reasoning engines, integrated terminal, unit/regression test harnesses.',
+    status: 'offline'
+  },
+  {
+    id: 'ai-web-builder',
+    name: 'AI Web Builder',
+    tagline: 'Universal Generative AI Website Builder (Desktop + Web)',
+    category: 'Autonomous AI & Intelligence',
+    icon: '🏗️',
+    port: 3014,
+    url: 'http://localhost:3014',
+    tags: ['Next.js', 'Turborepo', 'TypeScript', 'Tailwind CSS'],
+    techEquipment: 'Instant Component Sandboxing & Live ZIP Exporter',
+    description: 'Autonomous website synthesis engine generating multi-page web designs and layouts.',
+    status: 'offline'
+  },
+  {
+    id: 'stock-pulse',
+    name: 'Stock Pulse',
+    tagline: 'Deterministic Fundamental Intelligence for Indian Equities',
+    category: 'Fintech & Markets',
+    icon: '📊',
+    port: 3012,
+    url: 'http://localhost:3012',
+    tags: ['Node.js', 'Express', 'Cheerio', 'PDFKit', 'NSE / BSE'],
+    techEquipment: 'TradingView Lightweight Charts v5 + Interactive Reverse DCF Slider',
+    description: 'Zero-API-Key fundamental equity analyzer with moat evaluation, reverse DCF valuation, and PDF reports.',
+    status: 'offline'
+  },
+  {
+    id: 'prediction-arena',
+    name: 'Prediction Areena',
+    tagline: 'Interactive Decentralized Prediction Market & Betting Arena',
+    category: 'Fintech & Markets',
+    icon: '🎲',
+    port: 3011,
+    url: 'https://prediction-areena.vercel.app/',
+    tags: ['Next.js 16', 'React 19', 'LibSQL', 'SQLite', 'Vercel Cloud'],
+    techEquipment: 'Cryptographic Provable Fairness (VRF Hash Chain) & Orderbook Depth',
+    description: 'Competitive prediction market platform deployed on Vercel with real-time odds, leaderboards, and portfolio management.',
+    status: 'online'
+  },
+  {
+    id: 'venom',
+    name: 'VENOM Security',
+    tagline: 'Automated Web Vulnerability Scanner & Startup Security Audit Suite',
+    category: 'Cybersecurity & Privacy',
+    icon: '🛡️',
+    port: 3007,
+    url: 'https://dashboard-sigma-puce-87.vercel.app/onboard',
+    tags: ['Next.js', 'Node.js', 'Security Audit', 'Vercel Cloud'],
+    techEquipment: 'Static AST Vulnerability Scanner + CVSS 3.1 Severity Calculator',
+    description: 'Targeted vulnerability scanner for modern web applications deployed on Vercel with onboarding dashboard.',
+    status: 'online'
+  },
+  {
+    id: 'cyber-tree',
+    name: 'CYBER TREE',
+    tagline: 'Cyber Threat Intelligence & Telemetry Analytics Dashboard',
+    category: 'Cybersecurity & Privacy',
+    icon: '🌲',
+    port: 3000,
+    url: 'https://cyber-tree-azure.vercel.app/',
+    tags: ['Next.js 16', 'Supabase', 'Recharts', 'Vercel Cloud'],
+    techEquipment: 'Interactive 3D WebGL Threat Topology (Three.js Attack Arc Globe)',
+    description: 'Real-time telemetry and threat intelligence visualizer deployed on Vercel with live graphs and incident logging.',
+    status: 'online'
+  },
+  {
+    id: 'whisper-pages',
+    name: 'Whisper Pages',
+    tagline: 'Anonymous Encrypted Paste & Self-Destructing Message Platform',
+    category: 'Cybersecurity & Privacy',
+    icon: '🤫',
+    port: 3008,
+    url: 'http://localhost:3008',
+    tags: ['Node.js', 'Express', 'SQLite', 'AES Encryption'],
+    techEquipment: 'NIST Post-Quantum Hybrid Cryptography (ML-KEM/Kyber-1024)',
+    description: 'Secure, zero-knowledge secret-sharing utility with burn-after-reading notes.',
+    status: 'offline'
+  },
+  {
+    id: 'chess',
+    name: 'Cinematic Chess',
+    tagline: 'Immersive Cinematic Chess Experience with Stockfish AI Engine',
+    category: 'Creative & Utilities',
+    icon: '♟️',
+    port: 3013,
+    url: 'http://localhost:3013',
+    tags: ['TypeScript', 'Stockfish.js', 'Vitest', 'Monorepo'],
+    techEquipment: 'WebGPU Realistic PBR 3D Board + Stockfish NNUE Neural Evaluation',
+    description: 'Polished chess interface featuring real-time engine evaluation, custom themes, and move history.',
+    status: 'offline'
+  },
+  {
+    id: 'game-changer',
+    name: 'GAME CHANGER (MorphCart)',
+    tagline: 'Next-Generation E-Commerce with Dynamic Morphing UI',
+    category: 'Creative & Utilities',
+    icon: '🛍️',
+    port: 3002,
+    url: 'http://localhost:3002',
+    tags: ['Next.js 16', 'Framer Motion', 'Zod', 'Tailwind CSS'],
+    techEquipment: 'Physics-Driven Spring Mesh Dynamics + Web Haptics Triggers',
+    description: 'Experimental shopping interface showcasing physics-based cart morphing and checkout flows.',
+    status: 'offline'
+  },
+  {
+    id: 'jo-form',
+    name: 'jo form',
+    tagline: 'Dynamic Interactive Form & Survey Builder Suite',
+    category: 'Creative & Utilities',
+    icon: '📋',
+    port: 3009,
+    url: 'http://localhost:3009',
+    tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Schema Builder'],
+    techEquipment: 'Voice-to-Form Generative AI Wizard + Real-Time Schema Parser',
+    description: 'Intuitive drag-and-drop form creator with multi-step question workflows and analytics.',
+    status: 'offline'
+  },
+  {
+    id: 'decluz',
+    name: 'DECLUZ',
+    tagline: 'Ultra-Smooth Luxury Interaction & GSAP Motion Showcase',
+    category: 'Creative & Utilities',
+    icon: '✨',
+    port: 3001,
+    url: 'http://localhost:3001',
+    tags: ['Vite', 'React 19', 'GSAP', 'Lenis Smooth Scroll'],
+    techEquipment: 'WebGL Kinetic Ripple Shaders + Chromatic Aberration Dynamics',
+    description: 'Masterclass in modern web animation featuring inertial smooth scrolling and magnetic hover interactions.',
+    status: 'offline'
+  }
+];
+
 // Application State
 const state = {
-  projects: [],
+  projects: [...DEFAULT_PROJECTS],
   activeFilter: 'all',
   searchQuery: '',
   workspaceTabs: [],
@@ -57,6 +217,12 @@ const dom = {
   toastContainer: document.getElementById('toast-container')
 };
 
+// Instant Zero-Delay Render on Startup
+updateActiveCount();
+renderGrid();
+renderWorkspaceQuickLaunch();
+renderInnovationsTable();
+
 // Clock updater
 function updateClock() {
   const now = new Date();
@@ -81,8 +247,9 @@ function showToast(message, type = 'info') {
 async function loadProjects() {
   try {
     const res = await fetch('/api/projects');
+    if (!res.ok) return;
     const data = await res.json();
-    if (data.success) {
+    if (data.success && Array.isArray(data.projects) && data.projects.length > 0) {
       state.projects = data.projects;
       updateActiveCount();
       renderGrid();
@@ -90,7 +257,7 @@ async function loadProjects() {
       renderInnovationsTable();
     }
   } catch (err) {
-    console.error('Failed to load projects:', err);
+    console.warn('Backend /api/projects unreachable, keeping instant cached projects:', err);
   }
 }
 
@@ -110,6 +277,7 @@ setInterval(loadVitals, 5000);
 loadVitals();
 
 function updateActiveCount() {
+  if (!dom.activeCount) return;
   const onlineCount = state.projects.filter(p => p.status === 'online').length;
   dom.activeCount.textContent = `${onlineCount} / ${state.projects.length}`;
 }
@@ -118,6 +286,13 @@ function updateActiveCount() {
 window.openAllProjectsInTabs = async function(browser = 'chrome') {
   const browserLabel = browser === 'edge' ? 'Microsoft Edge' : 'Google Chrome';
   showToast(`Dispatching all 12 systems to ${browserLabel} in separate tabs...`, 'success');
+  const isVercel = window.location.hostname.includes('vercel.app') || window.location.protocol === 'https:';
+  if (isVercel) {
+    state.projects.forEach((p, idx) => {
+      setTimeout(() => window.open(p.url, '_blank'), idx * 120);
+    });
+    return;
+  }
   try {
     const res = await fetch('/api/open-all-tabs', {
       method: 'POST',
@@ -125,10 +300,9 @@ window.openAllProjectsInTabs = async function(browser = 'chrome') {
       body: JSON.stringify({ browser })
     });
     const data = await res.json();
-    if (data.success) {
+    if (data && data.success) {
       showToast(`Opened ${data.count} tabs in ${data.browser}!`, 'success');
     } else {
-      // Browser fallback
       state.projects.forEach((p, idx) => {
         setTimeout(() => window.open(p.url, '_blank'), idx * 100);
       });
@@ -142,13 +316,22 @@ window.openAllProjectsInTabs = async function(browser = 'chrome') {
 
 // Open Single Tab in Real Browser (Bypassing Antigravity Webview)
 window.openExternalTab = async function(url) {
+  const isVercel = window.location.hostname.includes('vercel.app') || window.location.protocol === 'https:';
+  if (isVercel) {
+    window.open(url, '_blank');
+    return;
+  }
   try {
-    await fetch('/api/open-tab', {
+    const res = await fetch('/api/open-tab', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ url })
     });
-    showToast(`Opened in browser: ${url}`, 'info');
+    if (!res.ok) {
+      window.open(url, '_blank');
+    } else {
+      showToast(`Opened in browser: ${url}`, 'info');
+    }
   } catch (e) {
     window.open(url, '_blank');
   }
