@@ -330,7 +330,7 @@ function launchProject(project) {
 }
 
 // Request dispatcher
-const server = http.createServer(async (req, res) => {
+async function requestHandler(req, res) {
   const parsedUrl = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
   const pathname = parsedUrl.pathname;
 
@@ -555,10 +555,16 @@ const server = http.createServer(async (req, res) => {
   }
 
   // Static File Serving
-  let filePath = path.join(__dirname, 'public', pathname === '/' ? 'index.html' : pathname);
-  
+  let targetFile = pathname === '/' ? 'index.html' : pathname.replace(/^\//, '');
+  let filePath = path.join(__dirname, 'public', targetFile);
+  if (!fs.existsSync(filePath)) {
+    filePath = path.join(__dirname, targetFile);
+  }
   if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
     filePath = path.join(__dirname, 'public', 'index.html');
+    if (!fs.existsSync(filePath)) {
+      filePath = path.join(__dirname, 'index.html');
+    }
   }
 
   const ext = path.extname(filePath).toLowerCase();
@@ -582,7 +588,9 @@ const server = http.createServer(async (req, res) => {
       res.end(content);
     }
   });
-});
+}
+
+const server = http.createServer(requestHandler);
 
 if (process.env.VERCEL !== '1') {
   server.listen(PORT, '0.0.0.0', () => {
@@ -595,4 +603,5 @@ if (process.env.VERCEL !== '1') {
   });
 }
 
-module.exports = server;
+module.exports = requestHandler;
+module.exports.server = server;
