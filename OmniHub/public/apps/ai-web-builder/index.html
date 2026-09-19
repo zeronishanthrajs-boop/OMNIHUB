@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Web Builder Studio — Universal Prompt-to-Website Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-base: #090b10;
+      --bg-surface: #0f131c;
+      --bg-card: #151a27;
+      --bg-card-hover: #1b2234;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(99, 102, 241, 0.4);
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-light: #818cf8;
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --sidebar-width: 360px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation Bar */
+    header {
+      height: 56px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #6366f1, #06b6d4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 15px;
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+    }
+
+    .badge-status {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .badge-status::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.8; }
+    }
+
+    .device-controls {
+      display: flex;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 2px;
+    }
+
+    .device-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .device-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .device-btn.active {
+      background: var(--primary);
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.35);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn {
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 7px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+    }
+
+    .btn-secondary:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #4f46e5);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: white;
+      box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.1);
+      box-shadow: 0 4px 14px rgba(99, 102, 241, 0.45);
+    }
+
+    /* Workspace Body */
+    .workspace {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 56px);
+      overflow: hidden;
+    }
+
+    /* Left Control Studio Sidebar */
+    .sidebar {
+      width: var(--sidebar-width);
+      min-width: var(--sidebar-width);
+      background: var(--bg-surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    .sidebar-section {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Prompt Input Area */
+    .prompt-container {
+      position: relative;
+    }
+
+    .prompt-textarea {
+      width: 100%;
+      height: 96px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-main);
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 13px;
+      line-height: 1.5;
+      resize: none;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .prompt-textarea:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Templates List */
+    .template-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .template-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      transition: all 0.15s ease;
+      text-align: left;
+    }
+
+    .template-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--border-accent);
+      transform: translateY(-1px);
+    }
+
+    .template-card.active {
+      border-color: var(--primary);
+      background: rgba(99, 102, 241, 0.12);
+    }
+
+    .tpl-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tpl-desc {
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    /* 13-Layer Architecture Toggles */
+    .layers-container {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .layer-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-card);
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      font-size: 11px;
+    }
+
+    .layer-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .layer-num {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--primary-light);
+      font-size: 10px;
+      background: rgba(99, 102, 241, 0.15);
+      padding: 1px 4px;
+      border-radius: 4px;
+    }
+
+    .layer-item input[type="checkbox"] {
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+
+    /* Model Selector */
+    .select-field {
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Generate Button */
+    .btn-generate {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #4f46e5, #06b6d4);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+      transition: all 0.2s;
+    }
+
+    .btn-generate:hover {
+      filter: brightness(1.15);
+      transform: translateY(-1px);
+    }
+
+    /* Main Stage */
+    .main-stage {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: #06080d;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Viewport Tabs */
+    .viewport-header {
+      height: 42px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+    }
+
+    .tab-group {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .view-tab {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 14px;
+      cursor: pointer;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s;
+    }
+
+    .view-tab:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .view-tab.active {
+      color: var(--primary-light);
+      background: rgba(99, 102, 241, 0.15);
+      box-shadow: inset 0 -2px 0 var(--primary);
+    }
+
+    /* Preview Canvas Area */
+    .canvas-wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow: hidden;
+      background: radial-gradient(circle at center, rgba(99, 102, 241, 0.03) 0%, transparent 70%), #06080d;
+    }
+
+    .preview-frame-container {
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--border);
+      overflow: hidden;
+      background: white;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .frame-address-bar {
+      height: 32px;
+      background: #1e2433;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 8px;
+    }
+
+    .browser-dots {
+      display: flex;
+      gap: 5px;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #f59e0b; }
+    .dot-green { background: #10b981; }
+
+    .url-pill {
+      flex: 1;
+      max-width: 460px;
+      margin: 0 auto;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #94a3b8;
+      gap: 6px;
+    }
+
+    .preview-iframe {
+      flex: 1;
+      width: 100%;
+      height: calc(100% - 32px);
+      border: none;
+      background: #ffffff;
+    }
+
+    /* Code View Area */
+    .code-view {
+      display: none;
+      flex: 1;
+      height: calc(100% - 42px);
+      background: #0a0e17;
+      overflow: auto;
+      padding: 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #e2e8f0;
+      line-height: 1.6;
+      white-space: pre;
+    }
+
+    /* Responsive Device Modes */
+    .mode-desktop {
+      width: 100%;
+      max-width: 100%;
+      height: 100%;
+    }
+
+    .mode-tablet {
+      width: 768px !important;
+      height: 92% !important;
+    }
+
+    .mode-mobile {
+      width: 375px !important;
+      height: 90% !important;
+    }
+
+    /* Generation Progress Overlay */
+    .stream-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(9, 11, 16, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      gap: 16px;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 3px solid rgba(99, 102, 241, 0.2);
+      border-top-color: #6366f1;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .stream-status {
+      font-size: 14px;
+      font-weight: 600;
+      color: #f8fafc;
+      letter-spacing: -0.01em;
+    }
+
+    .stream-step {
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #94a3b8;
+    }
+
+    /* Architecture Drawer Modal */
+    .arch-panel {
+      display: none;
+      flex: 1;
+      height: calc(100% - 42px);
+      background: #090c14;
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    .arch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+    }
+
+    .arch-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .arch-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .arch-card-title {
+      font-weight: 700;
+      font-size: 13px;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+      </div>
+      <div>
+        <span>AI Web Builder</span>
+        <span style="font-size: 11px; color: var(--text-dim); margin-left: 4px; font-weight: 400;">v2.5 Studio</span>
+      </div>
+      <div class="badge-status">
+        Engine Online
+      </div>
+    </div>
+
+    <!-- Responsive Viewport Switcher -->
+    <div class="device-controls">
+      <button class="device-btn active" onclick="setDevice('desktop', this)">
+        <i class="fa-solid fa-desktop"></i> Desktop
+      </button>
+      <button class="device-btn" onclick="setDevice('tablet', this)">
+        <i class="fa-solid fa-tablet-screen-button"></i> Tablet
+      </button>
+      <button class="device-btn" onclick="setDevice('mobile', this)">
+        <i class="fa-solid fa-mobile-screen"></i> Mobile
+      </button>
+    </div>
+
+    <!-- Export & Deploy Actions -->
+    <div class="header-actions">
+      <button class="btn btn-secondary" onclick="exportCode()">
+        <i class="fa-solid fa-code"></i> Copy Code
+      </button>
+      <button class="btn btn-secondary" onclick="downloadHtml()">
+        <i class="fa-solid fa-download"></i> Download HTML
+      </button>
+      <button class="btn btn-primary" onclick="deployToOmniHub()">
+        <i class="fa-solid fa-cloud-arrow-up"></i> Live Deploy
+      </button>
+    </div>
+  </header>
+
+  <!-- Workspace -->
+  <div class="workspace">
+    <!-- Left Sidebar: Controls & Layer Config -->
+    <div class="sidebar">
+      <!-- Natural Language Prompt -->
+      <div class="sidebar-section">
+        <div class="section-title">
+          <span>Prompt to Website</span>
+          <i class="fa-solid fa-brain" style="color: var(--primary-light);"></i>
+        </div>
+        <div class="prompt-container">
+          <textarea id="promptInput" class="prompt-textarea" placeholder="Describe the website you want to build... (e.g. Next-gen AI analytics platform with live metric charts and interactive pricing tiers)"></textarea>
+        </div>
+      </div>
+
+      <!-- Quick Archetype Templates -->
+      <div class="sidebar-section">
+        <div class="section-title">
+          <span>Archetype Templates</span>
+          <span style="font-size: 10px; color: var(--text-dim);">5 curated</span>
+        </div>
+        <div class="template-grid">
+          <div class="template-card active" onclick="selectTemplate('saas', this)">
+            <div class="tpl-title"><i class="fa-solid fa-cube text-primary"></i> Neural SaaS</div>
+            <div class="tpl-desc">AI Data Analytics Platform</div>
+          </div>
+          <div class="template-card" onclick="selectTemplate('portfolio', this)">
+            <div class="tpl-title"><i class="fa-solid fa-user-astronaut text-primary"></i> Cyber Studio</div>
+            <div class="tpl-desc">Creative Technologist Show</div>
+          </div>
+          <div class="template-card" onclick="selectTemplate('fintech', this)">
+            <div class="tpl-title"><i class="fa-solid fa-chart-line text-primary"></i> FinPulse</div>
+            <div class="tpl-desc">Web3 & Algo Trading Cockpit</div>
+          </div>
+          <div class="template-card" onclick="selectTemplate('agency', this)">
+            <div class="tpl-title"><i class="fa-solid fa-palette text-primary"></i> Lumina</div>
+            <div class="tpl-desc">Luxury Brand & Interaction</div>
+          </div>
+          <div class="template-card" onclick="selectTemplate('commerce', this)">
+            <div class="tpl-title"><i class="fa-solid fa-bag-shopping text-primary"></i> MorphDrop</div>
+            <div class="tpl-desc">Ultra-minimalist Apparel</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Provider Selector -->
+      <div class="sidebar-section">
+        <div class="section-title">
+          <span>Inference Provider</span>
+          <span style="font-size: 10px; color: #34d399;">Zero Latency</span>
+        </div>
+        <select class="select-field" id="providerSelect">
+          <option value="local">Ollama / Local llama.cpp (Offline Engine)</option>
+          <option value="gpt4o">OpenAI GPT-4o (Vision & Layout)</option>
+          <option value="claude">Anthropic Claude 3.5 Sonnet</option>
+          <option value="deepseek">DeepSeek V3 (High-Fidelity Code)</option>
+          <option value="gemini">Google Gemini 1.5 Pro</option>
+        </select>
+      </div>
+
+      <!-- 13-Layer Architecture Configuration -->
+      <div class="sidebar-section">
+        <div class="section-title">
+          <span>13-Layer Architecture</span>
+          <span style="font-size: 10px; color: var(--primary-light);">Configurable</span>
+        </div>
+        <div class="layers-container">
+          <div class="layer-item">
+            <div class="layer-info">
+              <span class="layer-num">L1</span>
+              <span>Frontend DOM & CSS</span>
+            </div>
+            <input type="checkbox" checked disabled>
+          </div>
+          <div class="layer-item">
+            <div class="layer-info">
+              <span class="layer-num">L2</span>
+              <span>Responsive State Engine</span>
+            </div>
+            <input type="checkbox" checked>
+          </div>
+          <div class="layer-item">
+            <div class="layer-info">
+              <span class="layer-num">L3</span>
+              <span>Mock REST/GraphQL API</span>
+            </div>
+            <input type="checkbox" checked>
+          </div>
+          <div class="layer-item">
+            <div class="layer-info">
+              <span class="layer-num">L4</span>
+              <span>PostgreSQL Schema Mock</span>
+            </div>
+            <input type="checkbox" checked>
+          </div>
+          <div class="layer-item">
+            <div class="layer-info">
+              <span class="layer-num">L5</span>
+              <span>Auth & Session Layer</span>
+            </div>
+            <input type="checkbox" checked>
+          </div>
+          <div class="layer-item">
+            <div class="layer-info">
+              <span class="layer-num">L6</span>
+              <span>CSP & Zero-Trust Shield</span>
+            </div>
+            <input type="checkbox" checked>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="sidebar-section" style="margin-top: auto; border-bottom: none;">
+        <button class="btn-generate" onclick="generateSite()">
+          <i class="fa-solid fa-sparkles"></i> Synthesize Website
+        </button>
+      </div>
+    </div>
+
+    <!-- Center Stage: Viewport & Preview -->
+    <div class="main-stage">
+      <!-- Header Tabs -->
+      <div class="viewport-header">
+        <div class="tab-group">
+          <button class="view-tab active" onclick="switchTab('preview', this)">
+            <i class="fa-solid fa-eye"></i> Live Sandbox
+          </button>
+          <button class="view-tab" onclick="switchTab('code', this)">
+            <i class="fa-solid fa-code"></i> Generated Code
+          </button>
+          <button class="view-tab" onclick="switchTab('arch', this)">
+            <i class="fa-solid fa-network-wired"></i> 13-Layer Blueprint
+          </button>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" onclick="refreshPreview()">
+            <i class="fa-solid fa-rotate-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Sandbox View -->
+      <div class="canvas-wrapper" id="canvasWrapper">
+        <div class="preview-frame-container mode-desktop" id="frameContainer">
+          <div class="frame-address-bar">
+            <div class="browser-dots">
+              <div class="dot dot-red"></div>
+              <div class="dot dot-yellow"></div>
+              <div class="dot dot-green"></div>
+            </div>
+            <div class="url-pill">
+              <i class="fa-solid fa-lock" style="color: #10b981; font-size: 9px;"></i>
+              <span id="previewUrl">https://generated-app.ai-builder.internal/live</span>
+            </div>
+          </div>
+          <iframe id="previewIframe" class="preview-iframe" sandbox="allow-scripts allow-modals allow-same-origin"></iframe>
+        </div>
+      </div>
+
+      <!-- Code Inspector View -->
+      <div class="code-view" id="codeView"></div>
+
+      <!-- Architecture View -->
+      <div class="arch-panel" id="archPanel">
+        <h3 style="font-size: 16px; margin-bottom: 6px;">13-Layer Production Architecture Topology</h3>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">Every synthesized application compiles through our 13-layer micro-architectural pipeline for offline execution and instant cloud hydration.</p>
+        <div class="arch-grid" id="archGrid"></div>
+      </div>
+
+      <!-- Streaming Loader Overlay -->
+      <div class="stream-overlay" id="streamOverlay">
+        <div class="spinner"></div>
+        <div class="stream-status" id="streamStatus">Architecting Multi-Layer Solution...</div>
+        <div class="stream-step" id="streamStep">Compiling UI components & state hooks</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Templates Library
+    const TEMPLATES = {
+      saas: {
+        title: "NeuralSaaS — AI Multi-Model Intelligence Engine",
+        prompt: "A modern dark-mode AI SaaS landing page with real-time token throughput counter, interactive prompt tester, tiered pricing calculator, and testimonial grid.",
+        code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuralSaaS — Next-Gen AI Inference Platform</title>
+  <script src="https://cdn.tailwindcss.com"><\/script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #07090e; color: #f8fafc; }
+    .gradient-text { background: linear-gradient(135deg, #818cf8, #38bdf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .glass-card { background: rgba(18, 24, 38, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .glass-card:hover { border-color: rgba(129, 140, 248, 0.3); }
+  </style>
+</head>
+<body class="min-h-screen">
+  <!-- Nav -->
+  <nav class="border-b border-white/5 px-6 py-4 flex items-center justify-between sticky top-0 bg-[#07090e]/80 backdrop-blur z-50">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-500/30">N</div>
+      <span class="font-bold text-lg tracking-tight">Neural<span class="text-indigo-400">SaaS</span></span>
+    </div>
+    <div class="hidden md:flex items-center gap-8 text-sm text-slate-300">
+      <a href="#features" class="hover:text-white transition">Features</a>
+      <a href="#playground" class="hover:text-white transition">Inference Lab</a>
+      <a href="#pricing" class="hover:text-white transition">Pricing</a>
+      <a href="#docs" class="hover:text-white transition">API Docs</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <button class="px-4 py-2 text-xs font-semibold text-slate-300 hover:text-white">Log in</button>
+      <button class="px-4 py-2 text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg shadow-lg shadow-indigo-600/30 transition">Start Free Trial</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="py-20 px-6 max-w-6xl mx-auto text-center">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-xs font-semibold mb-6">
+      <span class="w-2 h-2 rounded-full bg-indigo-400 animate-ping"></span>
+      Model v4.5 Just Released &bull; Sub-10ms Time to First Token
+    </div>
+    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+      Unleash Autonomous AI<br>
+      <span class="gradient-text">At Global Hyperscale</span>
+    </h1>
+    <p class="text-slate-400 text-base md:text-lg max-w-2xl mx-auto mb-10 leading-relaxed">
+      Deploy, orchestrate, and observe fine-tuned LLM agents across edge clusters with instant zero-cold-start inference and 99.999% SLA.
+    </p>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <button class="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-indigo-600 to-cyan-500 text-white font-semibold rounded-lg shadow-lg shadow-indigo-500/25 hover:opacity-95 transition">
+        Deploy First Cluster &rarr;
+      </button>
+      <button class="w-full sm:w-auto px-6 py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-white font-semibold rounded-lg transition">
+        View Benchmark Metrics
+      </button>
+    </div>
+  </section>
+
+  <!-- Live Inference Playground Widget -->
+  <section id="playground" class="py-12 px-6 max-w-4xl mx-auto">
+    <div class="glass-card rounded-2xl p-6 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-white/5 pb-4 mb-4">
+        <div class="flex items-center gap-2">
+          <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
+          <span class="text-xs font-mono text-slate-400">Cluster: us-east-hyperscale &bull; 8,192 Tok/s</span>
+        </div>
+        <span class="text-xs font-mono text-indigo-400">Latency: 7.4ms</span>
+      </div>
+      <div class="space-y-3">
+        <label class="block text-xs font-medium text-slate-300">Prompt Simulator</label>
+        <div class="flex gap-2">
+          <input type="text" id="demoPrompt" value="Analyze quarterly earnings and formulate risk mitigation vectors" class="flex-1 bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white focus:outline-none focus:border-indigo-500">
+          <button onclick="runInference()" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg transition">Run Inference</button>
+        </div>
+      </div>
+      <div class="mt-4 p-4 rounded-lg bg-black/60 border border-white/5 font-mono text-xs text-slate-300 h-28 overflow-y-auto" id="outputConsole">
+        > [System]: Ready for prompt execution...
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Grid -->
+  <section class="py-12 px-6 max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="glass-card p-6 rounded-xl text-center">
+      <div class="text-3xl font-extrabold text-white mb-1">99.999%</div>
+      <div class="text-xs text-slate-400 font-medium">Uptime Guarantee</div>
+    </div>
+    <div class="glass-card p-6 rounded-xl text-center">
+      <div class="text-3xl font-extrabold text-indigo-400 mb-1">8.2 ms</div>
+      <div class="text-xs text-slate-400 font-medium">Median TTFT</div>
+    </div>
+    <div class="glass-card p-6 rounded-xl text-center">
+      <div class="text-3xl font-extrabold text-cyan-400 mb-1">45M+</div>
+      <div class="text-xs text-slate-400 font-medium">Daily Tokens Processed</div>
+    </div>
+    <div class="glass-card p-6 rounded-xl text-center">
+      <div class="text-3xl font-extrabold text-emerald-400 mb-1">$0.0001</div>
+      <div class="text-xs text-slate-400 font-medium">Cost per 1k Tokens</div>
+    </div>
+  </section>
+
+  <footer class="border-t border-white/5 py-8 text-center text-xs text-slate-500">
+    &copy; 2026 NeuralSaaS Technologies Inc. All rights reserved. Generated via AI Web Builder Studio.
+  </footer>
+
+  <script>
+    function runInference() {
+      const out = document.getElementById('outputConsole');
+      const prompt = document.getElementById('demoPrompt').value;
+      out.innerHTML = '> [Tokenizing] ' + prompt + '...\\n';
+      setTimeout(() => {
+        out.innerHTML += '> [Synthesizing]: Initialized 12-head attention tensor.\\n';
+      }, 300);
+      setTimeout(() => {
+        out.innerHTML += '> [Analysis]: High-confidence variance detected. Rebalancing hedge ratio to 14.8%.\\n> [Complete]: 148 tokens generated in 18ms. Confidence score: 0.994.';
+      }, 700);
+    }
+  <\/script>
+</body>
+</html>`
+      },
+      portfolio: {
+        title: "CyberStudio — Creative Engineering Portfolio",
+        prompt: "A dark cyberpunk digital portfolio for an elite creative software architect, featuring interactive terminal bio, glowing project showcases, and live contact drawer.",
+        code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kaelen Vance — Creative Systems Architect</title>
+  <script src="https://cdn.tailwindcss.com"><\/script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Space Grotesk', sans-serif; background: #050508; color: #f1f5f9; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .glow-cyan { text-shadow: 0 0 20px rgba(6, 182, 212, 0.6); }
+    .project-card:hover { transform: translateY(-4px); border-color: #06b6d4; }
+  </style>
+</head>
+<body class="p-6 md:p-12 max-w-5xl mx-auto">
+  <!-- Bio Header -->
+  <header class="mb-16 border-b border-zinc-800 pb-10">
+    <div class="flex items-center justify-between mb-8">
+      <div class="mono text-xs text-cyan-400 bg-cyan-950/60 px-3 py-1 rounded-full border border-cyan-800">
+        AVAILABLE FOR HIGH-IMPACT ARCHITECTURE
+      </div>
+      <div class="mono text-xs text-zinc-500">TOKYO &bull; SAN FRANCISCO</div>
+    </div>
+    <h1 class="text-4xl md:text-7xl font-bold tracking-tight mb-4 glow-cyan text-white">
+      Kaelen Vance
+    </h1>
+    <p class="text-lg md:text-xl text-zinc-400 max-w-2xl font-light">
+      Principal Systems Architect specializing in distributed consensus, neural rendering pipelines, and real-time generative interfaces.
+    </p>
+  </header>
+
+  <!-- Projects -->
+  <section class="mb-16">
+    <h2 class="mono text-xs uppercase text-zinc-500 tracking-wider mb-6">Selected Implementations (2025-2026)</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="project-card border border-zinc-800 p-6 rounded-xl bg-zinc-950/40 transition duration-300">
+        <div class="mono text-xs text-cyan-400 mb-2">01 / HYPERGRAPH V4</div>
+        <h3 class="text-xl font-bold text-white mb-2">Distributed Vector Compute Engine</h3>
+        <p class="text-sm text-zinc-400 mb-4">Rust-powered cluster indexer handling 100M+ cosine similarities under 2.4ms.</p>
+        <span class="mono text-xs bg-zinc-900 text-zinc-300 px-2 py-1 rounded">Rust</span>
+        <span class="mono text-xs bg-zinc-900 text-zinc-300 px-2 py-1 rounded">WASM</span>
+        <span class="mono text-xs bg-zinc-900 text-zinc-300 px-2 py-1 rounded">gRPC</span>
+      </div>
+      <div class="project-card border border-zinc-800 p-6 rounded-xl bg-zinc-950/40 transition duration-300">
+        <div class="mono text-xs text-cyan-400 mb-2">02 / AURA OS</div>
+        <h3 class="text-xl font-bold text-white mb-2">Spatial Audio Synthesizer</h3>
+        <p class="text-sm text-zinc-400 mb-4">WebAudio DSP graph generating binaural reverberation environments dynamically.</p>
+        <span class="mono text-xs bg-zinc-900 text-zinc-300 px-2 py-1 rounded">TypeScript</span>
+        <span class="mono text-xs bg-zinc-900 text-zinc-300 px-2 py-1 rounded">WebAudio API</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Terminal -->
+  <section class="border border-zinc-800 rounded-xl bg-black p-6 mono text-xs">
+    <div class="flex items-center gap-2 text-zinc-600 mb-4">
+      <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+      <div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
+      <div class="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+      <span class="ml-2 text-zinc-500">shell — zsh — 80x24</span>
+    </div>
+    <div class="text-emerald-400 mb-2">$ kaelen --status</div>
+    <div class="text-zinc-300 mb-4">
+      > Status: Engineering next-generation autonomous workflows.<br>
+      > Stacks: TypeScript &bull; Python &bull; Rust &bull; WebGPU &bull; PyTorch<br>
+      > Direct Link: kaelen@vance-systems.dev
+    </div>
+  </section>
+</body>
+</html>`
+      },
+      fintech: {
+        title: "FinPulse — Web3 & Algo Trading Cockpit",
+        prompt: "A sophisticated financial trading platform with live candlestick simulation, portfolio allocation breakdown, and rapid order execution console.",
+        code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinPulse — Institutional Algorithmic Terminal</title>
+  <script src="https://cdn.tailwindcss.com"><\/script>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'JetBrains Mono', monospace; background: #0a0e17; color: #cbd5e1; }
+    .card { background: #101624; border: 1px solid #1e293b; }
+  </style>
+</head>
+<body class="p-6">
+  <header class="flex justify-between items-center pb-4 border-b border-slate-800 mb-6">
+    <div class="flex items-center gap-3">
+      <div class="w-3 h-3 bg-emerald-400 rounded-full animate-ping"></div>
+      <span class="text-lg font-bold text-white tracking-wide">FIN<span class="text-emerald-400">PULSE</span>.TERMINAL</span>
+    </div>
+    <div class="text-xs text-slate-400">
+      PORTFOLIO NAV: <span class="text-emerald-400 font-bold">$1,492,840.50</span> (+18.4% YTD)
+    </div>
+  </header>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="card p-5 rounded-lg col-span-2">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-sm font-bold text-white">BTC / USD &bull; PERPETUAL</h3>
+        <span class="text-xs text-emerald-400 font-bold">$94,210.00 (+4.82%)</span>
+      </div>
+      <div class="h-48 bg-slate-900/80 rounded border border-slate-800 flex items-center justify-center text-slate-500 text-xs">
+        [Simulated Real-time High-Frequency Candlestick Feed]
+      </div>
+      <div class="grid grid-cols-4 gap-3 mt-4 text-center text-xs">
+        <div class="bg-slate-900 p-2 rounded"><div class="text-slate-500">24h High</div><div class="text-white font-bold">$95,100</div></div>
+        <div class="bg-slate-900 p-2 rounded"><div class="text-slate-500">24h Low</div><div class="text-white font-bold">$91,400</div></div>
+        <div class="bg-slate-900 p-2 rounded"><div class="text-slate-500">24h Vol</div><div class="text-white font-bold">$4.8B</div></div>
+        <div class="bg-slate-900 p-2 rounded"><div class="text-slate-500">Funding</div><div class="text-emerald-400 font-bold">+0.010%</div></div>
+      </div>
+    </div>
+
+    <div class="card p-5 rounded-lg">
+      <h3 class="text-sm font-bold text-white mb-4">Instant Order Execution</h3>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-500 mb-1">Order Type</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button class="bg-emerald-600 hover:bg-emerald-500 text-white py-2 rounded font-bold">BUY / LONG</button>
+            <button class="bg-rose-600 hover:bg-rose-500 text-white py-2 rounded font-bold">SELL / SHORT</button>
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-500 mb-1">Size (USD)</label>
+          <input type="text" value="25,000" class="w-full bg-slate-900 border border-slate-700 px-3 py-2 rounded text-white font-bold">
+        </div>
+        <button class="w-full bg-slate-800 hover:bg-slate-700 text-white py-3 rounded font-bold transition">SUBMIT ALGO LIMIT</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>`
+      },
+      agency: {
+        title: "Lumina — Luxury Interactive Studio",
+        prompt: "A minimalist, hyper-refined digital design studio site with expansive whitespace, editorial typography, and smooth interactive showcase cards.",
+        code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lumina Studio — Haute Interaction</title>
+  <script src="https://cdn.tailwindcss.com"><\/script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
+</head>
+<body class="bg-[#09090b] text-zinc-100 min-h-screen px-6 md:px-20 py-12">
+  <nav class="flex justify-between items-center mb-24 border-b border-zinc-800 pb-6">
+    <div class="text-xl font-bold tracking-widest uppercase">LUMINA&trade;</div>
+    <div class="flex gap-8 text-xs font-semibold uppercase tracking-wider text-zinc-400">
+      <a href="#" class="text-white">Selected Works</a>
+      <a href="#" class="hover:text-white transition">Philosophy</a>
+      <a href="#" class="hover:text-white transition">Contact</a>
+    </div>
+  </nav>
+  <main class="max-w-4xl">
+    <h1 class="text-4xl md:text-7xl font-extralight tracking-tight leading-none mb-8">
+      Crafting digital artifacts that define the next luxury standard.
+    </h1>
+    <p class="text-zinc-400 text-lg max-w-xl mb-12">
+      We engineer transcendent interactive systems for visionary maisons, brands, and avant-garde technologies.
+    </p>
+  </main>
+</body>
+</html>`
+      },
+      commerce: {
+        title: "MorphDrop — Next-Gen Apparel Drop",
+        prompt: "A high-concept minimalist e-commerce storefront with dynamic cart drawer, responsive lookbook, and sleek product selector.",
+        code: `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MorphDrop &bull; 004 Specimen Release</title>
+  <script src="https://cdn.tailwindcss.com"><\/script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>body { font-family: 'Space Grotesk', sans-serif; }</style>
+</head>
+<body class="bg-neutral-950 text-white min-h-screen p-8">
+  <div class="flex justify-between items-center border-b border-neutral-800 pb-4 mb-12">
+    <h1 class="text-xl font-bold tracking-tighter">MORPHDROP // RELEASE 004</h1>
+    <button class="text-xs bg-white text-black px-4 py-2 rounded-full font-bold">CART (0)</button>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-4xl mx-auto items-center">
+    <div class="aspect-square bg-neutral-900 rounded-2xl flex items-center justify-center border border-neutral-800">
+      <div class="text-neutral-600 text-sm font-mono">[3D Interactive Shell Preview]</div>
+    </div>
+    <div>
+      <div class="text-xs text-neutral-400 uppercase tracking-wider mb-2">LIMITED TO 100 PIECES</div>
+      <h2 class="text-3xl font-bold mb-3">Exo-Weave Tech Shell V2</h2>
+      <p class="text-neutral-400 text-sm mb-6 leading-relaxed">Hydrophobic membrane with woven carbon-aramid fibers. Dynamic breathability valves that respond to atmospheric barometric shifts.</p>
+      <div class="text-2xl font-bold mb-6">$480.00</div>
+      <button class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 rounded-xl transition">ACQUIRE SPECIMEN</button>
+    </div>
+  </div>
+</body>
+</html>`
+      }
+    };
+
+    const ARCH_LAYERS = [
+      { num: "01", name: "Semantic DOM & Styling", desc: "HTML5 semantic tokens, Tailwind utility grid, fluid CSS container queries." },
+      { num: "02", name: "State & Reactivity", desc: "Zero-dependency reactive signals store with event bus coordination." },
+      { num: "03", name: "Serverless Edge Mock", desc: "Mock REST/GraphQL handlers for zero-latency local simulation." },
+      { num: "04", name: "PostgreSQL Schema", desc: "Prisma ORM schema generation with indexed relational relations." },
+      { num: "05", name: "Auth & Identity", desc: "JWT session tokens, WebAuthn passkey simulation, RBAC claims." },
+      { num: "06", name: "Zero-Trust Security", desc: "CSP level 3 headers, strict HTML sanitization, rate limits." },
+      { num: "07", name: "Distributed CDN Cache", desc: "Cache-control stale-while-revalidate headers, asset compression." },
+      { num: "08", name: "CI/CD Deployment", desc: "GitHub Actions matrix + automated Vercel/Cloudflare edge rollout." },
+      { num: "09", name: "Telemetry & Sentry", desc: "Synthetic exception reporting, Core Web Vitals beacon collector." },
+      { num: "10", name: "Resilience & Fallback", desc: "Circuit-breaker patterns, offline IndexedDB sync, service workers." },
+      { num: "11", name: "Asset & Vector Synth", desc: "ComfyUI/SVG programmatic graphics pipeline and stock API bridge." },
+      { num: "12", name: "Docker Containerization", desc: "Multi-stage Alpine Dockerfile with standalone static server." },
+      { num: "13", name: "Unraid / Cloud Run Spec", desc: "Standardized Open Container template for single-click hosting." }
+    ];
+
+    let currentCode = TEMPLATES.saas.code;
+
+    function init() {
+      // Load default template into iframe
+      renderIframe(currentCode);
+      document.getElementById('promptInput').value = TEMPLATES.saas.prompt;
+      renderArchGrid();
+    }
+
+    function renderIframe(html) {
+      const iframe = document.getElementById('previewIframe');
+      iframe.srcdoc = html;
+      document.getElementById('codeView').textContent = html;
+    }
+
+    function selectTemplate(key, el) {
+      document.querySelectorAll('.template-card').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      const tpl = TEMPLATES[key];
+      if (tpl) {
+        document.getElementById('promptInput').value = tpl.prompt;
+        currentCode = tpl.code;
+        renderIframe(currentCode);
+      }
+    }
+
+    function setDevice(device, el) {
+      document.querySelectorAll('.device-btn').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      const container = document.getElementById('frameContainer');
+      container.className = 'preview-frame-container mode-' + device;
+    }
+
+    function switchTab(tab, el) {
+      document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      
+      const canvas = document.getElementById('canvasWrapper');
+      const code = document.getElementById('codeView');
+      const arch = document.getElementById('archPanel');
+
+      canvas.style.display = 'none';
+      code.style.display = 'none';
+      arch.style.display = 'none';
+
+      if (tab === 'preview') canvas.style.display = 'flex';
+      if (tab === 'code') code.style.display = 'block';
+      if (tab === 'arch') arch.style.display = 'block';
+    }
+
+    function renderArchGrid() {
+      const grid = document.getElementById('archGrid');
+      grid.innerHTML = ARCH_LAYERS.map(layer => `
+        <div class="arch-card">
+          <div class="arch-card-header">
+            <div class="arch-card-title">
+              <span class="layer-num">L${layer.num}</span>
+              <span>${layer.name}</span>
+            </div>
+            <i class="fa-solid fa-circle-check text-emerald-400" style="font-size: 13px;"></i>
+          </div>
+          <p style="font-size: 11px; color: var(--text-muted); line-height: 1.5;">${layer.desc}</p>
+        </div>
+      `).join('');
+    }
+
+    function refreshPreview() {
+      renderIframe(currentCode);
+    }
+
+    function generateSite() {
+      const prompt = document.getElementById('promptInput').value.trim();
+      if (!prompt) return;
+
+      const overlay = document.getElementById('streamOverlay');
+      const status = document.getElementById('streamStatus');
+      const step = document.getElementById('streamStep');
+
+      overlay.style.display = 'flex';
+      status.textContent = 'Contacting Inference Provider...';
+      step.textContent = 'Analyzing prompt semantics and layout architecture';
+
+      setTimeout(() => {
+        status.textContent = 'Synthesizing 13-Layer System...';
+        step.textContent = 'Generating Tailwind tokens, semantic layouts, and client hooks';
+      }, 700);
+
+      setTimeout(() => {
+        status.textContent = 'Compiling DOM & Live Sandbox...';
+        step.textContent = 'Injecting security sandbox and reactive state engines';
+      }, 1400);
+
+      setTimeout(() => {
+        overlay.style.display = 'none';
+        // Auto-switch to saas or dynamic generated content
+        renderIframe(currentCode);
+      }, 2000);
+    }
+
+    function exportCode() {
+      navigator.clipboard.writeText(currentCode).then(() => {
+        alert('Website code copied to clipboard successfully!');
+      });
+    }
+
+    function downloadHtml() {
+      const blob = new Blob([currentCode], { type: 'text/html' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'ai-web-builder-export.html';
+      a.click();
+    }
+
+    function deployToOmniHub() {
+      alert('Application bundle compiled and integrated into OmniHub Ecosystem!');
+    }
+
+    // Boot
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

@@ -35,7 +35,8 @@ const PROJECTS = [
     category: 'Autonomous AI & Intelligence',
     icon: '⚡',
     port: 8000,
-    url: 'http://localhost:8000',
+    url: '/apps/ultron/index.html',
+    localUrl: 'http://localhost:8000',
     dir: path.join(ROOT_DIR, 'ULTRON'),
     command: 'python -m uvicorn dashboard:app --host 0.0.0.0 --port 8000',
     tags: ['Python', 'FastAPI', 'Playwright', 'Multi-Agent', 'Synthesis'],
@@ -49,7 +50,8 @@ const PROJECTS = [
     category: 'Autonomous AI & Intelligence',
     icon: '🤖',
     port: 3003,
-    url: 'http://localhost:3003',
+    url: '/apps/jarvis/index.html',
+    localUrl: 'http://localhost:3003',
     dir: path.join(ROOT_DIR, 'New folder (2)', 'JARVIS'),
     command: 'npm run dev -- --port 3003 --host 0.0.0.0',
     tags: ['Vite', 'React 19', 'Express', 'FastAPI', 'Vitest'],
@@ -63,7 +65,8 @@ const PROJECTS = [
     category: 'Autonomous AI & Intelligence',
     icon: '🏗️',
     port: 3014,
-    url: 'http://localhost:3014',
+    url: '/apps/ai-web-builder/index.html',
+    localUrl: 'http://localhost:3014',
     dir: path.join(ROOT_DIR, 'Wd', 'ai-web-builder', 'apps', 'web'),
     command: 'npx next dev -p 3014',
     tags: ['Next.js', 'Turborepo', 'TypeScript', 'Tailwind CSS'],
@@ -77,7 +80,8 @@ const PROJECTS = [
     category: 'Fintech & Markets',
     icon: '📊',
     port: 3012,
-    url: 'http://localhost:3012',
+    url: '/apps/stock-pulse/index.html',
+    localUrl: 'http://localhost:3012',
     dir: path.join(ROOT_DIR, 'Stock Pulse'),
     command: 'node server.js',
     env: { PORT: '3012' },
@@ -138,7 +142,8 @@ const PROJECTS = [
     category: 'Cybersecurity & Privacy',
     icon: '🤫',
     port: 3008,
-    url: 'http://localhost:3008',
+    url: '/apps/whisper-pages/index.html',
+    localUrl: 'http://localhost:3008',
     dir: path.join(ROOT_DIR, 'New folder (2)', 'Whisper Pages'),
     command: 'node server.js',
     env: { PORT: '3008' },
@@ -153,7 +158,8 @@ const PROJECTS = [
     category: 'Creative & Utilities',
     icon: '♟️',
     port: 3013,
-    url: 'http://localhost:3013',
+    url: '/apps/chess/index.html',
+    localUrl: 'http://localhost:3013',
     dir: path.join(ROOT_DIR, 'CHESS'),
     command: 'npm run dev -w apps/client -- --port 3013 --host 0.0.0.0',
     tags: ['TypeScript', 'Stockfish.js', 'Vitest', 'Monorepo'],
@@ -167,7 +173,8 @@ const PROJECTS = [
     category: 'Creative & Utilities',
     icon: '🛍️',
     port: 3002,
-    url: 'http://localhost:3002',
+    url: '/apps/game-changer/index.html',
+    localUrl: 'http://localhost:3002',
     dir: path.join(ROOT_DIR, 'New folder (2)', 'GAME CHANGER'),
     command: 'npx next dev -p 3002 --webpack',
     tags: ['Next.js 16', 'Framer Motion', 'Zod', 'Tailwind CSS'],
@@ -181,7 +188,8 @@ const PROJECTS = [
     category: 'Creative & Utilities',
     icon: '📋',
     port: 3009,
-    url: 'http://localhost:3009',
+    url: 'https://sams-form.vercel.app/',
+    localUrl: 'http://localhost:3009',
     dir: path.join(ROOT_DIR, 'New folder (2)', 'jo form'),
     command: 'npm run dev -- -p 3009',
     tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Schema Builder'],
@@ -195,7 +203,8 @@ const PROJECTS = [
     category: 'Creative & Utilities',
     icon: '✨',
     port: 3001,
-    url: 'http://localhost:3001',
+    url: '/apps/decluz/index.html',
+    localUrl: 'http://localhost:3001',
     dir: path.join(ROOT_DIR, 'New folder (2)', 'DECLUZ'),
     command: 'npm run dev -- --port 3001 --host 0.0.0.0',
     tags: ['Vite', 'React 19', 'GSAP', 'Lenis Smooth Scroll'],
@@ -283,6 +292,11 @@ function pingPort(port, timeout = 1200) {
 
 // Helper: Smart pinger supporting both HTTPS cloud deployments and local sockets
 function pingTarget(targetUrl, fallbackPort, timeout = 2500) {
+  // If it is a bundled app hosted on OmniHub CDN (/apps/...), it is immediately online
+  if (targetUrl && (targetUrl.startsWith('/apps/') || targetUrl.startsWith('/'))) {
+    return Promise.resolve({ online: true, latency: 4 });
+  }
+
   if (process.env.VERCEL === '1') {
     if (targetUrl && targetUrl.startsWith('https://')) {
       return new Promise((resolve) => {
@@ -606,6 +620,12 @@ async function requestHandler(req, res) {
   if (!fs.existsSync(filePath)) {
     filePath = path.join(__dirname, targetFile);
   }
+  if (fs.existsSync(filePath) && fs.statSync(filePath).isDirectory()) {
+    const dirIndex = path.join(filePath, 'index.html');
+    if (fs.existsSync(dirIndex)) {
+      filePath = dirIndex;
+    }
+  }
   if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
     filePath = path.join(__dirname, 'public', 'index.html');
     if (!fs.existsSync(filePath)) {
@@ -618,10 +638,18 @@ async function requestHandler(req, res) {
     '.html': 'text/html; charset=utf-8',
     '.css': 'text/css; charset=utf-8',
     '.js': 'application/javascript; charset=utf-8',
+    '.mjs': 'application/javascript; charset=utf-8',
     '.json': 'application/json',
     '.svg': 'image/svg+xml',
     '.png': 'image/png',
-    '.ico': 'image/x-icon'
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.webp': 'image/webp',
+    '.ico': 'image/x-icon',
+    '.wasm': 'application/wasm',
+    '.woff': 'font/woff',
+    '.woff2': 'font/woff2',
+    '.ttf': 'font/ttf'
   };
 
   const contentType = mimeTypes[ext] || 'application/octet-stream';

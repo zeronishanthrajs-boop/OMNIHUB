@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MorphCart // Next-Gen Dynamic E-Commerce Storefront</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #090d16;
+      --surface: rgba(17, 24, 39, 0.75);
+      --surface-hover: rgba(31, 41, 55, 0.85);
+      --card: rgba(15, 23, 42, 0.65);
+      --border: rgba(255, 255, 255, 0.08);
+      --accent: #00f0ff;
+      --accent-glow: rgba(0, 240, 255, 0.35);
+      --purple: #8b5cf6;
+      --emerald: #10b981;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --radius: 14px;
+      --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding-bottom: 5rem;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 2.5rem;
+      background: rgba(9, 13, 22, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .brand-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+    .brand h1 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em; }
+    .brand span { font-size: 0.75rem; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+    
+    .nav-stats {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      background: rgba(0, 240, 255, 0.1);
+      color: var(--accent);
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(0, 240, 255, 0.3);
+    }
+
+    .hero-banner {
+      padding: 3.5rem 2.5rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .hero-banner h2 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.75rem;
+    }
+    .hero-banner p { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto 2rem; }
+    
+    .filter-bar {
+      display: flex;
+      gap: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+    .filter-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.5rem 1.2rem;
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: var(--transition);
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+    .product-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 12px 30px rgba(0, 240, 255, 0.15);
+    }
+    .product-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      background: #111;
+    }
+    .product-info {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .product-cat {
+      font-size: 0.75rem;
+      color: var(--purple);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+    .product-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .product-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      flex: 1;
+    }
+    .product-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+    }
+    .product-price {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .btn-add {
+      background: linear-gradient(135deg, var(--accent), #0284c7);
+      color: #041019;
+      font-weight: 700;
+      border: none;
+      padding: 0.55rem 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-add:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    /* Morphing Floating Cart Pill */
+    .morph-cart-fab {
+      position: fixed;
+      bottom: 2rem;
+      right: 2.5rem;
+      background: linear-gradient(135deg, #00f0ff, #8b5cf6);
+      color: #041019;
+      padding: 0.9rem 1.6rem;
+      border-radius: 40px;
+      box-shadow: 0 10px 35px rgba(0, 240, 255, 0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      z-index: 100;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .morph-cart-fab:hover {
+      transform: scale(1.08) translateY(-2px);
+    }
+    .cart-count-badge {
+      background: #041019;
+      color: #00f0ff;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    /* Cart Drawer Modal */
+    .cart-drawer {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      z-index: 200;
+      display: none;
+      justify-content: flex-end;
+    }
+    .drawer-content {
+      width: 100%;
+      max-width: 420px;
+      background: #0d131f;
+      border-left: 1px solid var(--border);
+      height: 100%;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      animation: slideIn 0.3s ease;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .cart-items-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .cart-item {
+      display: flex;
+      gap: 1rem;
+      background: var(--surface);
+      padding: 0.75rem;
+      border-radius: 10px;
+      align-items: center;
+    }
+    .cart-item img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .cart-item-title { font-size: 0.9rem; font-weight: 600; }
+    .cart-item-price { color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+    .drawer-footer {
+      border-top: 1px solid var(--border);
+      padding-top: 1.5rem;
+      margin-top: 1rem;
+    }
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+    .btn-checkout {
+      width: 100%;
+      background: linear-gradient(135deg, var(--accent), var(--emerald));
+      color: #041019;
+      font-weight: 700;
+      border: none;
+      padding: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+    .btn-checkout:hover {
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-icon">🛍️</div>
+      <div>
+        <h1>MorphCart</h1>
+        <span>PHYSICS MESH v2.4</span>
+      </div>
+    </div>
+    <div class="nav-stats">
+      <span class="badge">⚡ Spring Haptics Online</span>
+      <span class="badge">🌐 Cloud Edge Active</span>
+    </div>
+  </header>
+
+  <section class="hero-banner">
+    <h2>Dynamic Morphing Storefront</h2>
+    <p>Physics-driven reactive e-commerce showcase. Add items to trigger dynamic cart geometry morphing.</p>
+
+    <div class="filter-bar" id="filter-container">
+      <button class="filter-btn active" data-cat="all">All Products</button>
+      <button class="filter-btn" data-cat="Audio">Audio</button>
+      <button class="filter-btn" data-cat="Displays">Displays</button>
+      <button class="filter-btn" data-cat="Peripherals">Peripherals</button>
+      <button class="filter-btn" data-cat="Gaming">Gaming</button>
+    </div>
+  </section>
+
+  <main class="products-grid" id="products-container">
+    <!-- Products injected via JavaScript -->
+  </main>
+
+  <!-- Morphing Cart FAB -->
+  <div class="morph-cart-fab" id="cart-fab" onclick="toggleCartDrawer()">
+    <span>🛒 Cart</span>
+    <span class="cart-count-badge" id="cart-count">0</span>
+    <span id="cart-subtotal">$0.00</span>
+  </div>
+
+  <!-- Cart Drawer -->
+  <div class="cart-drawer" id="cart-drawer" onclick="if(event.target===this) toggleCartDrawer()">
+    <div class="drawer-content">
+      <div class="drawer-header">
+        <h3>Your Shopping Bag</h3>
+        <button class="close-btn" onclick="toggleCartDrawer()">✕</button>
+      </div>
+      <div class="cart-items-list" id="cart-items">
+        <p style="color:var(--text-muted);text-align:center;margin-top:3rem;">Your cart is currently empty.</p>
+      </div>
+      <div class="drawer-footer">
+        <div class="total-row">
+          <span>Subtotal:</span>
+          <span id="drawer-total" style="color:var(--accent);">$0.00</span>
+        </div>
+        <button class="btn-checkout" onclick="checkout()">Checkout with MorphPay</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const products = [
+      { id: "p1", title: "Nova Wireless Headphones", price: 129.99, category: "Audio", img: "https://images.unsplash.com/photo-1583394838336-acd977736f90?auto=format&fit=crop&w=600&q=80", desc: "Adaptive noise control with 40-hour ultra-low latency battery." },
+      { id: "p2", title: "Aero 4K Horizon Monitor", price: 349.00, category: "Displays", img: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=600&q=80", desc: "27-inch 144Hz true-color IPS display with ultra-thin bezels." },
+      { id: "p3", title: "Flux Mechanical Keyboard", price: 109.50, category: "Peripherals", img: "https://images.unsplash.com/photo-1595225476474-87563907a212?auto=format&fit=crop&w=600&q=80", desc: "Hot-swappable tactile RGB board with CNC aluminium frame." },
+      { id: "p4", title: "Pulse Ultra Gaming Mouse", price: 59.99, category: "Gaming", img: "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=600&q=80", desc: "Ultra-lightweight 58g honeycomb shell with optical switches." },
+      { id: "p5", title: "Prism RGB Desk Mat XL", price: 34.00, category: "Gaming", img: "https://images.unsplash.com/photo-1616401784845-180882ba9ba8?auto=format&fit=crop&w=600&q=80", desc: "Micro-textured cloth surface with 360-degree ambient lighting." },
+      { id: "p6", title: "Solace Studio Microphone", price: 89.99, category: "Audio", img: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=600&q=80", desc: "Cardioid condenser mic with built-in DSP noise isolation." }
+    ];
+
+    let cart = [];
+
+    function renderProducts(cat = 'all') {
+      const filtered = cat === 'all' ? products : products.filter(p => p.category === cat);
+      document.getElementById('products-container').innerHTML = filtered.map(p => `
+        <div class="product-card">
+          <img class="product-img" src="${p.img}" alt="${p.title}" loading="lazy">
+          <div class="product-info">
+            <span class="product-cat">${p.category}</span>
+            <h3 class="product-title">${p.title}</h3>
+            <p class="product-desc">${p.desc}</p>
+            <div class="product-bottom">
+              <span class="product-price">$${p.price.toFixed(2)}</span>
+              <button class="btn-add" onclick="addToCart('${p.id}')">
+                <span>+ Add</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function addToCart(id) {
+      const item = products.find(p => p.id === id);
+      if (!item) return;
+      cart.push(item);
+      updateCartUI();
+
+      // Trigger spring morph animation
+      const fab = document.getElementById('cart-fab');
+      fab.style.transform = 'scale(1.25) rotate(-3deg)';
+      setTimeout(() => { fab.style.transform = 'scale(1)'; }, 250);
+    }
+
+    function updateCartUI() {
+      const countEl = document.getElementById('cart-count');
+      const subtotalEl = document.getElementById('cart-subtotal');
+      const drawerTotal = document.getElementById('drawer-total');
+      const drawerItems = document.getElementById('cart-items');
+
+      countEl.textContent = cart.length;
+      const total = cart.reduce((acc, curr) => acc + curr.price, 0);
+      subtotalEl.textContent = `$${total.toFixed(2)}`;
+      drawerTotal.textContent = `$${total.toFixed(2)}`;
+
+      if (cart.length === 0) {
+        drawerItems.innerHTML = '<p style="color:var(--text-muted);text-align:center;margin-top:3rem;">Your cart is currently empty.</p>';
+      } else {
+        drawerItems.innerHTML = cart.map((item, idx) => `
+          <div class="cart-item">
+            <img src="${item.img}" alt="${item.title}">
+            <div style="flex:1;">
+              <div class="cart-item-title">${item.title}</div>
+              <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+            </div>
+            <button onclick="removeFromCart(${idx})" style="background:none;border:none;color:var(--text-muted);cursor:pointer;">✕</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    function removeFromCart(idx) {
+      cart.splice(idx, 1);
+      updateCartUI();
+    }
+
+    function toggleCartDrawer() {
+      const drawer = document.getElementById('cart-drawer');
+      drawer.style.display = drawer.style.display === 'flex' ? 'none' : 'flex';
+    }
+
+    function checkout() {
+      if (cart.length === 0) return alert('Cart is empty!');
+      alert(`🎉 MorphCart Checkout Complete!\nTotal: $${cart.reduce((a,b)=>a+b.price,0).toFixed(2)}\nThank you for trying the 2026 dynamic storefront!`);
+      cart = [];
+      updateCartUI();
+      toggleCartDrawer();
+    }
+
+    // Category pill click handlers
+    document.getElementById('filter-container').addEventListener('click', (e) => {
+      if (e.target.classList.contains('filter-btn')) {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        renderProducts(e.target.dataset.cat);
+      }
+    });
+
+    renderProducts();
+  </script>
+</body>
+</html>

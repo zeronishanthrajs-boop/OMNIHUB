@@ -12,11 +12,12 @@ const DEFAULT_PROJECTS = [
     category: 'Autonomous AI & Intelligence',
     icon: '⚡',
     port: 8000,
-    url: 'http://localhost:8000',
+    url: '/apps/ultron/index.html',
+    localUrl: 'http://localhost:8000',
     tags: ['Python', 'FastAPI', 'Playwright', 'Multi-Agent', 'Synthesis'],
     techEquipment: 'MCP Server Endpoint + AST Auto-Patching Engine',
     description: 'Transform high-level human objectives into fully functional, production-ready software applications.',
-    status: 'offline'
+    status: 'online'
   },
   {
     id: 'jarvis',
@@ -25,11 +26,12 @@ const DEFAULT_PROJECTS = [
     category: 'Autonomous AI & Intelligence',
     icon: '🤖',
     port: 3003,
-    url: 'http://localhost:3003',
+    url: '/apps/jarvis/index.html',
+    localUrl: 'http://localhost:3003',
     tags: ['Vite', 'React 19', 'Express', 'FastAPI', 'Vitest'],
     techEquipment: 'In-Browser WebLLM / Local Neural SLM + Voice HUD',
     description: 'Advanced AI assistant with reasoning engines, integrated terminal, unit/regression test harnesses.',
-    status: 'offline'
+    status: 'online'
   },
   {
     id: 'ai-web-builder',
@@ -38,11 +40,12 @@ const DEFAULT_PROJECTS = [
     category: 'Autonomous AI & Intelligence',
     icon: '🏗️',
     port: 3014,
-    url: 'http://localhost:3014',
+    url: '/apps/ai-web-builder/index.html',
+    localUrl: 'http://localhost:3014',
     tags: ['Next.js', 'Turborepo', 'TypeScript', 'Tailwind CSS'],
     techEquipment: 'Instant Component Sandboxing & Live ZIP Exporter',
     description: 'Autonomous website synthesis engine generating multi-page web designs and layouts.',
-    status: 'offline'
+    status: 'online'
   },
   {
     id: 'stock-pulse',
@@ -51,11 +54,12 @@ const DEFAULT_PROJECTS = [
     category: 'Fintech & Markets',
     icon: '📊',
     port: 3012,
-    url: 'http://localhost:3012',
+    url: '/apps/stock-pulse/index.html',
+    localUrl: 'http://localhost:3012',
     tags: ['Node.js', 'Express', 'Cheerio', 'PDFKit', 'NSE / BSE'],
     techEquipment: 'TradingView Lightweight Charts v5 + Interactive Reverse DCF Slider',
     description: 'Zero-API-Key fundamental equity analyzer with moat evaluation, reverse DCF valuation, and PDF reports.',
-    status: 'offline'
+    status: 'online'
   },
   {
     id: 'prediction-arena',
@@ -65,6 +69,7 @@ const DEFAULT_PROJECTS = [
     icon: '🎲',
     port: 3011,
     url: 'https://prediction-areena.vercel.app/play',
+    localUrl: 'http://localhost:3011',
     tags: ['Next.js 16', 'React 19', 'LibSQL', 'SQLite', 'Vercel Cloud'],
     techEquipment: 'Cryptographic Provable Fairness (VRF Hash Chain) & Orderbook Depth',
     description: 'Competitive prediction market platform deployed on Vercel with real-time odds, leaderboards, and portfolio management.',
@@ -79,6 +84,7 @@ const DEFAULT_PROJECTS = [
     port: 3007,
     url: 'https://dashboard-sigma-puce-87.vercel.app/onboard',
     iframeUrl: '/api/proxy?url=' + encodeURIComponent('https://dashboard-sigma-puce-87.vercel.app/onboard'),
+    localUrl: 'http://localhost:3007',
     tags: ['Next.js', 'Node.js', 'Security Audit', 'Vercel Cloud'],
     techEquipment: 'Static AST Vulnerability Scanner + CVSS 3.1 Severity Calculator',
     description: 'Targeted vulnerability scanner for modern web applications deployed on Vercel with onboarding dashboard.',
@@ -92,6 +98,7 @@ const DEFAULT_PROJECTS = [
     icon: '🌲',
     port: 3000,
     url: 'https://cyber-tree-azure.vercel.app/explore',
+    localUrl: 'http://localhost:3000',
     tags: ['Next.js 16', 'Supabase', 'Recharts', 'Vercel Cloud'],
     techEquipment: 'Interactive 3D WebGL Threat Topology (Three.js Attack Arc Globe)',
     description: 'Real-time telemetry and threat intelligence visualizer deployed on Vercel with live graphs and incident logging.',
@@ -104,11 +111,12 @@ const DEFAULT_PROJECTS = [
     category: 'Cybersecurity & Privacy',
     icon: '🤫',
     port: 3008,
-    url: 'http://localhost:3008',
+    url: '/apps/whisper-pages/index.html',
+    localUrl: 'http://localhost:3008',
     tags: ['Node.js', 'Express', 'SQLite', 'AES Encryption'],
     techEquipment: 'NIST Post-Quantum Hybrid Cryptography (ML-KEM/Kyber-1024)',
     description: 'Secure, zero-knowledge secret-sharing utility with burn-after-reading notes.',
-    status: 'offline'
+    status: 'online'
   },
   {
     id: 'chess',
@@ -117,11 +125,12 @@ const DEFAULT_PROJECTS = [
     category: 'Creative & Utilities',
     icon: '♟️',
     port: 3013,
-    url: 'http://localhost:3013',
+    url: '/apps/chess/index.html',
+    localUrl: 'http://localhost:3013',
     tags: ['TypeScript', 'Stockfish.js', 'Vitest', 'Monorepo'],
     techEquipment: 'WebGPU Realistic PBR 3D Board + Stockfish NNUE Neural Evaluation',
     description: 'Polished chess interface featuring real-time engine evaluation, custom themes, and move history.',
-    status: 'offline'
+    status: 'online'
   },
   {
     id: 'game-changer',
@@ -130,11 +139,12 @@ const DEFAULT_PROJECTS = [
     category: 'Creative & Utilities',
     icon: '🛍️',
     port: 3002,
-    url: 'http://localhost:3002',
+    url: '/apps/game-changer/index.html',
+    localUrl: 'http://localhost:3002',
     tags: ['Next.js 16', 'Framer Motion', 'Zod', 'Tailwind CSS'],
     techEquipment: 'Physics-Driven Spring Mesh Dynamics + Web Haptics Triggers',
     description: 'Experimental shopping interface showcasing physics-based cart morphing and checkout flows.',
-    status: 'offline'
+    status: 'online'
   },
   {
     id: 'jo-form',
@@ -143,11 +153,12 @@ const DEFAULT_PROJECTS = [
     category: 'Creative & Utilities',
     icon: '📋',
     port: 3009,
-    url: 'http://localhost:3009',
+    url: 'https://sams-form.vercel.app/',
+    localUrl: 'http://localhost:3009',
     tags: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Schema Builder'],
     techEquipment: 'Voice-to-Form Generative AI Wizard + Real-Time Schema Parser',
     description: 'Intuitive drag-and-drop form creator with multi-step question workflows and analytics.',
-    status: 'offline'
+    status: 'online'
   },
   {
     id: 'decluz',
@@ -156,11 +167,12 @@ const DEFAULT_PROJECTS = [
     category: 'Creative & Utilities',
     icon: '✨',
     port: 3001,
-    url: 'http://localhost:3001',
+    url: '/apps/decluz/index.html',
+    localUrl: 'http://localhost:3001',
     tags: ['Vite', 'React 19', 'GSAP', 'Lenis Smooth Scroll'],
     techEquipment: 'WebGL Kinetic Ripple Shaders + Chromatic Aberration Dynamics',
     description: 'Masterclass in modern web animation featuring inertial smooth scrolling and magnetic hover interactions.',
-    status: 'offline'
+    status: 'online'
   }
 ];
 
@@ -289,11 +301,24 @@ window.openAllProjectsInTabs = async function(browser = 'chrome') {
   const isVercel = window.location.hostname.includes('vercel.app') || window.location.protocol === 'https:';
   
   if (isVercel) {
-    // Open primary live cloud apps immediately in user click stack to bypass popup blocker
-    window.open('https://prediction-areena.vercel.app/play', '_blank', 'noopener,noreferrer');
-    window.open('https://cyber-tree-azure.vercel.app/explore', '_blank', 'noopener,noreferrer');
-    window.open('https://dashboard-sigma-puce-87.vercel.app/onboard', '_blank', 'noopener,noreferrer');
-    showToast('Launched live cloud suites! (Prediction Areena, CYBER TREE, VENOM)', 'success');
+    const liveUrls = [
+      'https://prediction-areena.vercel.app/play',
+      'https://cyber-tree-azure.vercel.app/explore',
+      'https://dashboard-sigma-puce-87.vercel.app/onboard',
+      'https://sams-form.vercel.app/',
+      '/apps/chess/index.html',
+      '/apps/stock-pulse/index.html',
+      '/apps/decluz/index.html',
+      '/apps/game-changer/index.html',
+      '/apps/ai-web-builder/index.html',
+      '/apps/whisper-pages/index.html',
+      '/apps/jarvis/index.html',
+      '/apps/ultron/index.html'
+    ];
+    liveUrls.forEach((u, i) => {
+      setTimeout(() => window.open(u, '_blank', 'noopener,noreferrer'), i * 150);
+    });
+    showToast('Launched all 12 cloud applications in browser tabs!', 'success');
     return;
   }
   
