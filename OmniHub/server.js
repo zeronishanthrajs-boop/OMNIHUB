@@ -11,6 +11,7 @@ const path = require('path');
 const net = require('net');
 const os = require('os');
 const { spawn } = require('child_process');
+const proxyHandler = require('../api/proxy.js');
 
 const PORT = process.env.PORT || 8080;
 const ROOT_DIR = path.resolve(__dirname, '..');
@@ -91,7 +92,7 @@ const PROJECTS = [
     category: 'Fintech & Markets',
     icon: '🎲',
     port: 3011,
-    url: process.env.PREDICTION_ARENA_URL || process.env.APP_URL_PREDICTION_ARENA || process.env.VERCEL_URL_PREDICTION_ARENA || 'https://prediction-areena.vercel.app/',
+    url: process.env.PREDICTION_ARENA_URL || process.env.APP_URL_PREDICTION_ARENA || process.env.VERCEL_URL_PREDICTION_ARENA || 'https://prediction-areena.vercel.app/play',
     localUrl: 'http://localhost:3011',
     dir: path.join(ROOT_DIR, 'Prediction Areena'),
     command: 'npm run dev -- -p 3011',
@@ -107,6 +108,7 @@ const PROJECTS = [
     icon: '🛡️',
     port: 3007,
     url: process.env.VENOM_URL || process.env.APP_URL_VENOM || process.env.VERCEL_URL_VENOM || 'https://dashboard-sigma-puce-87.vercel.app/onboard',
+    iframeUrl: '/api/proxy?url=' + encodeURIComponent('https://dashboard-sigma-puce-87.vercel.app/onboard'),
     localUrl: 'http://localhost:3007',
     dir: path.join(ROOT_DIR, 'New folder (2)', 'VENOM', 'dashboard'),
     command: 'npm run dev -- -p 3007',
@@ -121,7 +123,7 @@ const PROJECTS = [
     category: 'Cybersecurity & Privacy',
     icon: '🌲',
     port: 3000,
-    url: process.env.CYBER_TREE_URL || process.env.APP_URL_CYBER_TREE || process.env.VERCEL_URL_CYBER_TREE || 'https://cyber-tree-azure.vercel.app/',
+    url: process.env.CYBER_TREE_URL || process.env.APP_URL_CYBER_TREE || process.env.VERCEL_URL_CYBER_TREE || 'https://cyber-tree-azure.vercel.app/explore',
     localUrl: 'http://localhost:3000',
     dir: path.join(ROOT_DIR, 'New folder (2)', 'CYBER TREE'),
     command: 'npm run dev -- -p 3000',
@@ -415,6 +417,11 @@ async function requestHandler(req, res) {
 
       res.writeHead(200, { 'Content-Type': 'application/json' });
       return res.end(JSON.stringify({ success: true, statuses, timestamp: Date.now() }));
+    }
+
+    // Reverse Proxy for iframe embedding & anti-framing header bypass
+    if (pathname === '/api/proxy' || pathname === '/proxy' || pathname.endsWith('/proxy')) {
+      return proxyHandler(req, res);
     }
 
   // MCP (Model Context Protocol) Discovery & Execution

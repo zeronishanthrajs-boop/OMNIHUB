@@ -160,10 +160,14 @@
           <!-- App Frames Container (Supports Single or Split Mode) -->
           <div class="workspace-frames-viewport" id="frames-viewport">
             <div class="frame-wrapper primary-frame" id="primary-frame-wrapper">
-              <iframe id="main-workspace-iframe" src="about:blank" frameborder="0"></iframe>
+              <iframe id="main-workspace-iframe" src="about:blank" frameborder="0"
+                allow="clipboard-read; clipboard-write; fullscreen; web-share; camera; microphone; autoplay; display-capture"
+                loading="lazy"></iframe>
             </div>
             <div class="frame-wrapper secondary-frame" id="secondary-frame-wrapper" style="display: none;">
-              <iframe id="secondary-workspace-iframe" src="about:blank" frameborder="0"></iframe>
+              <iframe id="secondary-workspace-iframe" src="about:blank" frameborder="0"
+                allow="clipboard-read; clipboard-write; fullscreen; web-share; camera; microphone; autoplay; display-capture"
+                loading="lazy"></iframe>
             </div>
           </div>
         </div>

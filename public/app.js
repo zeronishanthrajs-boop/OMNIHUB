@@ -64,7 +64,7 @@ const DEFAULT_PROJECTS = [
     category: 'Fintech & Markets',
     icon: '🎲',
     port: 3011,
-    url: 'https://prediction-areena.vercel.app/',
+    url: 'https://prediction-areena.vercel.app/play',
     tags: ['Next.js 16', 'React 19', 'LibSQL', 'SQLite', 'Vercel Cloud'],
     techEquipment: 'Cryptographic Provable Fairness (VRF Hash Chain) & Orderbook Depth',
     description: 'Competitive prediction market platform deployed on Vercel with real-time odds, leaderboards, and portfolio management.',
@@ -78,6 +78,7 @@ const DEFAULT_PROJECTS = [
     icon: '🛡️',
     port: 3007,
     url: 'https://dashboard-sigma-puce-87.vercel.app/onboard',
+    iframeUrl: '/api/proxy?url=' + encodeURIComponent('https://dashboard-sigma-puce-87.vercel.app/onboard'),
     tags: ['Next.js', 'Node.js', 'Security Audit', 'Vercel Cloud'],
     techEquipment: 'Static AST Vulnerability Scanner + CVSS 3.1 Severity Calculator',
     description: 'Targeted vulnerability scanner for modern web applications deployed on Vercel with onboarding dashboard.',
@@ -90,7 +91,7 @@ const DEFAULT_PROJECTS = [
     category: 'Cybersecurity & Privacy',
     icon: '🌲',
     port: 3000,
-    url: 'https://cyber-tree-azure.vercel.app/',
+    url: 'https://cyber-tree-azure.vercel.app/explore',
     tags: ['Next.js 16', 'Supabase', 'Recharts', 'Vercel Cloud'],
     techEquipment: 'Interactive 3D WebGL Threat Topology (Three.js Attack Arc Globe)',
     description: 'Real-time telemetry and threat intelligence visualizer deployed on Vercel with live graphs and incident logging.',
@@ -285,14 +286,17 @@ function updateActiveCount() {
 // Open All Projects in Real Browser Tabs (Native OS Dispatcher)
 window.openAllProjectsInTabs = async function(browser = 'chrome') {
   const browserLabel = browser === 'edge' ? 'Microsoft Edge' : 'Google Chrome';
-  showToast(`Dispatching all 12 systems to ${browserLabel} in separate tabs...`, 'success');
   const isVercel = window.location.hostname.includes('vercel.app') || window.location.protocol === 'https:';
+  
   if (isVercel) {
-    state.projects.forEach((p, idx) => {
-      setTimeout(() => window.open(p.url, '_blank'), idx * 120);
-    });
+    // Open primary live cloud apps immediately in user click stack to bypass popup blocker
+    window.open('https://prediction-areena.vercel.app/play', '_blank', 'noopener,noreferrer');
+    window.open('https://cyber-tree-azure.vercel.app/explore', '_blank', 'noopener,noreferrer');
+    window.open('https://dashboard-sigma-puce-87.vercel.app/onboard', '_blank', 'noopener,noreferrer');
+    showToast('Launched live cloud suites! (Prediction Areena, CYBER TREE, VENOM)', 'success');
     return;
   }
+  
   try {
     const res = await fetch('/api/open-all-tabs', {
       method: 'POST',
@@ -303,14 +307,10 @@ window.openAllProjectsInTabs = async function(browser = 'chrome') {
     if (data && data.success) {
       showToast(`Opened ${data.count} tabs in ${data.browser}!`, 'success');
     } else {
-      state.projects.forEach((p, idx) => {
-        setTimeout(() => window.open(p.url, '_blank'), idx * 100);
-      });
+      window.open('https://prediction-areena.vercel.app/play', '_blank');
     }
   } catch (err) {
-    state.projects.forEach((p, idx) => {
-      setTimeout(() => window.open(p.url, '_blank'), idx * 100);
-    });
+    window.open('https://prediction-areena.vercel.app/play', '_blank');
   }
 };
 
@@ -488,44 +488,11 @@ function renderWorkspace() {
     `;
   }).join('');
 
-  // Load DIRECT localhost URL into iframe
+  // Smart Frame Loader with Security Fallbacks
   if (state.activeWorkspaceId) {
     const activeProject = state.projects.find(p => p.id === state.activeWorkspaceId);
     if (activeProject) {
-      if (dom.mainIframe.dataset.currentId !== activeProject.id) {
-        dom.mainIframe.src = activeProject.url;
-        dom.mainIframe.dataset.currentId = activeProject.id;
-      }
-
-      // Security Frame Overlay for services with X-Frame-Options DENY
-      const bannerId = 'venom-frame-security-overlay';
-      let existingBanner = document.getElementById(bannerId);
-      if (activeProject.id === 'venom' && activeProject.url.includes('vercel.app')) {
-        if (!existingBanner) {
-          existingBanner = document.createElement('div');
-          existingBanner.id = bannerId;
-          existingBanner.className = 'frame-security-overlay';
-          existingBanner.innerHTML = `
-            <div class="security-banner-card">
-              <div class="sec-badge">🛡️ VERCEL STRICT CSP PROTECTED</div>
-              <h3>VENOM Security Dashboard</h3>
-              <p>This deployment enforces strict HTTP headers (<code>X-Frame-Options: DENY</code> & <code>frame-ancestors 'none'</code>) preventing clickjacking.</p>
-              <div class="sec-actions">
-                <button class="btn btn-primary" onclick="openExternalTab('${activeProject.url}')">
-                  <span>🚀 Open Live Onboard in Browser Tab</span>
-                </button>
-                <button class="btn btn-secondary" onclick="dom.mainIframe.src='http://localhost:3007'; document.getElementById('${bannerId}').style.display='none';">
-                  <span>Load Local Port (:3007)</span>
-                </button>
-              </div>
-            </div>
-          `;
-          dom.primaryFrameWrapper.appendChild(existingBanner);
-        }
-        existingBanner.style.display = 'flex';
-      } else if (existingBanner) {
-        existingBanner.style.display = 'none';
-      }
+      loadFrameForProject(dom.mainIframe, dom.primaryFrameWrapper, activeProject);
     }
   } else {
     dom.mainIframe.src = 'about:blank';
@@ -537,15 +504,105 @@ function renderWorkspace() {
     dom.secondaryFrameWrapper.style.display = 'block';
     const secProject = state.projects.find(p => p.id === state.secondaryWorkspaceId);
     if (secProject) {
-      if (dom.secondaryIframe.dataset.currentId !== secProject.id) {
-        dom.secondaryIframe.src = secProject.url;
-        dom.secondaryIframe.dataset.currentId = secProject.id;
-      }
+      loadFrameForProject(dom.secondaryIframe, dom.secondaryFrameWrapper, secProject);
     }
   } else {
     dom.secondaryFrameWrapper.style.display = 'none';
   }
 }
+
+function loadFrameForProject(iframeEl, wrapperEl, project) {
+  if (!project) return;
+  
+  const isHttpsOrigin = window.location.protocol === 'https:';
+  const overlayId = `diag-overlay-${wrapperEl.id}`;
+  let overlay = document.getElementById(overlayId);
+
+  // If running on HTTPS cloud and target is unencrypted localhost, display smart diagnostic card
+  if (isHttpsOrigin && project.url && project.url.startsWith('http://localhost')) {
+    iframeEl.src = 'about:blank';
+    delete iframeEl.dataset.currentId;
+
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = overlayId;
+      overlay.className = 'workspace-local-diagnostic-overlay';
+      wrapperEl.appendChild(overlay);
+    }
+    overlay.innerHTML = `
+      <div class="diagnostic-card">
+        <div class="diag-header">
+          <span class="diag-icon">${project.icon}</span>
+          <div class="diag-title">
+            <h3>${project.name}</h3>
+            <span class="port-tag">Dedicated Port :${project.port}</span>
+          </div>
+        </div>
+        <p class="diag-desc">${project.tagline}</p>
+        <div class="diag-status-box">
+          <div class="status-row">
+            <span>Security Isolation:</span>
+            <strong class="text-amber">W3C Mixed-Content Protection</strong>
+          </div>
+          <p class="status-hint">
+            OmniHub is running on Vercel over HTTPS. Browsers isolate unencrypted local loopback (<code>${project.url}</code>) from public HTTPS iframes.
+          </p>
+        </div>
+        <div class="diag-actions">
+          <button class="btn btn-primary" onclick="openExternalTab('${project.url}')">
+            <span>↗ Open in Local Browser Tab</span>
+          </button>
+          <button class="btn btn-secondary" onclick="switchView('innovations')">
+            <span>⚡ 2026 Tech Interactive Lab</span>
+          </button>
+          <button class="btn btn-ghost" onclick="showLocalRunModal('${project.name}', '${project.port}', '${project.command ? project.command.replace(/'/g, "\\'") : ''}')">
+            <span>💻 CLI Instructions</span>
+          </button>
+        </div>
+      </div>
+    `;
+    overlay.style.display = 'flex';
+    return;
+  }
+
+  // Remove diagnostic overlay if present
+  if (overlay) {
+    overlay.style.display = 'none';
+  }
+
+  // Determine URL: prioritize iframeUrl (reverse proxy) if available, otherwise direct url
+  const targetUrl = project.iframeUrl || project.url;
+  if (iframeEl.dataset.currentId !== project.id || iframeEl.src !== targetUrl) {
+    iframeEl.src = targetUrl;
+    iframeEl.dataset.currentId = project.id;
+  }
+}
+
+window.showLocalRunModal = function(name, port, command) {
+  const modalHtml = `
+    <div class="palette-backdrop" id="local-run-modal" style="display: flex;" onclick="if(event.target===this) this.remove()">
+      <div class="palette-box" style="max-width: 550px;">
+        <div class="diag-header">
+          <span class="diag-icon">💻</span>
+          <div>
+            <h3>Run ${name} Locally</h3>
+            <span class="port-tag">Target Port :${port}</span>
+          </div>
+        </div>
+        <p style="color:var(--text-muted);font-size:0.88rem;margin:1rem 0;">
+          To run this service in your local environment, execute the following command in its directory:
+        </p>
+        <pre style="background:rgba(0,0,0,0.5);border:1px solid var(--border-glass);padding:1rem;border-radius:8px;color:var(--accent-cyan);font-family:'JetBrains Mono',monospace;font-size:0.8rem;overflow-x:auto;">${command || `npm run dev -- -p ${port}`}</pre>
+        <div style="display:flex;justify-content:flex-end;margin-top:1.5rem;">
+          <button class="btn btn-primary btn-xs" onclick="document.getElementById('local-run-modal').remove()">Got it</button>
+        </div>
+      </div>
+    </div>
+  `;
+  const existing = document.getElementById('local-run-modal');
+  if (existing) existing.remove();
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+};
 
 window.selectWorkspaceTab = function(id) {
   state.activeWorkspaceId = id;
